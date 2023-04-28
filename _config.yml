@@ -104,4 +104,4 @@ theme: next
 deploy:
   type: git
   repository: https://github.com/lanshushui/lanshushui.github.io.git  #你的仓库地址
-  branch: master
+  branch: blog
