@@ -39,4 +39,6 @@ More info: [Generating](https://hexo.io/docs/generating.html)
 $ hexo deploy
 ```
 
+测试源代码提交
+
 More info: [Deployment](https://hexo.io/docs/one-command-deployment.html)
