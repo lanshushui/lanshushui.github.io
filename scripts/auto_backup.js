@@ -22,7 +22,7 @@ function run() {
             echo('Error: Git commit failed');
             exit(1);
         }
-        if (exec('git push origin master:hexo').code !== 0) {
+        if (exec('git push origin hexo:hexo').code !== 0) {
             echo('Error: Git push failed');
             exit(1);
         }
