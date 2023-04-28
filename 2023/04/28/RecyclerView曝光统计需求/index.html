@@ -20,30 +20,34 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="选择有时候比努力更重要">
-<meta property="og:type" content="website">
-<meta property="og:title" content="懒鼠睡的Android">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="突然接到一个需求，要知道一个RecyclerView刚打开时，第一次加载时屏幕上所有子item的封面图片下载完成的时机 开始1.目前屏幕上RecyclerView所有可见viewHolder123456val manager &#x3D;recyclerview.layoutManager()val first &#x3D; findFirstVisibleItemPosition()val last &#x3D; findL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RecyclerView首次加载图片展示完成时机">
+<meta property="og:url" content="http://example.com/2023/04/28/RecyclerView%E6%9B%9D%E5%85%89%E7%BB%9F%E8%AE%A1%E9%9C%80%E6%B1%82/index.html">
 <meta property="og:site_name" content="懒鼠睡的Android">
-<meta property="og:description" content="选择有时候比努力更重要">
+<meta property="og:description" content="突然接到一个需求，要知道一个RecyclerView刚打开时，第一次加载时屏幕上所有子item的封面图片下载完成的时机 开始1.目前屏幕上RecyclerView所有可见viewHolder123456val manager &#x3D;recyclerview.layoutManager()val first &#x3D; findFirstVisibleItemPosition()val last &#x3D; findL">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-28T04:26:09.502Z">
+<meta property="article:modified_time" content="2023-04-28T04:50:41.019Z">
 <meta property="article:author" content="懒鼠睡zzz">
+<meta property="article:tag" content="RecyclerView">
+<meta property="article:tag" content="RecyclerView首次加载">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2023/04/28/RecyclerView%E6%9B%9D%E5%85%89%E7%BB%9F%E8%AE%A1%E9%9C%80%E6%B1%82/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>懒鼠睡的Android</title>
+  <title>RecyclerView首次加载图片展示完成时机 | 懒鼠睡的Android</title>
   
 
 
@@ -146,9 +150,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -164,10 +169,9 @@
       <meta itemprop="name" content="懒鼠睡的Android">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/04/28/RecyclerView%E6%9B%9D%E5%85%89%E7%BB%9F%E8%AE%A1%E9%9C%80%E6%B1%82/" class="post-title-link" itemprop="url">RecyclerView首次加载图片展示完成时机</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          RecyclerView首次加载图片展示完成时机
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -200,7 +204,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>突然接到一个需求，要知道一个RecyclerView刚打开时，第一次加载时屏幕上所有子item的封面图片下载完成的时机</p>
+        <p>突然接到一个需求，要知道一个RecyclerView刚打开时，第一次加载时屏幕上所有子item的封面图片下载完成的时机</p>
 <h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><h3 id="1-目前屏幕上RecyclerView所有可见viewHolder"><a href="#1-目前屏幕上RecyclerView所有可见viewHolder" class="headerlink" title="1.目前屏幕上RecyclerView所有可见viewHolder"></a>1.目前屏幕上RecyclerView所有可见viewHolder</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> manager =recyclerview.layoutManager()</span><br><span class="line"><span class="keyword">val</span> first = findFirstVisibleItemPosition()</span><br><span class="line"><span class="keyword">val</span> last = findLastVisibleItemPosition()</span><br><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> first..last) &#123;</span><br><span class="line">    <span class="keyword">val</span> viewHolder = recyclerView?.findViewHolderForAdapterPosition(i) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -213,21 +217,27 @@
 
 <p>知道怎么实现后感觉挺简单的，较难的是想到解决思路</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/RecyclerView/" rel="tag"># RecyclerView</a>
+              <a href="/tags/RecyclerView%E9%A6%96%E6%AC%A1%E5%8A%A0%E8%BD%BD/" rel="tag"># RecyclerView首次加载</a>
+          </div>
+
+        
+
+
+        
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -280,6 +290,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B"><span class="nav-number">1.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%9B%AE%E5%89%8D%E5%B1%8F%E5%B9%95%E4%B8%8ARecyclerView%E6%89%80%E6%9C%89%E5%8F%AF%E8%A7%81viewHolder"><span class="nav-number">1.1.</span> <span class="nav-text">1.目前屏幕上RecyclerView所有可见viewHolder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E5%AE%8C%E6%88%90%E6%97%B6%E6%9C%BA%EF%BC%88Glide%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">2.图片下载完成时机（Glide）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%9C%80%E9%87%8D%E8%A6%81%E7%9A%84%E6%98%AF%E7%9F%A5%E9%81%93%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%B0%83%E7%94%A8%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%8C%E8%8E%B7%E5%BE%97Recyclerview%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%8A%A0%E8%BD%BD%E5%AE%8C%E6%88%90%E5%90%8E%E5%B1%8F%E5%B9%95%E4%B8%8A%E6%89%80%E6%9C%89%E5%8F%AF%E8%A7%81viewHolder"><span class="nav-number">1.3.</span> <span class="nav-text">3.最重要的是知道什么时候调用第一步，获得Recyclerview第一次加载完成后屏幕上所有可见viewHolder</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%AD%94%E6%A1%88%E6%98%AF-%E8%87%AA%E5%AE%9A%E4%B9%89GridLayoutManager-%EF%BC%8C%E9%87%8D%E5%86%99onLayoutCompleted%E6%96%B9%E6%B3%95"><span class="nav-number">1.3.0.0.1.</span> <span class="nav-text">答案是 自定义GridLayoutManager ，重写onLayoutCompleted方法</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
