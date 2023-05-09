@@ -152,6 +152,94 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/09/Fragment%E7%9F%A5%E8%AF%86%E7%82%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="懒鼠睡zzz">
+      <meta itemprop="description" content="选择有时候比努力更重要">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="懒鼠睡的Android">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/09/Fragment%E7%9F%A5%E8%AF%86%E7%82%B9/" class="post-title-link" itemprop="url">Fragment知识点</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-09 21:35:36 / 修改时间：22:03:59" itemprop="dateCreated datePublished" datetime="2023-05-09T21:35:36+08:00">2023-05-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="1-关键节点"><a href="#1-关键节点" class="headerlink" title="1.关键节点"></a>1.关键节点</h2><p>Fragment调用生命周期最近的方法</p>
+<p>androidx.fragment.app.FragmentStateManager#moveToExpectedState</p>
+<h2 id="2-Commit与CommitNow的区别"><a href="#2-Commit与CommitNow的区别" class="headerlink" title="2.Commit与CommitNow的区别"></a>2.Commit与CommitNow的区别</h2><ol>
+<li><p>commit() &gt;&gt; enqueueAction() &gt;&gt; scheduleCommit() &gt;&gt; execPendingActions()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">scheduleCommit</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">postponeReady</span> <span class="operator">=</span></span><br><span class="line">            mPostponedTransactions != <span class="literal">null</span> &amp;&amp; !mPostponedTransactions.isEmpty();</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">pendingReady</span> <span class="operator">=</span> mPendingActions != <span class="literal">null</span> &amp;&amp; mPendingActions.size() == <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (postponeReady || pendingReady) &#123;</span><br><span class="line">            mHost.getHandler().removeCallbacks(mExecCommit);</span><br><span class="line">            mHost.getHandler().post(mExecCommit);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>​       </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Runnable</span> <span class="variable">mExecCommit</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        execPendingActions();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以看到commit方法利用Handler机制， 是异步的，所以不清楚fragment什么时候被添加上，不清楚生命周期什么时候被调用</p>
+<p>2.commitNow() &gt;&gt;  execSingleAction() &gt;&gt;  removeRedundantOperationsAndExecute() &gt;&gt; executeOpsTogether()</p>
+<p>删除部分代码，贴入executeOpsTogether重要部分代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>((newState = <span class="built_in">this</span>.computeExpectedState()) != <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">                 stateWasChanged = <span class="literal">true</span>;</span><br><span class="line">                 <span class="type">int</span> nextStep;</span><br><span class="line">                 <span class="keyword">if</span> (newState &gt; <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">                     nextStep = <span class="built_in">this</span>.mFragment.mState + <span class="number">1</span>;</span><br><span class="line">                     <span class="keyword">switch</span> (nextStep) &#123;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                             <span class="built_in">this</span>.attach();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                             <span class="built_in">this</span>.create();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                             <span class="built_in">this</span>.ensureInflatedView();</span><br><span class="line">                             <span class="built_in">this</span>.createView();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                             <span class="built_in">this</span>.activityCreated();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                             <span class="built_in">this</span>.mFragment.mState = <span class="number">4</span>;</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">                             <span class="built_in">this</span>.start();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                             <span class="built_in">this</span>.mFragment.mState = <span class="number">6</span>;</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">                             <span class="built_in">this</span>.resume();</span><br><span class="line">                     &#125;</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以看到commitNow 是同步的，连同Fragment的各个生命周期OnCreate，OnCreateView都会在同一个Looper消息循环中被调用</p>
+<p>因此在一些迫切需要立刻展示的场景，可以使用commitNow 或者 commitNowAllowingStateLoss</p>
+<p>Keep Moving Forward</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/09/ViewPager2%E7%9F%A5%E8%AF%86%E7%82%B9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -473,7 +561,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -484,7 +572,7 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
