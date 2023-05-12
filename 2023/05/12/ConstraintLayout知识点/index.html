@@ -20,20 +20,24 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="1.Flow 的collect的正常用法12345678910mainScope.launch &amp;#123;    flow.collect &amp;#123;        &#x2F;&#x2F;do something    &amp;#125;&amp;#125;mainScope.launch &amp;#123;    flow2.collect &amp;#123;        &#x2F;&#x2F;do something    &amp;#125;&amp;#125;">
+  <meta name="description" content="万字长文 - 史上最全ConstraintLayout 1.一次Recyclerview的item曝光需求产生的BUG对ConstraintLayout的分析曝光逻辑是在ViewHolder的onViewAttachedToWindow进行上报， 最后却发现Recyclerview第一次刷新数据时 发现不在屏幕上的viewholder也调用了onViewAttachedToWindow方法，导致多">
 <meta property="og:type" content="article">
-<meta property="og:title" content="协程知识点">
-<meta property="og:url" content="http://example.com/2023/05/11/%E5%8D%8F%E7%A8%8B%E7%9F%A5%E8%AF%86%E7%82%B9/index.html">
+<meta property="og:title" content="ConstraintLayout知识点">
+<meta property="og:url" content="http://example.com/2023/05/12/ConstraintLayout%E7%9F%A5%E8%AF%86%E7%82%B9/index.html">
 <meta property="og:site_name" content="懒鼠睡的Android">
-<meta property="og:description" content="1.Flow 的collect的正常用法12345678910mainScope.launch &amp;#123;    flow.collect &amp;#123;        &#x2F;&#x2F;do something    &amp;#125;&amp;#125;mainScope.launch &amp;#123;    flow2.collect &amp;#123;        &#x2F;&#x2F;do something    &amp;#125;&amp;#125;">
+<meta property="og:description" content="万字长文 - 史上最全ConstraintLayout 1.一次Recyclerview的item曝光需求产生的BUG对ConstraintLayout的分析曝光逻辑是在ViewHolder的onViewAttachedToWindow进行上报， 最后却发现Recyclerview第一次刷新数据时 发现不在屏幕上的viewholder也调用了onViewAttachedToWindow方法，导致多">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-05-11T13:10:45.933Z">
-<meta property="article:modified_time" content="2023-05-11T13:22:55.239Z">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/05/12/6dcd17d349803a7b.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/05/12/63478300924c3186.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/05/12/38f2bd35454f0c3a.jpg">
+<meta property="article:published_time" content="2023-05-12T05:13:14.232Z">
+<meta property="article:modified_time" content="2023-05-12T05:55:00.355Z">
 <meta property="article:author" content="懒鼠睡zzz">
-<meta property="article:tag" content="协程">
+<meta property="article:tag" content="ConstraintLayout">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s3.bmp.ovh/imgs/2023/05/12/6dcd17d349803a7b.jpg">
 
-<link rel="canonical" href="http://example.com/2023/05/11/%E5%8D%8F%E7%A8%8B%E7%9F%A5%E8%AF%86%E7%82%B9/">
+<link rel="canonical" href="http://example.com/2023/05/12/ConstraintLayout%E7%9F%A5%E8%AF%86%E7%82%B9/">
 
 
 <script id="page-configurations">
@@ -46,7 +50,7 @@
   };
 </script>
 
-  <title>协程知识点 | 懒鼠睡的Android</title>
+  <title>ConstraintLayout知识点 | 懒鼠睡的Android</title>
   
 
 
@@ -156,7 +160,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/11/%E5%8D%8F%E7%A8%8B%E7%9F%A5%E8%AF%86%E7%82%B9/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/12/ConstraintLayout%E7%9F%A5%E8%AF%86%E7%82%B9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -169,7 +173,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          协程知识点
+          ConstraintLayout知识点
         </h1>
 
         <div class="post-meta">
@@ -180,7 +184,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-05-11 21:10:45 / 修改时间：21:22:55" itemprop="dateCreated datePublished" datetime="2023-05-11T21:10:45+08:00">2023-05-11</time>
+              <time title="创建时间：2023-05-12 13:13:14 / 修改时间：13:55:00" itemprop="dateCreated datePublished" datetime="2023-05-12T13:13:14+08:00">2023-05-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -188,7 +192,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
+                  <a href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" itemprop="url" rel="index"><span itemprop="name">疑难杂症</span></a>
                 </span>
             </span>
 
@@ -203,15 +207,35 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="1-Flow-的collect的正常用法"><a href="#1-Flow-的collect的正常用法" class="headerlink" title="1.Flow 的collect的正常用法"></a>1.Flow 的collect的正常用法</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mainScope.launch &#123;</span><br><span class="line">    flow.collect &#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">mainScope.launch &#123;</span><br><span class="line">    flow2.collect &#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6949186887609221133">万字长文 - 史上最全ConstraintLayout</a></p>
+<h2 id="1-一次Recyclerview的item曝光需求产生的BUG对ConstraintLayout的分析"><a href="#1-一次Recyclerview的item曝光需求产生的BUG对ConstraintLayout的分析" class="headerlink" title="1.一次Recyclerview的item曝光需求产生的BUG对ConstraintLayout的分析"></a>1.一次Recyclerview的item曝光需求产生的BUG对ConstraintLayout的分析</h2><p>曝光逻辑是在ViewHolder的onViewAttachedToWindow进行上报，</p>
+<p>最后却发现Recyclerview第一次刷新数据时 发现不在屏幕上的viewholder也调用了onViewAttachedToWindow方法，导致多余非法上报</p>
+<blockquote>
+<p><font color="red">测试发现是部分viewholder快速进行了onViewAttachedToWindow，然后onViewDetachedFromWindow的操作</font></p>
+</blockquote>
+<p><strong>xml布局</strong></p>
+<img src="https://s3.bmp.ovh/imgs/2023/05/12/6dcd17d349803a7b.jpg" style="zoom:80%;" />
 
-<p> flow的collect是个suspend函数，内部逻辑是个while(true)死循环，所以不能在collect之后写任何代码，因为执行不到 </p>
-<p>下面为 <strong>SharedFlowImpl</strong> 的代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">override suspend fun collect(collector: FlowCollector&lt;T&gt;): Nothing &#123;</span><br><span class="line">    val slot = allocateSlot()</span><br><span class="line">    try &#123;</span><br><span class="line">        if (collector is SubscribedFlowCollector) collector.onSubscription()</span><br><span class="line">        val collectorJob = currentCoroutineContext()[Job]</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            var newValue: Any?</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                newValue = tryTakeValue(slot) // attempt no-suspend fast path first</span><br><span class="line">                if (newValue !== NO_VALUE) break</span><br><span class="line">                awaitValue(slot) // await signal that the new value is available</span><br><span class="line">            &#125;</span><br><span class="line">            collectorJob?.ensureActive()</span><br><span class="line">            collector.emit(newValue as T)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        freeSlot(slot)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class MyRecyclerView @JvmOverloads constructor(</span><br><span class="line">    context: Context,</span><br><span class="line">    attrs: AttributeSet? = null,</span><br><span class="line">    defStyle: Int = 0</span><br><span class="line">) : RecyclerView(context, attrs, defStyle) &#123;</span><br><span class="line"></span><br><span class="line">    override fun onMeasure(widthSpec: Int, heightSpec: Int) &#123;</span><br><span class="line">        super.onMeasure(widthSpec, heightSpec)</span><br><span class="line">        Log.i(&quot;MyRecyclerView&quot;, &quot;$&#123;MeasureSpec.getSize(heightSpec)&#125;&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p><font color='red'>如果需要collect一个flow，需要单独起一个协程，该协程内只能collect一个flow，不能在collect函数后面加任何代码</font></p>
+<p>上面的布局看起来很正常，大多数场景下都可能用到这样子的布局，但就是这样子的布局导致的Log日志是</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2023</span>-<span class="number">05</span>-<span class="number">12</span> <span class="number">13</span>:<span class="number">30</span>:<span class="number">44.381</span>  <span class="number">5692</span>-<span class="number">5692</span>  MyRecyclerView          com.example.testcode                 I  <span class="number">2151</span></span><br><span class="line"><span class="number">2023</span>-<span class="number">05</span>-<span class="number">12</span> <span class="number">13</span>:<span class="number">30</span>:<span class="number">44.383</span>  <span class="number">5692</span>-<span class="number">5692</span>  MyRecyclerView          com.example.testcode                 I  <span class="number">776</span></span><br><span class="line"><span class="number">2023</span>-<span class="number">05</span>-<span class="number">12</span> <span class="number">13</span>:<span class="number">30</span>:<span class="number">44.397</span>  <span class="number">5692</span>-<span class="number">5692</span>  MyRecyclerView          com.example.testcode                 I  <span class="number">2151</span></span><br><span class="line"><span class="number">2023</span>-<span class="number">05</span>-<span class="number">12</span> <span class="number">13</span>:<span class="number">30</span>:<span class="number">44.399</span>  <span class="number">5692</span>-<span class="number">5692</span>  MyRecyclerView          com.example.testcode                 I  <span class="number">776</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>进入Activity，页面会被绘制两次，ConstraintLayout也会绘制两次，所以形成了四次输出，我们只需要看第一和第二次输出</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_26287435/article/details/123274342">进入Activity时，为何页面布局内View#onMeasure会被调用两次</a></p>
+<p>第一输出的是MyRecyclerView父布局的高度，这个是因为ConstraintLayout的子view相互影响布局，第一次无法确定高度导致的</p>
+<p>第二次输出才是MyRecyclerView自身的高度</p>
+<p><strong>知识前提：viewholder的onViewAttachedToWindow是在addView时被调用，addView是在Recyclerview的onMeasuer时被调用</strong></p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/05/12/63478300924c3186.jpg"></p>
+<p><strong>所以正是因为第一次传入的错误高度，导致RecyclerView add了多余的View，又在第二次正确高度的影响下，detach掉 导致的问题</strong></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>1.不用ConstraintLayout，使用LinearLayout，让RecyclerView从始至终都拿到正确的布局高度</p>
+<p>2.破坏链式约束</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/05/12/38f2bd35454f0c3a.jpg"></p>
+<p>ConstraintLayout内部不要形成链式的约束，这样子ConstraintLayout第一次就能知道RecyclerView需要的高度是多少</p>
 <p>Keep Moving Forward</p>
 
     </div>
@@ -222,7 +246,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag"># 协程</a>
+              <a href="/tags/ConstraintLayout/" rel="tag"># ConstraintLayout</a>
           </div>
 
         
@@ -231,13 +255,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/05/11/Comparator%E7%9F%A5%E8%AF%86%E7%82%B9/" rel="prev" title="Comparator知识点">
-      <i class="fa fa-chevron-left"></i> Comparator知识点
+    <a href="/2023/05/11/%E5%8D%8F%E7%A8%8B%E7%9F%A5%E8%AF%86%E7%82%B9/" rel="prev" title="协程知识点">
+      <i class="fa fa-chevron-left"></i> 协程知识点
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/05/12/ConstraintLayout%E7%9F%A5%E8%AF%86%E7%82%B9/" rel="next" title="ConstraintLayout知识点">
-      ConstraintLayout知识点 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -296,7 +317,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Flow-%E7%9A%84collect%E7%9A%84%E6%AD%A3%E5%B8%B8%E7%94%A8%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">1.Flow 的collect的正常用法</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%80%E6%AC%A1Recyclerview%E7%9A%84item%E6%9B%9D%E5%85%89%E9%9C%80%E6%B1%82%E4%BA%A7%E7%94%9F%E7%9A%84BUG%E5%AF%B9ConstraintLayout%E7%9A%84%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">1.一次Recyclerview的item曝光需求产生的BUG对ConstraintLayout的分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
