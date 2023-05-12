@@ -12,6 +12,10 @@ tags:
 
 
 
+基于RecyclerView 1.2.1 版本分析
+
+
+
 ## 1.一次Recyclerview的item曝光需求产生的BUG对ConstraintLayout的分析
 
 曝光逻辑是在ViewHolder的onViewAttachedToWindow进行上报，
@@ -37,9 +41,17 @@ class MyRecyclerView @JvmOverloads constructor(
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         super.onMeasure(widthSpec, heightSpec)
-        Log.i("MyRecyclerView", "${MeasureSpec.getSize(heightSpec)}")
+        Log.i("MyRecyclerView", "${MeasureSpec.getMode(heightSpec)} ,${MeasureSpec.getSize(heightSpec)}")
     }
 }
+```
+
+
+
+```
+MeasureSpec.EXACTLY   1073741824
+MeasureSpec.AT_MOST   -2147483648
+MeasureSpec.UNSPECIFIED  0
 ```
 
 
@@ -47,10 +59,10 @@ class MyRecyclerView @JvmOverloads constructor(
 上面的布局看起来很正常，大多数场景下都可能用到这样子的布局，但就是这样子的布局导致的Log日志是
 
 ```kotlin
-2023-05-12 13:30:44.381  5692-5692  MyRecyclerView          com.example.testcode                 I  2151
-2023-05-12 13:30:44.383  5692-5692  MyRecyclerView          com.example.testcode                 I  776
-2023-05-12 13:30:44.397  5692-5692  MyRecyclerView          com.example.testcode                 I  2151
-2023-05-12 13:30:44.399  5692-5692  MyRecyclerView          com.example.testcode                 I  776
+2023-05-12 17:30:21.830  3206-3206  MyRecyclerView          com.example.testcode                 I  -2147483648 ,2151
+2023-05-12 17:30:21.832  3206-3206  MyRecyclerView          com.example.testcode                 I  1073741824 ,776
+2023-05-12 17:30:21.847  3206-3206  MyRecyclerView          com.example.testcode                 I  -2147483648 ,2151
+2023-05-12 17:30:21.849  3206-3206  MyRecyclerView          com.example.testcode                 I  1073741824 ,776
 ```
 
 
@@ -65,13 +77,90 @@ class MyRecyclerView @JvmOverloads constructor(
 
 
 
-**知识前提：viewholder的onViewAttachedToWindow是在addView时被调用，addView是在Recyclerview的onMeasuer时被调用**
+RecyclerView的onMeasure方法
+
+```kotlin
+protected void onMeasure(int widthSpec, int heightSpec) {
+    if (this.mLayout == null) { //没有layoutmanager
+        this.defaultOnMeasure(widthSpec, heightSpec);
+    } else {
+        if (!this.mLayout.isAutoMeasureEnabled()) {  //自动测量，系统的layoutmanager都是开启的，所以一般不进入该分支
+            if (this.mHasFixedSize) {
+                this.mLayout.onMeasure(this.mRecycler, this.mState, widthSpec, heightSpec);
+                return;
+            }
+
+            if (this.mAdapterUpdateDuringMeasure) {
+                this.startInterceptRequestLayout();
+                this.onEnterLayoutOrScroll();
+                this.processAdapterUpdatesAndSetAnimationFlags();
+                this.onExitLayoutOrScroll();
+                if (this.mState.mRunPredictiveAnimations) {
+                    this.mState.mInPreLayout = true;
+                } else {
+                    this.mAdapterHelper.consumeUpdatesInOnePass();
+                    this.mState.mInPreLayout = false;
+                }
+
+                this.mAdapterUpdateDuringMeasure = false;
+                this.stopInterceptRequestLayout(false);
+            } else if (this.mState.mRunPredictiveAnimations) {
+                this.setMeasuredDimension(this.getMeasuredWidth(), this.getMeasuredHeight());
+                return;
+            }
+
+            if (this.mAdapter != null) {
+                this.mState.mItemCount = this.mAdapter.getItemCount();
+            } else {
+                this.mState.mItemCount = 0;
+            }
+
+            this.startInterceptRequestLayout();
+            this.mLayout.onMeasure(this.mRecycler, this.mState, widthSpec, heightSpec);
+            this.stopInterceptRequestLayout(false);
+            this.mState.mInPreLayout = false;
+        } else {  //经常都是走这个分支
+            int widthMode = MeasureSpec.getMode(widthSpec);
+            int heightMode = MeasureSpec.getMode(heightSpec);
+            this.mLayout.onMeasure(this.mRecycler, this.mState, widthSpec, heightSpec);
+            this.mLastAutoMeasureSkippedDueToExact = widthMode == 1073741824 && heightMode == 1073741824;
+            //当宽高都是EXACTLY时，直接return
+            if (this.mLastAutoMeasureSkippedDueToExact || this.mAdapter == null) {
+                return;
+            }
+			//走到这里说明Recyclerivew是不确定宽高，这时候onMeasure方法会调用dispatchLayoutStep2，导致addView
+            if (this.mState.mLayoutStep == 1) {
+                this.dispatchLayoutStep1();
+            }
+
+            this.mLayout.setMeasureSpecs(widthSpec, heightSpec);
+            this.mState.mIsMeasuring = true;
+            this.dispatchLayoutStep2();
+            this.mLayout.setMeasuredDimensionFromChildren(widthSpec, heightSpec);
+            if (this.mLayout.shouldMeasureTwice()) {
+                this.mLayout.setMeasureSpecs(MeasureSpec.makeMeasureSpec(this.getMeasuredWidth(), 1073741824), MeasureSpec.makeMeasureSpec(this.getMeasuredHeight(), 1073741824));
+                this.mState.mIsMeasuring = true;
+                this.dispatchLayoutStep2();
+                this.mLayout.setMeasuredDimensionFromChildren(widthSpec, heightSpec);
+            }
+
+            this.mLastAutoMeasureNonExactMeasuredWidth = this.getMeasuredWidth();
+            this.mLastAutoMeasureNonExactMeasuredHeight = this.getMeasuredHeight();
+        }
+
+    }
+}
+```
+
+
+
+**当RecyclerView宽高不确定时，viewholder的onViewAttachedToWindow是在addView时被调用，addView是在Recyclerview的onMeasuer时被调用**
 
 ![](https://s3.bmp.ovh/imgs/2023/05/12/63478300924c3186.jpg)
 
 
 
-**所以正是因为第一次传入的错误高度，导致RecyclerView add了多余的View，又在第二次正确高度的影响下，detach掉 导致的问题**
+**所以正是因为第一次传入的错误高度以及Recyclerivew不确定的宽高条件下，导致RecyclerView 在measure阶段add了多余的View，又在layout阶段拿到正确高度的影响下，detach掉 导致的问题**
 
 
 
@@ -79,7 +168,9 @@ class MyRecyclerView @JvmOverloads constructor(
 
 
 
-## 解决方案
+## 解决方案（让RecyclerView的measure阶段不进行addView操作）
+
+RecyclerView的measure阶段不进行addView操作  -》》measure阶段能拿到EXACTLY的宽高
 
 1.不用ConstraintLayout，使用LinearLayout，让RecyclerView从始至终都拿到正确的布局高度
 
