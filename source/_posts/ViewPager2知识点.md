@@ -1,9 +1,10 @@
 ---
 title: ViewPager2知识点
-categories: 
-- 知识点
+categories:
+  - 知识点
 tags:
-- ViewPager2
+  - ViewPager2
+abbrlink: 5f633874
 ---
 
 

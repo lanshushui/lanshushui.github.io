@@ -1,9 +1,10 @@
 ---
 title: ConstraintLayout知识点
-categories: 
-- 疑难杂症
+categories:
+  - 疑难杂症
 tags:
-- ConstraintLayout
+  - ConstraintLayout
+abbrlink: 22258c7a
 ---
 
 

@@ -1,9 +1,10 @@
 ---
 title: Fragment知识点
-categories: 
-- 知识点
+categories:
+  - 知识点
 tags:
-- Fragment
+  - Fragment
+abbrlink: 1733ce00
 ---
 
 

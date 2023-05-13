@@ -1,9 +1,10 @@
 ---
 title: Comparator知识点
-categories: 
-- 知识点
+categories:
+  - 知识点
 tags:
-- Comparator
+  - Comparator
+abbrlink: c4311606
 ---
 
 

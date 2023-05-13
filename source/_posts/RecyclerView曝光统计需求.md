@@ -1,10 +1,11 @@
 ---
 title: RecyclerView首次加载图片展示完成时机
-categories: 
-- 疑难杂症
+categories:
+  - 疑难杂症
 tags:
-- RecyclerView
-- RecyclerView首次加载
+  - RecyclerView
+  - RecyclerView首次加载
+abbrlink: 94cfd8e0
 ---
 突然接到一个需求，要知道一个RecyclerView刚打开时，第一次加载时屏幕上所有子item的封面图片下载完成的时机
 
