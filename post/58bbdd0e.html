@@ -17,23 +17,23 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="开始 ViewPager2的实现原理是RecyclerView  offscreenPageLimit参数的原理是增加RecyclerView的绘制区域   ViewPager2内部LinearLayoutManagerImpl类 12345678910111213141516private class LinearLayoutManagerImpl extends LinearLayoutMan">
+  <meta name="description" content="1.Flow 的collect的正常用法12345678910mainScope.launch &amp;#123;    flow.collect &amp;#123;        &#x2F;&#x2F;do something    &amp;#125;&amp;#125;mainScope.launch &amp;#123;    flow2.collect &amp;#123;        &#x2F;&#x2F;do something    &amp;#125;&amp;#125;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ViewPager2知识点">
-<meta property="og:url" content="http://example.com/2023/05/09/ViewPager2%E7%9F%A5%E8%AF%86%E7%82%B9/index.html">
+<meta property="og:title" content="协程知识点">
+<meta property="og:url" content="http://example.com/post/58bbdd0e.html">
 <meta property="og:site_name" content="懒鼠睡的Android">
-<meta property="og:description" content="开始 ViewPager2的实现原理是RecyclerView  offscreenPageLimit参数的原理是增加RecyclerView的绘制区域   ViewPager2内部LinearLayoutManagerImpl类 12345678910111213141516private class LinearLayoutManagerImpl extends LinearLayoutMan">
+<meta property="og:description" content="1.Flow 的collect的正常用法12345678910mainScope.launch &amp;#123;    flow.collect &amp;#123;        &#x2F;&#x2F;do something    &amp;#125;&amp;#125;mainScope.launch &amp;#123;    flow2.collect &amp;#123;        &#x2F;&#x2F;do something    &amp;#125;&amp;#125;">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-05-09T11:44:14.387Z">
-<meta property="article:modified_time" content="2023-05-09T11:53:23.760Z">
+<meta property="article:published_time" content="2023-05-11T13:10:45.933Z">
+<meta property="article:modified_time" content="2023-05-15T02:02:48.624Z">
 <meta property="article:author" content="懒鼠睡zzz">
-<meta property="article:tag" content="ViewPager2">
+<meta property="article:tag" content="协程">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2023/05/09/ViewPager2%E7%9F%A5%E8%AF%86%E7%82%B9/">
+<link rel="canonical" href="http://example.com/post/58bbdd0e.html">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>ViewPager2知识点 | 懒鼠睡的Android</title>
+  <title>协程知识点 | 懒鼠睡的Android</title>
   
 
 
@@ -104,6 +104,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -128,11 +129,38 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -156,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/09/ViewPager2%E7%9F%A5%E8%AF%86%E7%82%B9/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/58bbdd0e.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -169,7 +197,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          ViewPager2知识点
+          协程知识点
         </h1>
 
         <div class="post-meta">
@@ -178,10 +206,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-09 19:44:14 / 修改时间：19:53:23" itemprop="dateCreated datePublished" datetime="2023-05-09T19:44:14+08:00">2023-05-09</time>
+              <time title="创建时间：2023-05-11 21:10:45" itemprop="dateCreated datePublished" datetime="2023-05-11T21:10:45+08:00">2023-05-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-15 10:02:48" itemprop="dateModified" datetime="2023-05-15T10:02:48+08:00">2023-05-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -203,12 +237,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><ol>
-<li><p>ViewPager2的实现原理是RecyclerView</p>
-</li>
-<li><p>offscreenPageLimit参数的原理是增加RecyclerView的绘制区域   <strong>ViewPager2内部LinearLayoutManagerImpl类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">LinearLayoutManagerImpl</span> <span class="keyword">extends</span> <span class="title class_">LinearLayoutManager</span> &#123;</span><br><span class="line">    LinearLayoutManagerImpl(Context context) &#123;</span><br><span class="line">        <span class="built_in">super</span>(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">calculateExtraLayoutSpace</span><span class="params">(<span class="meta">@NonNull</span> RecyclerView.State state, <span class="meta">@NonNull</span> <span class="type">int</span>[] extraLayoutSpace)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">pageLimit</span> <span class="operator">=</span> ViewPager2.<span class="built_in">this</span>.getOffscreenPageLimit();</span><br><span class="line">        <span class="keyword">if</span> (pageLimit == -<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="built_in">super</span>.calculateExtraLayoutSpace(state, extraLayoutSpace);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">offscreenSpace</span> <span class="operator">=</span> ViewPager2.<span class="built_in">this</span>.getPageSize() * pageLimit;</span><br><span class="line">            extraLayoutSpace[<span class="number">0</span>] = offscreenSpace;</span><br><span class="line">            extraLayoutSpace[<span class="number">1</span>] = offscreenSpace;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
+        <h2 id="1-Flow-的collect的正常用法"><a href="#1-Flow-的collect的正常用法" class="headerlink" title="1.Flow 的collect的正常用法"></a>1.Flow 的collect的正常用法</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mainScope.launch &#123;</span><br><span class="line">    flow.collect &#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">mainScope.launch &#123;</span><br><span class="line">    flow2.collect &#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> flow的collect是个suspend函数，内部逻辑是个while(true)死循环，所以不能在collect之后写任何代码，因为执行不到 </p>
+<p>下面为 <strong>SharedFlowImpl</strong> 的代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">override suspend fun collect(collector: FlowCollector&lt;T&gt;): Nothing &#123;</span><br><span class="line">    val slot = allocateSlot()</span><br><span class="line">    try &#123;</span><br><span class="line">        if (collector is SubscribedFlowCollector) collector.onSubscription()</span><br><span class="line">        val collectorJob = currentCoroutineContext()[Job]</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            var newValue: Any?</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                newValue = tryTakeValue(slot) // attempt no-suspend fast path first</span><br><span class="line">                if (newValue !== NO_VALUE) break</span><br><span class="line">                awaitValue(slot) // await signal that the new value is available</span><br><span class="line">            &#125;</span><br><span class="line">            collectorJob?.ensureActive()</span><br><span class="line">            collector.emit(newValue as T)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        freeSlot(slot)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><font color='red'>如果需要collect一个flow，需要单独起一个协程，该协程内只能collect一个flow，不能在collect函数后面加任何代码</font></p>
 <p>Keep Moving Forward</p>
 
     </div>
@@ -219,7 +256,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/ViewPager2/" rel="tag"># ViewPager2</a>
+              <a href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag"># 协程</a>
           </div>
 
         
@@ -228,12 +265,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/05/04/%E7%BD%91%E7%BB%9C%E5%8A%A0%E8%BD%BD%E7%82%B99%E5%9B%BE/" rel="prev" title="网络加载点9图的补充">
-      <i class="fa fa-chevron-left"></i> 网络加载点9图的补充
+    <a href="/post/c4311606.html" rel="prev" title="Comparator知识点">
+      <i class="fa fa-chevron-left"></i> Comparator知识点
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/05/09/Fragment%E7%9F%A5%E8%AF%86%E7%82%B9/" rel="next" title="Fragment知识点">
-      Fragment知识点 <i class="fa fa-chevron-right"></i>
+    <a href="/post/22258c7a.html" rel="next" title="ConstraintLayout知识点">
+      ConstraintLayout知识点 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -293,7 +330,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B"><span class="nav-number">1.</span> <span class="nav-text">开始</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Flow-%E7%9A%84collect%E7%9A%84%E6%AD%A3%E5%B8%B8%E7%94%A8%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">1.Flow 的collect的正常用法</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -307,7 +344,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -318,7 +355,7 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -388,6 +425,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

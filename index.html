@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="选择有时候比努力更重要">
@@ -101,6 +101,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -125,11 +126,38 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -152,7 +180,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/12/ConstraintLayout%E7%9F%A5%E8%AF%86%E7%82%B9/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/undefined.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -166,7 +194,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/05/12/ConstraintLayout%E7%9F%A5%E8%AF%86%E7%82%B9/" class="post-title-link" itemprop="url">ConstraintLayout知识点</a>
+            <a href="/post/undefined.html" class="post-title-link" itemprop="url">PopUpWindow知识点</a>
         </h2>
 
         <div class="post-meta">
@@ -177,8 +205,108 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-05-12 13:13:14 / 修改时间：17:36:29" itemprop="dateCreated datePublished" datetime="2023-05-12T13:13:14+08:00">2023-05-12</time>
+              <time title="创建时间：2023-05-25 17:59:19 / 修改时间：18:42:50" itemprop="dateCreated datePublished" datetime="2023-05-25T17:59:19+08:00">2023-05-25</time>
             </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="PopUpWindow基础用法"><a href="#PopUpWindow基础用法" class="headerlink" title="PopUpWindow基础用法"></a>PopUpWindow基础用法</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//继承PopupWindow</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyPopupWindow</span>(context: Context) : PopupWindow(context) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>&#123;</span><br><span class="line">        setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))</span><br><span class="line">        contentView = view</span><br><span class="line">        width = ViewGroup.LayoutParams.WRAP_CONTENT</span><br><span class="line">        height = ViewGroup.LayoutParams.WRAP_CONTENT</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        showAtLocation(parent, Gravity.CENTER, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="问题1：丢失contentView设置的宽度"><a href="#问题1：丢失contentView设置的宽度" class="headerlink" title="问题1：丢失contentView设置的宽度"></a>问题1：丢失contentView设置的宽度</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//PopupWindow</span></span><br><span class="line"><span class="keyword">private</span> void preparePopup(WindowManager.LayoutParams p) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mBackground != <span class="literal">null</span>) &#123; <span class="comment">//背景图不为空，将创建背景View</span></span><br><span class="line">        mBackgroundView = createBackgroundView(mContentView);</span><br><span class="line">        mBackgroundView.setBackground(mBackground);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">//不设置背景图时，contentView就是背景View</span></span><br><span class="line">        mBackgroundView = mContentView;</span><br><span class="line">    &#125;</span><br><span class="line">    mDecorView = createDecorView(mBackgroundView);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//将contentView加入背景ViewGroud中</span></span><br><span class="line"><span class="comment">//如果设置的contentView的高是WRAP_CONTENT，将不改变contentView的高</span></span><br><span class="line"><span class="comment">//否则将contentView的高以MATCH_PARENT加入背景ViewGroud中</span></span><br><span class="line"><span class="comment">//而宽度锁死为MATCH_PARENT</span></span><br><span class="line"><span class="keyword">private</span> PopupBackgroundView createBackgroundView(View contentView) &#123;</span><br><span class="line">    <span class="keyword">final</span> ViewGroup.LayoutParams layoutParams = mContentView.getLayoutParams();</span><br><span class="line">    <span class="keyword">final</span> int height;</span><br><span class="line">    <span class="keyword">if</span> (layoutParams != <span class="literal">null</span> &amp;&amp; layoutParams.height == WRAP_CONTENT) &#123;</span><br><span class="line">        height = WRAP_CONTENT;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        height = MATCH_PARENT;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> PopupBackgroundView backgroundView = new PopupBackgroundView(mContext);</span><br><span class="line">    <span class="keyword">final</span> PopupBackgroundView.LayoutParams listParams = new PopupBackgroundView.LayoutParams(</span><br><span class="line">        MATCH_PARENT, height);</span><br><span class="line">    backgroundView.addView(contentView, listParams);</span><br><span class="line">    <span class="keyword">return</span> backgroundView;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//将背景View加入DecorView中</span></span><br><span class="line"><span class="comment">//如果设置的contentView的高是WRAP_CONTENT，背景View的高也是WRAP_CONTENT</span></span><br><span class="line"><span class="comment">//否则将背景View的高将以MATCH_PARENT加入背景ViewGroud中</span></span><br><span class="line"><span class="comment">//而背景View宽度锁死为MATCH_PARENT</span></span><br><span class="line"><span class="keyword">private</span> PopupDecorView createDecorView(View contentView) &#123;</span><br><span class="line">    <span class="keyword">final</span> ViewGroup.LayoutParams layoutParams = mContentView.getLayoutParams();</span><br><span class="line">    <span class="keyword">final</span> int height;</span><br><span class="line">    <span class="keyword">if</span> (layoutParams != <span class="literal">null</span> &amp;&amp; layoutParams.height == WRAP_CONTENT) &#123;</span><br><span class="line">        height = WRAP_CONTENT;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        height = MATCH_PARENT;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> PopupDecorView decorView = new PopupDecorView(mContext);</span><br><span class="line">    decorView.addView(contentView, MATCH_PARENT, height);</span><br><span class="line">    decorView.setClipChildren(<span class="literal">false</span>);</span><br><span class="line">    decorView.setClipToPadding(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> decorView;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//DecorView将以设置PopupWindow的宽高加入window中 </span></span><br></pre></td></tr></table></figure>
+
+<p>总结</p>
+<p>宽度：</p>
+<ol>
+<li>背景View 宽度  MATCH_PARENT</li>
+<li>contentView宽度  MATCH_PARENT</li>
+</ol>
+<p>高度：</p>
+<p>如果 contentView高度 是  WRAP_CONTENT </p>
+<ol>
+<li>contentView高度 是  WRAP_CONTENT</li>
+<li>​     背景View高度 是  WRAP_CONTENT</li>
+</ol>
+<p>否则</p>
+<ol>
+<li>​    contentView高度 是  MATCH_PARENT</li>
+<li>​    背景View高度 是  MATCH_PARENT</li>
+</ol>
+<p><strong>由上面可以看出，contentView宽度数据被完全丢失，因此如果contentView存在具体的宽度数据，必须挪到PopupWindow的宽度属性上</strong></p>
+<h4 id="提问：当PopupWindow的宽度设置为WRAP-CONTENT-，而我们知道contentView的宽度锁死为MATCH-PARENT，那弹窗的宽度是什么呢？"><a href="#提问：当PopupWindow的宽度设置为WRAP-CONTENT-，而我们知道contentView的宽度锁死为MATCH-PARENT，那弹窗的宽度是什么呢？" class="headerlink" title="提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？"></a>提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？</h4><p>做个实验便知道：PopupWindow宽是WRAP_CONTENT -》DecorView的宽是WRAP_CONTENT </p>
+<p>FrameLayout宽是WRAP_CONTENT ，而它子View（ConstraintLayout）是MATCH_PARENT时，子View（ConstraintLayout）的宽度将是WRAP_CONTENT的形式展示。</p>
+<p>Keep Moving Forward</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/22258c7a.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="懒鼠睡zzz">
+      <meta itemprop="description" content="选择有时候比努力更重要">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="懒鼠睡的Android">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/post/22258c7a.html" class="post-title-link" itemprop="url">ConstraintLayout知识点</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-05-12 13:13:14" itemprop="dateCreated datePublished" datetime="2023-05-12T13:13:14+08:00">2023-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-15 10:02:48" itemprop="dateModified" datetime="2023-05-15T10:02:48+08:00">2023-05-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -260,7 +388,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/11/%E5%8D%8F%E7%A8%8B%E7%9F%A5%E8%AF%86%E7%82%B9/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/58bbdd0e.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -274,7 +402,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/05/11/%E5%8D%8F%E7%A8%8B%E7%9F%A5%E8%AF%86%E7%82%B9/" class="post-title-link" itemprop="url">协程知识点</a>
+            <a href="/post/58bbdd0e.html" class="post-title-link" itemprop="url">协程知识点</a>
         </h2>
 
         <div class="post-meta">
@@ -283,10 +411,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-11 21:10:45 / 修改时间：21:22:55" itemprop="dateCreated datePublished" datetime="2023-05-11T21:10:45+08:00">2023-05-11</time>
+              <time title="创建时间：2023-05-11 21:10:45" itemprop="dateCreated datePublished" datetime="2023-05-11T21:10:45+08:00">2023-05-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-15 10:02:48" itemprop="dateModified" datetime="2023-05-15T10:02:48+08:00">2023-05-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -337,7 +471,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/11/Comparator%E7%9F%A5%E8%AF%86%E7%82%B9/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/c4311606.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -351,7 +485,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/05/11/Comparator%E7%9F%A5%E8%AF%86%E7%82%B9/" class="post-title-link" itemprop="url">Comparator知识点</a>
+            <a href="/post/c4311606.html" class="post-title-link" itemprop="url">Comparator知识点</a>
         </h2>
 
         <div class="post-meta">
@@ -360,10 +494,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-11 17:05:13 / 修改时间：17:15:56" itemprop="dateCreated datePublished" datetime="2023-05-11T17:05:13+08:00">2023-05-11</time>
+              <time title="创建时间：2023-05-11 17:05:13" itemprop="dateCreated datePublished" datetime="2023-05-11T17:05:13+08:00">2023-05-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-15 10:02:48" itemprop="dateModified" datetime="2023-05-15T10:02:48+08:00">2023-05-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -421,7 +561,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/09/Fragment%E7%9F%A5%E8%AF%86%E7%82%B9/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/1733ce00.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -435,7 +575,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/05/09/Fragment%E7%9F%A5%E8%AF%86%E7%82%B9/" class="post-title-link" itemprop="url">Fragment知识点</a>
+            <a href="/post/1733ce00.html" class="post-title-link" itemprop="url">Fragment知识点</a>
         </h2>
 
         <div class="post-meta">
@@ -444,10 +584,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-09 21:35:36 / 修改时间：22:03:59" itemprop="dateCreated datePublished" datetime="2023-05-09T21:35:36+08:00">2023-05-09</time>
+              <time title="创建时间：2023-05-09 21:35:36" itemprop="dateCreated datePublished" datetime="2023-05-09T21:35:36+08:00">2023-05-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-15 10:02:48" itemprop="dateModified" datetime="2023-05-15T10:02:48+08:00">2023-05-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -509,7 +655,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/09/ViewPager2%E7%9F%A5%E8%AF%86%E7%82%B9/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/5f633874.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -523,7 +669,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/05/09/ViewPager2%E7%9F%A5%E8%AF%86%E7%82%B9/" class="post-title-link" itemprop="url">ViewPager2知识点</a>
+            <a href="/post/5f633874.html" class="post-title-link" itemprop="url">ViewPager2知识点</a>
         </h2>
 
         <div class="post-meta">
@@ -532,10 +678,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-09 19:44:14 / 修改时间：19:53:23" itemprop="dateCreated datePublished" datetime="2023-05-09T19:44:14+08:00">2023-05-09</time>
+              <time title="创建时间：2023-05-09 19:44:14" itemprop="dateCreated datePublished" datetime="2023-05-09T19:44:14+08:00">2023-05-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-15 10:02:48" itemprop="dateModified" datetime="2023-05-15T10:02:48+08:00">2023-05-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -583,7 +735,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/04/%E7%BD%91%E7%BB%9C%E5%8A%A0%E8%BD%BD%E7%82%B99%E5%9B%BE/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/eb603a17.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -597,7 +749,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/05/04/%E7%BD%91%E7%BB%9C%E5%8A%A0%E8%BD%BD%E7%82%B99%E5%9B%BE/" class="post-title-link" itemprop="url">网络加载点9图的补充</a>
+            <a href="/post/eb603a17.html" class="post-title-link" itemprop="url">网络加载点9图的补充</a>
         </h2>
 
         <div class="post-meta">
@@ -614,7 +766,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-05-08 18:09:39" itemprop="dateModified" datetime="2023-05-08T18:09:39+08:00">2023-05-08</time>
+                <time title="修改时间：2023-05-15 10:02:48" itemprop="dateModified" datetime="2023-05-15T10:02:48+08:00">2023-05-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -689,7 +841,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/28/RecyclerView%E6%9B%9D%E5%85%89%E7%BB%9F%E8%AE%A1%E9%9C%80%E6%B1%82/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/94cfd8e0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -703,7 +855,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/04/28/RecyclerView%E6%9B%9D%E5%85%89%E7%BB%9F%E8%AE%A1%E9%9C%80%E6%B1%82/" class="post-title-link" itemprop="url">RecyclerView首次加载图片展示完成时机</a>
+            <a href="/post/94cfd8e0.html" class="post-title-link" itemprop="url">RecyclerView首次加载图片展示完成时机</a>
         </h2>
 
         <div class="post-meta">
@@ -712,10 +864,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-04-28 12:26:09 / 修改时间：12:50:41" itemprop="dateCreated datePublished" datetime="2023-04-28T12:26:09+08:00">2023-04-28</time>
+              <time title="创建时间：2023-04-28 12:26:09" itemprop="dateCreated datePublished" datetime="2023-04-28T12:26:09+08:00">2023-04-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-15 10:02:48" itemprop="dateModified" datetime="2023-05-15T10:02:48+08:00">2023-05-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -830,7 +988,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -841,7 +999,7 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -911,6 +1069,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 
