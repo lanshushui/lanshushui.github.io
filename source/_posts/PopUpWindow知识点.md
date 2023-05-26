@@ -122,7 +122,14 @@ FrameLayout宽是WRAP_CONTENT ，而它子View（ConstraintLayout）是MATCH_PAR
 
 
 
+## PopupWindow如何全屏
 
+```kotlin
+setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+isClippingEnabled = false
+width = ViewGroup.LayoutParams.MATCH_PARENT
+height = ViewGroup.LayoutParams.MATCH_PARENT
+```
 
 
 
