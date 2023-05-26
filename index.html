@@ -203,10 +203,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-25 17:59:19 / 修改时间：18:42:50" itemprop="dateCreated datePublished" datetime="2023-05-25T17:59:19+08:00">2023-05-25</time>
+              <time title="创建时间：2023-05-25 17:59:19" itemprop="dateCreated datePublished" datetime="2023-05-25T17:59:19+08:00">2023-05-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-26 14:14:54" itemprop="dateModified" datetime="2023-05-26T14:14:54+08:00">2023-05-26</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -254,6 +260,10 @@
 <p><strong>由上面可以看出，contentView宽度数据被完全丢失，因此如果contentView存在具体的宽度数据，必须挪到PopupWindow的宽度属性上</strong></p>
 <h4 id="提问：当PopupWindow的宽度设置为WRAP-CONTENT-，而我们知道contentView的宽度锁死为MATCH-PARENT，那弹窗的宽度是什么呢？"><a href="#提问：当PopupWindow的宽度设置为WRAP-CONTENT-，而我们知道contentView的宽度锁死为MATCH-PARENT，那弹窗的宽度是什么呢？" class="headerlink" title="提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？"></a>提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？</h4><p>做个实验便知道：PopupWindow宽是WRAP_CONTENT -》DecorView的宽是WRAP_CONTENT </p>
 <p>FrameLayout宽是WRAP_CONTENT ，而它子View（ConstraintLayout）是MATCH_PARENT时，子View（ConstraintLayout）的宽度将是WRAP_CONTENT的形式展示。</p>
+<h2 id="PopupWindow如何全屏"><a href="#PopupWindow如何全屏" class="headerlink" title="PopupWindow如何全屏"></a>PopupWindow如何全屏</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))</span><br><span class="line">isClippingEnabled = <span class="literal">false</span></span><br><span class="line">width = ViewGroup.LayoutParams.MATCH_PARENT</span><br><span class="line">height = ViewGroup.LayoutParams.MATCH_PARENT</span><br></pre></td></tr></table></figure>
+
+
+
 <p>Keep Moving Forward</p>
 
       

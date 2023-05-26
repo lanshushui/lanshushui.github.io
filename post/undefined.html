@@ -28,7 +28,7 @@
 <meta property="og:description" content="PopUpWindow基础用法1234567891011121314&#x2F;&#x2F;继承PopupWindowclass MyPopupWindow(context: Context) : PopupWindow(context) &amp;#123;        init&amp;#123;        setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-05-25T09:59:19.875Z">
-<meta property="article:modified_time" content="2023-05-25T10:42:50.306Z">
+<meta property="article:modified_time" content="2023-05-26T06:14:54.942Z">
 <meta property="article:author" content="懒鼠睡zzz">
 <meta property="article:tag" content="PopUpWindow">
 <meta name="twitter:card" content="summary">
@@ -206,10 +206,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-25 17:59:19 / 修改时间：18:42:50" itemprop="dateCreated datePublished" datetime="2023-05-25T17:59:19+08:00">2023-05-25</time>
+              <time title="创建时间：2023-05-25 17:59:19" itemprop="dateCreated datePublished" datetime="2023-05-25T17:59:19+08:00">2023-05-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-26 14:14:54" itemprop="dateModified" datetime="2023-05-26T14:14:54+08:00">2023-05-26</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -257,6 +263,10 @@
 <p><strong>由上面可以看出，contentView宽度数据被完全丢失，因此如果contentView存在具体的宽度数据，必须挪到PopupWindow的宽度属性上</strong></p>
 <h4 id="提问：当PopupWindow的宽度设置为WRAP-CONTENT-，而我们知道contentView的宽度锁死为MATCH-PARENT，那弹窗的宽度是什么呢？"><a href="#提问：当PopupWindow的宽度设置为WRAP-CONTENT-，而我们知道contentView的宽度锁死为MATCH-PARENT，那弹窗的宽度是什么呢？" class="headerlink" title="提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？"></a>提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？</h4><p>做个实验便知道：PopupWindow宽是WRAP_CONTENT -》DecorView的宽是WRAP_CONTENT </p>
 <p>FrameLayout宽是WRAP_CONTENT ，而它子View（ConstraintLayout）是MATCH_PARENT时，子View（ConstraintLayout）的宽度将是WRAP_CONTENT的形式展示。</p>
+<h2 id="PopupWindow如何全屏"><a href="#PopupWindow如何全屏" class="headerlink" title="PopupWindow如何全屏"></a>PopupWindow如何全屏</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))</span><br><span class="line">isClippingEnabled = <span class="literal">false</span></span><br><span class="line">width = ViewGroup.LayoutParams.MATCH_PARENT</span><br><span class="line">height = ViewGroup.LayoutParams.MATCH_PARENT</span><br></pre></td></tr></table></figure>
+
+
+
 <p>Keep Moving Forward</p>
 
     </div>
@@ -338,7 +348,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PopUpWindow%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">PopUpWindow基础用法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%981%EF%BC%9A%E4%B8%A2%E5%A4%B1contentView%E8%AE%BE%E7%BD%AE%E7%9A%84%E5%AE%BD%E5%BA%A6"><span class="nav-number">1.0.1.</span> <span class="nav-text">问题1：丢失contentView设置的宽度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%90%E9%97%AE%EF%BC%9A%E5%BD%93PopupWindow%E7%9A%84%E5%AE%BD%E5%BA%A6%E8%AE%BE%E7%BD%AE%E4%B8%BAWRAP-CONTENT-%EF%BC%8C%E8%80%8C%E6%88%91%E4%BB%AC%E7%9F%A5%E9%81%93contentView%E7%9A%84%E5%AE%BD%E5%BA%A6%E9%94%81%E6%AD%BB%E4%B8%BAMATCH-PARENT%EF%BC%8C%E9%82%A3%E5%BC%B9%E7%AA%97%E7%9A%84%E5%AE%BD%E5%BA%A6%E6%98%AF%E4%BB%80%E4%B9%88%E5%91%A2%EF%BC%9F"><span class="nav-number">1.0.2.</span> <span class="nav-text">提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PopUpWindow%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">PopUpWindow基础用法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%981%EF%BC%9A%E4%B8%A2%E5%A4%B1contentView%E8%AE%BE%E7%BD%AE%E7%9A%84%E5%AE%BD%E5%BA%A6"><span class="nav-number">1.0.1.</span> <span class="nav-text">问题1：丢失contentView设置的宽度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%90%E9%97%AE%EF%BC%9A%E5%BD%93PopupWindow%E7%9A%84%E5%AE%BD%E5%BA%A6%E8%AE%BE%E7%BD%AE%E4%B8%BAWRAP-CONTENT-%EF%BC%8C%E8%80%8C%E6%88%91%E4%BB%AC%E7%9F%A5%E9%81%93contentView%E7%9A%84%E5%AE%BD%E5%BA%A6%E9%94%81%E6%AD%BB%E4%B8%BAMATCH-PARENT%EF%BC%8C%E9%82%A3%E5%BC%B9%E7%AA%97%E7%9A%84%E5%AE%BD%E5%BA%A6%E6%98%AF%E4%BB%80%E4%B9%88%E5%91%A2%EF%BC%9F"><span class="nav-number">1.0.2.</span> <span class="nav-text">提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PopupWindow%E5%A6%82%E4%BD%95%E5%85%A8%E5%B1%8F"><span class="nav-number">2.</span> <span class="nav-text">PopupWindow如何全屏</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
