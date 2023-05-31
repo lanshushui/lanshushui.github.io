@@ -127,7 +127,8 @@ FrameLayout宽是WRAP_CONTENT ，而它子View（ConstraintLayout）是MATCH_PAR
 
 ```kotlin
 setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-isClippingEnabled = false
+isFocusable = true //为了支持返回键响应
+isClippingEnabled = false //为了覆盖到状态栏
 width = ViewGroup.LayoutParams.MATCH_PARENT
 height = ViewGroup.LayoutParams.MATCH_PARENT
 ```
