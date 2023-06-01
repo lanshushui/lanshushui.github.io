@@ -114,7 +114,7 @@
   </entry>
   <entry>
     <title>LinkMovementMethod知识点</title>
-    <url>/post/p8hxlm47.html</url>
+    <url>/post/p8hxlm4c.html</url>
     <content><![CDATA[<h6 id="LinkMovementMethod问题点："><a href="#LinkMovementMethod问题点：" class="headerlink" title="LinkMovementMethod问题点："></a>LinkMovementMethod问题点：</h6><p>当clickSpan连着imageSpan时，点击imageSpan很容易就触发到clickspan的点击逻辑</p>
 <p>特别是文本发生换行时，clickSpan连着imageSpan，此时imagespan处于行尾时，很容易触发该问题</p>
 <p><a href="https://www.jianshu.com/p/b87dddf02e04">ImageSpan点击事件位置偏移问题</a></p>
