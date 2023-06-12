@@ -106,7 +106,7 @@ Runnable mExecCommit = new Runnable() {
 
 ## 3.Fragment onResume调用时，view的WindowToken是空的吗？
 
- *答案：不一定，如果的，那么token就是空的；如果是activity的window已经在屏幕上时，再创建显示一个fragment，此时token就不是空的*
+ *答案：不一定，如果activity的window没在屏幕上时，那么token就是空的；如果是activity的window已经在屏幕上时，再创建显示一个fragment，此时token就不是空的*
 
 
 
@@ -161,7 +161,7 @@ android.view.WindowManager$BadTokenException: Unable to add window -- token null
 
 
 
-## 探究fragment和activity同时创建场景下，fragment的生命周期
+## 探究activity onCreate方法中 commit fragment 场景下，fragment的生命周期
 
 ```java
 //FragmentActivity类
@@ -215,7 +215,9 @@ void moveToExpectedState() {
 }
 ```
 
-可以看到fragment除了onResume方法外，所有创建的生命周期都在Activity的onStart()中被调用
+可以看到除了fragment的onResume方法外，所有创建的生命周期都在Activity的onStart()中被调用。
+
+其实Activity的onCreate方法也会调用this.dispatchStateChange(1)，但我们的场景onCreate被调用时才进行commit，导致此时还没有任何的fragment。所有都生命周期堆积在Activity的onStart()中被调用
 
 
 
