@@ -77,7 +77,6 @@ setFlags( WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutP
 
 ```kotlin
 class MyToast : DialogFragment() {
-    private val mainScope by lazy { CoroutineScope(Dispatchers.Main + SupervisorJob()) }
     companion object {
         private const val TAG = "MyToast"
         fun show(value: Any) {
@@ -132,7 +131,7 @@ class MyToast : DialogFragment() {
     fun show() {
         //处理逻辑
         //启动定时器调用dismissWithAlpha
-        mainScope.launch { 
+        lifecycleScope.launch { 
             delay(3000)
             dismissWithAlpha()
         }
@@ -142,9 +141,17 @@ class MyToast : DialogFragment() {
         val animator = ObjectAnimator.ofFloat(view, "alpha", 1.0f, 0f)
         animator.duration = 320
         animator.doOnEnd {
-            dismiss()
+           if (fragmentManager != null) { 
+               //加个null判断 因为有个定时器逻辑，最容易发生 Fragment not associated with a fragment manager.
+                dismissAllowingStateLoss()
+            }
         }
         animator.start()
+    }
+    
+     override fun onDestroy() {
+        super.onDestroy()
+        animator?.cancel()
     }
 }
 ```
