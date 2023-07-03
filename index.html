@@ -180,6 +180,94 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/a442dbbf.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="懒鼠睡zzz">
+      <meta itemprop="description" content="选择有时候比努力更重要">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="懒鼠睡的Android">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/post/a442dbbf.html" class="post-title-link" itemprop="url">协程Cancel知识点</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-07-03 10:48:53 / 修改时间：11:30:39" itemprop="dateCreated datePublished" datetime="2023-07-03T10:48:53+08:00">2023-07-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>参考文档：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7158008928930906148#heading-0">Kotlin 协程的取消机制超详细解读</a></p>
+<p><em>协程被cancel后，只有在【运行前】或者【跑到挂起点】才会退出</em></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> job= CoroutineScope(Dispatchers.Default + SupervisorJob()).launch &#123;</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>, <span class="string">&quot;开始&quot;</span>)</span><br><span class="line">    Thread.sleep(<span class="number">5000</span>)</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>,<span class="string">&quot;协程是否被cancel <span class="subst">$&#123;!isActive&#125;</span>&quot;</span>)</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>,<span class="string">&quot;协程还在跑&quot;</span>)</span><br><span class="line">    delay(<span class="number">1000</span>)</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>,<span class="string">&quot;协程跑完了&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">viewModelScope.launch &#123;</span><br><span class="line">    delay(<span class="number">1000</span>)</span><br><span class="line">    job.cancel()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对应的日志内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2023-07-03 10:45:21.397 12710-12776 协程测试                    com.sodo.live                        I  协程是否被cancel true</span><br><span class="line">2023-07-03 10:45:21.398 12710-12776 协程测试                    com.sodo.live                        I  协程还在跑</span><br></pre></td></tr></table></figure>
+
+
+
+<p>代码的目的是在协程运行在Thread.sleep(5000)时，cancel掉协程</p>
+<p>看日志可以看出，协程虽然被cancel了，但还在跑，直到运行到挂起点，才退出协程</p>
+<p>看参考文档可以知道，此时运行到delay代码时，抛出了CancellationException异常，导致协程结束</p>
+<p>协程的调度线程和cancel代码执行线程是同一个时，一般不用太关注这一点，因为符合时序，调用cancel时，协程一定处于被调度前或者运行在挂起点。</p>
+<p>但不在同一线程时，可能会出现协程运行在某一行时，调用cancel的场景，但协程此时并不会停止执行，会继续运行到挂起点，这可能就会出现问题</p>
+<p>例如资源找不到，View找不到</p>
+<p>错误代码样例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Activity</span>  &#123;</span><br><span class="line">    <span class="keyword">var</span> job:Job?=<span class="literal">null</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        job= CoroutineScope(Dispatchers.Default + SupervisorJob()).launch &#123;</span><br><span class="line">            <span class="keyword">val</span> subView =view.findViewById(R.id.test)</span><br><span class="line">            delay(<span class="number">1000</span>)</span><br><span class="line">            subView.gone()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDestroy</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy()</span><br><span class="line">        job?.cancel()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>概率不大，但也有可能出现崩溃。findViewById过程中，Activity被Destroy了，找不到View出现崩溃</p>
+<p>虽然onDestroy方法中协程被cancel了，但协程还是会继续执行delay之前的代码</p>
+<p>Keep Moving Forward</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/post/1c5b60a8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -947,119 +1035,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/post/1733ce00.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="懒鼠睡zzz">
-      <meta itemprop="description" content="选择有时候比努力更重要">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="懒鼠睡的Android">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/post/1733ce00.html" class="post-title-link" itemprop="url">Fragment知识点</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-05-09 21:35:36" itemprop="dateCreated datePublished" datetime="2023-05-09T21:35:36+08:00">2023-05-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-06-12 17:28:12" itemprop="dateModified" datetime="2023-06-12T17:28:12+08:00">2023-06-12</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="1-关键节点"><a href="#1-关键节点" class="headerlink" title="1.关键节点"></a>1.关键节点</h2><p>Fragment调用生命周期最近的方法</p>
-<p>androidx.fragment.app.FragmentStateManager#moveToExpectedState</p>
-<h2 id="2-Commit与CommitNow的区别"><a href="#2-Commit与CommitNow的区别" class="headerlink" title="2.Commit与CommitNow的区别"></a>2.Commit与CommitNow的区别</h2><ol>
-<li><p>commit() &gt;&gt; enqueueAction() &gt;&gt; scheduleCommit() &gt;&gt; execPendingActions()</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">scheduleCommit</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">postponeReady</span> <span class="operator">=</span></span><br><span class="line">            mPostponedTransactions != <span class="literal">null</span> &amp;&amp; !mPostponedTransactions.isEmpty();</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">pendingReady</span> <span class="operator">=</span> mPendingActions != <span class="literal">null</span> &amp;&amp; mPendingActions.size() == <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (postponeReady || pendingReady) &#123;</span><br><span class="line">            mHost.getHandler().removeCallbacks(mExecCommit);</span><br><span class="line">            mHost.getHandler().post(mExecCommit);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>​       </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Runnable</span> <span class="variable">mExecCommit</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        execPendingActions();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以看到commit方法利用Handler机制， 是异步的，所以不清楚fragment什么时候被添加上，不清楚生命周期什么时候被调用</p>
-<p>2.commitNow() &gt;&gt;  execSingleAction() &gt;&gt;  removeRedundantOperationsAndExecute() &gt;&gt; executeOpsTogether()</p>
-<p>删除部分代码，贴入executeOpsTogether重要部分代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>((newState = <span class="built_in">this</span>.computeExpectedState()) != <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">                 stateWasChanged = <span class="literal">true</span>;</span><br><span class="line">                 <span class="type">int</span> nextStep;</span><br><span class="line">                 <span class="keyword">if</span> (newState &gt; <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">                     nextStep = <span class="built_in">this</span>.mFragment.mState + <span class="number">1</span>;</span><br><span class="line">                     <span class="keyword">switch</span> (nextStep) &#123;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                             <span class="built_in">this</span>.attach();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                             <span class="built_in">this</span>.create();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                             <span class="built_in">this</span>.ensureInflatedView();</span><br><span class="line">                             <span class="built_in">this</span>.createView();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                             <span class="built_in">this</span>.activityCreated();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                             <span class="built_in">this</span>.mFragment.mState = <span class="number">4</span>;</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">                             <span class="built_in">this</span>.start();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                             <span class="built_in">this</span>.mFragment.mState = <span class="number">6</span>;</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">                             <span class="built_in">this</span>.resume();</span><br><span class="line">                     &#125;</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以看到commitNow 是同步的，连同Fragment的各个生命周期OnCreate，OnCreateView都会在同一个Looper消息循环中被调用</p>
-<p>因此在一些迫切需要立刻展示的场景，可以使用commitNow 或者 commitNowAllowingStateLoss</p>
-<h2 id="3-Fragment-onResume调用时，view的WindowToken是空的吗？"><a href="#3-Fragment-onResume调用时，view的WindowToken是空的吗？" class="headerlink" title="3.Fragment onResume调用时，view的WindowToken是空的吗？"></a>3.Fragment onResume调用时，view的WindowToken是空的吗？</h2><p> <em>答案：不一定，如果activity的window没在屏幕上时，那么token就是空的；如果是activity的window已经在屏幕上时，再创建显示一个fragment，此时token就不是空的</em></p>
-<h5 id="Fragment是在Activity的onCreate方法时加入场景下-Fragment的onResume方法调用路径"><a href="#Fragment是在Activity的onCreate方法时加入场景下-Fragment的onResume方法调用路径" class="headerlink" title="Fragment是在Activity的onCreate方法时加入场景下 , Fragment的onResume方法调用路径"></a>Fragment是在Activity的onCreate方法时加入场景下 , Fragment的onResume方法调用路径</h5><p><img src="https://s3.bmp.ovh/imgs/2023/06/12/3dd9a65d555145c1.jpg"></p>
-<p>可以看到 Fragment的onResume是在同一个消息循环中，跟着Activity的onResume方法调用的，</p>
-<p>我们都知道Activity的onResume方法调用，activity的view是还没有add到window上的，所以导致fragment的view有没有add到window上，没有token</p>
-<h5 id="Fragment-的view是什么时候add的？"><a href="#Fragment-的view是什么时候add的？" class="headerlink" title="Fragment 的view是什么时候add的？"></a>Fragment 的view是什么时候add的？</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//FragmentStateManager类</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">createView</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.mFragment.mContainer = container;</span><br><span class="line">    <span class="comment">//Fragment的onCreateView被调用</span></span><br><span class="line">    <span class="built_in">this</span>.mFragment.performCreateView(layoutInflater, container, <span class="built_in">this</span>.mFragment.mSavedFragmentState);</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.mFragment.mView != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="built_in">this</span>.mFragment.mView.setSaveFromParentEnabled(<span class="literal">false</span>);</span><br><span class="line">        <span class="built_in">this</span>.mFragment.mView.setTag(id.fragment_container_view_tag, <span class="built_in">this</span>.mFragment);</span><br><span class="line">        <span class="keyword">if</span> (container != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">//加入父布局</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> <span class="built_in">this</span>.mFragmentStore.findFragmentIndexInContainer(<span class="built_in">this</span>.mFragment);</span><br><span class="line">            <span class="built_in">this</span>.mFragment.mContainer.addView(<span class="built_in">this</span>.mFragment.mView, index);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//Fragment的onViewCreated被调用</span></span><br><span class="line">        <span class="built_in">this</span>.mFragment.performViewCreated();</span><br><span class="line">        <span class="built_in">this</span>.mDispatcher.dispatchOnFragmentViewCreated(<span class="built_in">this</span>.mFragment, <span class="built_in">this</span>.mFragment.mView, <span class="built_in">this</span>.mFragment.mSavedFragmentState, <span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p> 可以看到虽然Fragment 的view在createView时就add到mContainer上，但可惜mContainer还没有add到window上，所以导致一直到onResume时，也拿不到token</p>
-<p>知识场景：Fragment onResume调用时，利用fragment的view 显示一个popupwindow可能会因为拿不到token导致崩溃</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android.view.WindowManager$BadTokenException: Unable to add window -- token null is not valid; is your activity running?</span><br></pre></td></tr></table></figure>
-
-
-
-<p>解决方法：post一下再显示popupwindow</p>
-<h2 id="探究activity-onCreate方法中-commit-fragment-场景下，fragment的生命周期"><a href="#探究activity-onCreate方法中-commit-fragment-场景下，fragment的生命周期" class="headerlink" title="探究activity onCreate方法中 commit fragment 场景下，fragment的生命周期"></a>探究activity onCreate方法中 commit fragment 场景下，fragment的生命周期</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//FragmentActivity类</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onStart</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.mFragments.noteStateNotSaved();</span><br><span class="line">    <span class="built_in">super</span>.onStart();</span><br><span class="line">    <span class="built_in">this</span>.mStopped = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.mCreated) &#123;</span><br><span class="line">        <span class="built_in">this</span>.mCreated = <span class="literal">true</span>;</span><br><span class="line">        <span class="built_in">this</span>.mFragments.dispatchActivityCreated();  <span class="comment">//this.dispatchStateChange(4);</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.mFragments.execPendingActions();</span><br><span class="line">    <span class="built_in">this</span>.mFragmentLifecycleRegistry.handleLifecycleEvent(Event.ON_START);</span><br><span class="line">    <span class="built_in">this</span>.mFragments.dispatchStart(); <span class="comment">// this.dispatchStateChange(5);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//FragmentStateManager类</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">moveToExpectedState</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (newState &gt; <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">        nextStep = <span class="built_in">this</span>.mFragment.mState + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">switch</span>(nextStep) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="built_in">this</span>.attach();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                <span class="built_in">this</span>.create();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="built_in">this</span>.ensureInflatedView();</span><br><span class="line">                <span class="built_in">this</span>.createView();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                <span class="built_in">this</span>.activityCreated();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                <span class="built_in">this</span>.mFragment.mState = <span class="number">4</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">                <span class="built_in">this</span>.start();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                <span class="built_in">this</span>.mFragment.mState = <span class="number">6</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">                <span class="built_in">this</span>.resume();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到除了fragment的onResume方法外，所有创建的生命周期都在Activity的onStart()中被调用。</p>
-<p>其实Activity的onCreate方法也会调用this.dispatchStateChange(1)，但我们的场景onCreate被调用时才进行commit，导致此时还没有任何的fragment。所有都生命周期堆积在Activity的onStart()中被调用</p>
-<p>Keep Moving Forward</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1129,7 +1104,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
