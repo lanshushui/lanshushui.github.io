@@ -252,4 +252,4 @@ recyclerView?.smoothScrollToPosition(position + 1)
 
 
 
-Keep Moving Forward
+解决方案很简单，就一行代码，但知道怎么解决却花了几天时间研究RecyclerView源码   。。。。。。。。。。
