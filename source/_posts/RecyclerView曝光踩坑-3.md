@@ -35,13 +35,13 @@ abbrlink: 362a61c3
 
 LinearLayoutManager的fill函数是布局关键函数，不了解的先去了解一下，这里就不仔细讲了。
 
-remainingSpace是布局可用空间，截图数值为265。是由layoutState.mAvailable的1px和layoutState.mExtraFillSpace的264px组成。
+remainingSpace是布局可用空间，截图数值为265。是由**【layoutState.mAvailable的1px】和【layoutState.mExtraFillSpace的264px】**组成。
 
-我的用例场景一页宽度就是264px。所以导致会加载进两个页面，导致问题的出现。
+**我的用例场景一页宽度就是264px**。所以导致会加载进两个页面，导致问题的出现。
 
 
 
-让我们来分析下 layoutState.mAvailable的1px 和 layoutState.mExtraFillSpace的264px   是如何产生的？这有利于我们解决问题
+让我们来分析下**【 layoutState.mAvailable的1px】 和 【layoutState.mExtraFillSpace的264px】**   是如何产生的？这有利于我们解决问题
 
 
 
