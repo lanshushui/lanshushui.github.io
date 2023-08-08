@@ -19,7 +19,11 @@ abbrlink: 362a61c3
 
 
 
-背景： 使用RecyclerView+PagerSnapHelper 实现一页一页滑动的效果使用RecyclerView的smoothScrollToPosition实现自动滑页功能，
+背景： 使用RecyclerView+PagerSnapHelper 实现一页一页滑动的效果。
+
+使用RecyclerView的smoothScrollToPosition实现自动滑页功能。
+
+
 
 当从第一页自动滑向第二页，第二页和第三页的都会被调用onViewAttachedToWindow，导致多余页面上报。
 
