@@ -15,6 +15,8 @@ abbrlink: 412d5155
 
 [RecyclerView曝光踩坑-1](https://lanshushui.github.io/post/22258c7a.html)
 
+[RecyclerView曝光踩坑-3](https://lanshushui.github.io/post/362a61c3.html)
+
 
 
 基于RecyclerView 1.2.1 版本分析

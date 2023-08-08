@@ -8,11 +8,13 @@ tags:
 abbrlink: 22258c7a
 ---
 
-
-
 [万字长文 - 史上最全ConstraintLayout](https://juejin.cn/post/6949186887609221133)
 
 
+
+[RecyclerView曝光踩坑-2](https://lanshushui.github.io/post/412d5155.html)
+
+[RecyclerView曝光踩坑-3](https://lanshushui.github.io/post/362a61c3.html)
 
 基于RecyclerView 1.2.1 版本分析
 
