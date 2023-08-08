@@ -146,8 +146,22 @@ void layoutChunk(RecyclerView.Recycler recycler, RecyclerView.State state,
 
 RecyclerView在dispatchLayoutStep1中多add一些view，dispatchLayoutStep3中将不合适的view移出去，达到动画效果。
 
-所以只能做个定时判断，Attached时用50ms延迟的定时器进行曝光上报，Detached时尝试移除定时器。
+dispatchLayoutStep1和dispatchLayoutStep3都是在一个消息循环中完成的，所以我们可以通过post操作完成曝光和取消曝光的功能。
 
 
+
+```kotlin
+val task= Runnable { 
+    //曝光逻辑
+}
+
+override fun onViewAttachedToWindow(holder: BaseViewHolder) {
+    holder.itemView.post(task)
+}
+
+override fun onViewDetachedFromWindow(holder: BaseViewHolder) {
+    holder.itemView.removeCallbacks(task)
+}
+```
 
 Keep Moving Forward
