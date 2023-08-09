@@ -10,11 +10,19 @@ abbrlink: 3098f3f8
 
 
 
+[【Android】函数插桩（Gradle + ASM）](https://www.jianshu.com/p/16ed4d233fd1)
+
+通过上面的大神教程，学习在自定义函数前后进行插桩，满足打点日志的需求。
 
 
 
+但如果想要知道APP中什么时候调用系统的方法，例如想要知道APP【哪些地方】【什么时候】调用了 context.getSystemService() 方法，以及当时的堆栈，
 
-*利用ASM的  **AdviceAdapter** 类和  **INVOKESTATIC**  操作码很容易就实现函数的Hook功能*
+Hook替换掉context.getSystemService()这一行代码为是最简单的操作
+
+
+
+*利用ASM的  **AdviceAdapter** 类和  **INVOKESTATIC**  操作码很容易就实现函数的Hook替换功能*
 
 
 
