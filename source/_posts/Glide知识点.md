@@ -11,6 +11,10 @@ abbrlink: 692dc279
 
 
 
+# 1.Glide+OKHTTP3
+
+
+
 ## 1.Glide 接入OKHttp3
 
 ```groovy
@@ -69,6 +73,106 @@ public final class MyGlideModule extends AppGlideModule {
 
 
 可以看出是图片下载被解析时，调用getRegistry方法时，如果还未初始化，就会走初始化逻辑，调用registerComponents
+
+
+
+
+
+# 2.Glide+OKHttp3 线程池分析
+
+## 1.Glide线程池
+
+```java
+//com.bumptech.glide.GlideBuilder
+Glide build(@NonNull Context context,List<GlideModule> manifestModules, AppGlideModule annotationGeneratedGlideModule) {
+    //图片下载线程池
+    if (sourceExecutor == null) {
+        sourceExecutor = GlideExecutor.newSourceExecutor();
+    }
+	//硬盘解析线程池
+    if (diskCacheExecutor == null) {
+        diskCacheExecutor = GlideExecutor.newDiskCacheExecutor();
+    }
+	//动画解析线程池
+    if (animationExecutor == null) {
+        animationExecutor = GlideExecutor.newAnimationExecutor();
+    }
+}
+```
+
+
+
+![](https://s3.bmp.ovh/imgs/2023/08/16/f29dedbeb0a190b2.jpg)
+
+ 图片下载线程池是个【核心4线程，最多4线程】的线程池
+
+
+
+![](https://s3.bmp.ovh/imgs/2023/08/16/c4fcc46afe34fc6e.jpg)
+
+  硬盘解析线程池是个【核心1线程，最多1线程】的线程池
+
+
+
+![](https://s3.bmp.ovh/imgs/2023/08/16/9d4c9903a1a4901e.jpg)
+
+动画解析线程池是个【核心2线程，最多2线程】的线程池
+
+
+
+1. ***在未接入OKHttp3时，Source线程池用于下载图片，可以看出最多支持4个图片同时下载***
+2. ***在接入OKHttp3时，Source线程池用于向OKHttp3线程池提交下载任务获得InputStream 基本是瞬间完成提交任务，等Okhttp3下载回调，所以下载图片取决于OKHttp3配置***
+
+
+
+## 2.OkHttp3线程池
+
+```kotlin
+val executorService: ExecutorService
+get() {
+    if (executorServiceOrNull == null) {
+        executorServiceOrNull = ThreadPoolExecutor(0, Int.MAX_VALUE, 60, TimeUnit.SECONDS,
+                                                   SynchronousQueue(), threadFactory("$okHttpName Dispatcher", false))
+    }
+    return executorServiceOrNull!!
+}
+```
+
+
+
+```kotlin
+//okhttp3.Dispatcher
+private fun promoteAndExecute(): Boolean {
+    this.assertThreadDoesntHoldLock()
+
+    val executableCalls = mutableListOf<AsyncCall>()
+    val isRunning: Boolean
+    synchronized(this) {
+        val i = readyAsyncCalls.iterator()
+        while (i.hasNext()) {
+            val asyncCall = i.next()
+
+            if (runningAsyncCalls.size >= this.maxRequests) break // 最多支持64个请求
+            if (asyncCall.callsPerHost.get() >= this.maxRequestsPerHost) continue // 每个Host最多支持5个请求
+
+            i.remove()
+            asyncCall.callsPerHost.incrementAndGet()
+            executableCalls.add(asyncCall)
+            runningAsyncCalls.add(asyncCall)
+        }
+        isRunning = runningCallsCount() > 0
+    }
+
+    for (i in 0 until executableCalls.size) {
+        val asyncCall = executableCalls[i]
+        asyncCall.executeOn(executorService)
+    }
+
+    return isRunning
+}
+```
+
+ OKhttp3线程池是无限制的，但最多同时支持64个请求，每个Host同时最多支持5个请求
 
 
 
