@@ -9,8 +9,6 @@ abbrlink: 412d5155
 
 
 
-[万字长文 - 史上最全ConstraintLayout](https://juejin.cn/post/6949186887609221133)
-
 
 
 [RecyclerView曝光踩坑-1](https://lanshushui.github.io/post/22258c7a.html)
@@ -20,6 +18,12 @@ abbrlink: 412d5155
 
 
 基于RecyclerView 1.2.1 版本分析
+
+
+
+*问题场景是 发现屏幕内的一个豆腐块调用notifyItemChanged后，会导致屏幕外的viewHolder的onViewAttachedToWindow也会被调用*
+
+<!-- more -->
 
 
 

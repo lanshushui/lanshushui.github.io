@@ -26,6 +26,10 @@ Hook替换掉context.getSystemService()这一行代码为是最简单的操作
 
 
 
+<!-- more -->
+
+
+
 ## 1.自定义AdviceAdapter
 
 ```kotlin

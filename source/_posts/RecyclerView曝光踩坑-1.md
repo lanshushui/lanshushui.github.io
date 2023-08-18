@@ -30,7 +30,10 @@ abbrlink: 22258c7a
 
 > <font color="red">测试发现是部分viewholder快速进行了onViewAttachedToWindow，然后onViewDetachedFromWindow的操作</font>
 >
-> 
+
+
+
+<!-- more -->
 
 **xml布局**
 

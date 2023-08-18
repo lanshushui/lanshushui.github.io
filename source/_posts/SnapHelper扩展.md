@@ -9,16 +9,16 @@ abbrlink: f6744f64
 
 
 
-
-
-
-
 ```java
 //快速滑动时触发
 public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX,int velocityY)
 //缓慢滑动时触发  
 public View findSnapView(RecyclerView.LayoutManager layoutManager)    
 ```
+
+
+
+<!-- more -->
 
 
 

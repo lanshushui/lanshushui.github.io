@@ -11,6 +11,8 @@ abbrlink: 503d328
 
 ## 支持GIF播放的TextView
 
+<!-- more -->
+
 ```kotlin
 class SpanTextView @JvmOverloads constructor(
     context: Context,

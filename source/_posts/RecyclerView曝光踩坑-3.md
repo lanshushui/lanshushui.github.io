@@ -9,10 +9,6 @@ abbrlink: 362a61c3
 
 
 
-[万字长文 - 史上最全ConstraintLayout](https://juejin.cn/post/6949186887609221133)
-
-
-
 [RecyclerView曝光踩坑-1](https://lanshushui.github.io/post/22258c7a.html)
 
 [RecyclerView曝光踩坑-2](https://lanshushui.github.io/post/412d5155.html)
@@ -26,6 +22,10 @@ abbrlink: 362a61c3
 
 
 当从第一页自动滑向第二页，第二页和第三页的都会被调用onViewAttachedToWindow，导致多余页面上报。
+
+
+
+<!-- more -->
 
 
 

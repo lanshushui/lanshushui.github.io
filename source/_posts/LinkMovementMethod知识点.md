@@ -23,6 +23,12 @@ abbrlink: p8hxlm4c
 
  上面的博客提供了BUG原因和解决方案
 
+
+
+<!-- more -->
+
+
+
 ## 自定义LinkMovementMethod
 
 ```java

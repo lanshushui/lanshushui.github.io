@@ -9,8 +9,6 @@ abbrlink: c4311606
 
 
 
-
-
 ## 1.Comparator接口  compare方法实现返回值探究
 
 ```java
@@ -33,10 +31,6 @@ return 01.xxx -02.xxx
 
 
 
-
-
-
-
 ```java
 return 02.xxx -01.xxx
 ```
@@ -46,6 +40,8 @@ return 02.xxx -01.xxx
 1.  xxx属性代表着优先级，而队列是高优先级队列 
 
 
+
+<!-- more -->
 
 
 
