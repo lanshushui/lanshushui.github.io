@@ -11,7 +11,7 @@ abbrlink: 692dc279
 
 
 
-# 1.Glide+OKHTTP3
+# Glide+OKHTTP3
 
 
 
@@ -82,7 +82,7 @@ public final class MyGlideModule extends AppGlideModule {
 
 
 
-# 2.Glide+OKHttp3 线程池分析
+# Glide+OKHttp3 线程池分析
 
 ## 1.Glide线程池
 
@@ -177,6 +177,112 @@ private fun promoteAndExecute(): Boolean {
 ```
 
  OKhttp3线程池是无限制的，但最多同时支持64个请求，每个Host同时最多支持5个请求
+
+
+
+
+
+# Glide into()后图片加载时间
+
+
+
+## ***需要有具体的宽高， glide才会加载图片***
+
+如果设置了RequestOptions的override方法，则直接调用onSizeReady，否则设置target的回调监听
+
+```java
+//com.bumptech.glide.request.SingleRequest
+public void begin() {
+    if (Util.isValidDimensions(overrideWidth, overrideHeight)) {
+        onSizeReady(overrideWidth, overrideHeight);
+    } else {
+        //设置回调
+        target.getSize(this);
+    }
+}
+
+public void onSizeReady(int width, int height) {
+    loadStatus =engine.load();
+}
+```
+
+
+
+## ViewTarget啥时候会返回合适的宽高？
+
+```java
+void getSize(@NonNull SizeReadyCallback cb) {
+    int currentWidth = getTargetWidth();
+    int currentHeight = getTargetHeight();
+    //判断目前是否有合适的宽高，是则直接返回
+    if (isViewStateAndSizeValid(currentWidth, currentHeight)) {
+        cb.onSizeReady(currentWidth, currentHeight);
+        return;
+    }
+
+    if (!cbs.contains(cb)) {
+        cbs.add(cb);
+    }
+    //设置addOnPreDrawListener，View绘制前回调
+    if (layoutListener == null) {
+        ViewTreeObserver observer = view.getViewTreeObserver();
+        layoutListener = new SizeDeterminerLayoutListener(this);
+        observer.addOnPreDrawListener(layoutListener);
+    }
+}
+```
+
+
+
+```java
+private int getTargetHeight() {
+    int verticalPadding = view.getPaddingTop() + view.getPaddingBottom();
+    LayoutParams layoutParams = view.getLayoutParams();
+    int layoutParamSize = layoutParams != null ? layoutParams.height : PENDING_SIZE;
+    return getTargetDimen(view.getHeight(), layoutParamSize, verticalPadding);
+}
+
+
+private int getTargetDimen(int viewSize, int paramSize, int paddingSize) {
+    //params的宽高是固定值
+    int adjustedParamSize = paramSize - paddingSize;
+    if (adjustedParamSize > 0) {
+        return adjustedParamSize;
+    }
+
+    //View正打算layout布局，返回PENDING_SIZE 表示目前的宽高不合适，等待PreDrawListener回调
+    if (waitForLayout && view.isLayoutRequested()) {
+        return PENDING_SIZE;
+    }
+
+    //View存在宽高数据，因为这个宽高数据可能是脏数据，所以放这么后面
+    int adjustedViewSize = viewSize - paddingSize;
+    if (adjustedViewSize > 0) {
+        return adjustedViewSize;
+    }
+
+    //view目前没有请求layout布局，且宽高是WRAP_CONTENT，返回屏幕宽高的最大值
+    if (!view.isLayoutRequested() && paramSize == LayoutParams.WRAP_CONTENT) {
+        return getMaxDisplayLength(view.getContext());
+    }
+
+    //返回PENDING_SIZE 表示目前的宽高不合适，等待PreDrawListener回调
+    return PENDING_SIZE;
+}
+```
+
+
+
+​    **into后宽高数据的获取逻辑**：
+
+1. RequestOptions存在overrideWidth, overrideHeight
+2. params的宽高是固定值
+3. viewTarget的waitForLayout是true，且正打算layout布局，则等待PreDrawListener回调（waitForLayout无设置默认值，boolean默认值是false）
+4. view存在真实的宽高数据
+5. view目前没有请求layout布局，且宽高是WRAP_CONTENT，返回屏幕宽高的最大值
+6. 等待PreDrawListener回调
+
+
 
 
 
