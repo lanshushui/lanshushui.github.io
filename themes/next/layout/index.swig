@@ -8,7 +8,9 @@
 {% block content %}
 
   {%- for post in page.posts.toArray() %}
+  {% if post.hide != true %}
     {{ partial('_macro/post.swig', {post: post, is_index: true}) }}
+  {% endif %}
   {%- endfor %}
 
   {% include '_partials/pagination.swig' %}
