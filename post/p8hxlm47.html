@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="PopUpWindow基础用法1234567891011121314&#x2F;&#x2F;继承PopupWindowclass MyPopupWindow(context: Context) : PopupWindow(context) &amp;#123;        init&amp;#123;        setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PopUpWindow知识点">
+<meta property="og:url" content="http://example.com/post/p8hxlm47.html">
+<meta property="og:site_name" content="懒鼠睡的Android">
+<meta property="og:description" content="PopUpWindow基础用法1234567891011121314&#x2F;&#x2F;继承PopupWindowclass MyPopupWindow(context: Context) : PopupWindow(context) &amp;#123;        init&amp;#123;        setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-05T12:58:32.614Z">
+<meta property="article:modified_time" content="2023-09-05T12:58:32.614Z">
+<meta property="article:author" content="懒鼠睡zzz">
+<meta property="article:tag" content="PopUpWindow">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/post/p8hxlm47.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>PopUpWindow知识点 | 懒鼠睡的Android</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">懒鼠睡的Android</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-疑难杂症">
+
+    <a href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" rel="section"><i class="fa fa-th fa-fw"></i>疑难杂症</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/p8hxlm47.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="懒鼠睡zzz">
+      <meta itemprop="description" content="选择有时候比努力更重要">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="懒鼠睡的Android">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PopUpWindow知识点
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-05 20:58:32" itemprop="dateCreated datePublished" datetime="2023-09-05T20:58:32+08:00">2023-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="PopUpWindow基础用法"><a href="#PopUpWindow基础用法" class="headerlink" title="PopUpWindow基础用法"></a>PopUpWindow基础用法</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//继承PopupWindow</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyPopupWindow</span>(context: Context) : PopupWindow(context) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>&#123;</span><br><span class="line">        setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))</span><br><span class="line">        contentView = view</span><br><span class="line">        width = ViewGroup.LayoutParams.WRAP_CONTENT</span><br><span class="line">        height = ViewGroup.LayoutParams.WRAP_CONTENT</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        showAtLocation(parent, Gravity.CENTER, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<span id="more"></span>
+
+
+
+<h4 id="问题1：丢失contentView设置的宽度"><a href="#问题1：丢失contentView设置的宽度" class="headerlink" title="问题1：丢失contentView设置的宽度"></a>问题1：丢失contentView设置的宽度</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//PopupWindow</span></span><br><span class="line"><span class="keyword">private</span> void preparePopup(WindowManager.LayoutParams p) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mBackground != <span class="literal">null</span>) &#123; <span class="comment">//背景图不为空，将创建背景View</span></span><br><span class="line">        mBackgroundView = createBackgroundView(mContentView);</span><br><span class="line">        mBackgroundView.setBackground(mBackground);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">//不设置背景图时，contentView就是背景View</span></span><br><span class="line">        mBackgroundView = mContentView;</span><br><span class="line">    &#125;</span><br><span class="line">    mDecorView = createDecorView(mBackgroundView);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//将contentView加入背景ViewGroud中</span></span><br><span class="line"><span class="comment">//如果设置的contentView的高是WRAP_CONTENT，将不改变contentView的高</span></span><br><span class="line"><span class="comment">//否则将contentView的高以MATCH_PARENT加入背景ViewGroud中</span></span><br><span class="line"><span class="comment">//而宽度锁死为MATCH_PARENT</span></span><br><span class="line"><span class="keyword">private</span> PopupBackgroundView createBackgroundView(View contentView) &#123;</span><br><span class="line">    <span class="keyword">final</span> ViewGroup.LayoutParams layoutParams = mContentView.getLayoutParams();</span><br><span class="line">    <span class="keyword">final</span> int height;</span><br><span class="line">    <span class="keyword">if</span> (layoutParams != <span class="literal">null</span> &amp;&amp; layoutParams.height == WRAP_CONTENT) &#123;</span><br><span class="line">        height = WRAP_CONTENT;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        height = MATCH_PARENT;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> PopupBackgroundView backgroundView = new PopupBackgroundView(mContext);</span><br><span class="line">    <span class="keyword">final</span> PopupBackgroundView.LayoutParams listParams = new PopupBackgroundView.LayoutParams(</span><br><span class="line">        MATCH_PARENT, height);</span><br><span class="line">    backgroundView.addView(contentView, listParams);</span><br><span class="line">    <span class="keyword">return</span> backgroundView;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//将背景View加入DecorView中</span></span><br><span class="line"><span class="comment">//如果设置的contentView的高是WRAP_CONTENT，背景View的高也是WRAP_CONTENT</span></span><br><span class="line"><span class="comment">//否则将背景View的高将以MATCH_PARENT加入背景ViewGroud中</span></span><br><span class="line"><span class="comment">//而背景View宽度锁死为MATCH_PARENT</span></span><br><span class="line"><span class="keyword">private</span> PopupDecorView createDecorView(View contentView) &#123;</span><br><span class="line">    <span class="keyword">final</span> ViewGroup.LayoutParams layoutParams = mContentView.getLayoutParams();</span><br><span class="line">    <span class="keyword">final</span> int height;</span><br><span class="line">    <span class="keyword">if</span> (layoutParams != <span class="literal">null</span> &amp;&amp; layoutParams.height == WRAP_CONTENT) &#123;</span><br><span class="line">        height = WRAP_CONTENT;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        height = MATCH_PARENT;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> PopupDecorView decorView = new PopupDecorView(mContext);</span><br><span class="line">    decorView.addView(contentView, MATCH_PARENT, height);</span><br><span class="line">    decorView.setClipChildren(<span class="literal">false</span>);</span><br><span class="line">    decorView.setClipToPadding(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> decorView;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//DecorView将以设置PopupWindow的宽高加入window中 </span></span><br></pre></td></tr></table></figure>
+
+<p>总结</p>
+<p>宽度：</p>
+<ol>
+<li>背景View 宽度  MATCH_PARENT</li>
+<li>contentView宽度  MATCH_PARENT</li>
+</ol>
+<p>高度：</p>
+<p>如果 contentView高度 是  WRAP_CONTENT </p>
+<ol>
+<li>contentView高度 是  WRAP_CONTENT</li>
+<li>​     背景View高度 是  WRAP_CONTENT</li>
+</ol>
+<p>否则</p>
+<ol>
+<li>​    contentView高度 是  MATCH_PARENT</li>
+<li>​    背景View高度 是  MATCH_PARENT</li>
+</ol>
+<p><strong>由上面可以看出，contentView宽度数据被完全丢失，因此如果contentView存在具体的宽度数据，必须挪到PopupWindow的宽度属性上</strong></p>
+<h4 id="提问：当PopupWindow的宽度设置为WRAP-CONTENT-，而我们知道contentView的宽度锁死为MATCH-PARENT，那弹窗的宽度是什么呢？"><a href="#提问：当PopupWindow的宽度设置为WRAP-CONTENT-，而我们知道contentView的宽度锁死为MATCH-PARENT，那弹窗的宽度是什么呢？" class="headerlink" title="提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？"></a>提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？</h4><p>做个实验便知道：PopupWindow宽是WRAP_CONTENT -》DecorView的宽是WRAP_CONTENT </p>
+<p>FrameLayout宽是WRAP_CONTENT ，而它子View（ConstraintLayout）是MATCH_PARENT时，子View（ConstraintLayout）的宽度将是WRAP_CONTENT的形式展示。</p>
+<h2 id="PopupWindow如何全屏"><a href="#PopupWindow如何全屏" class="headerlink" title="PopupWindow如何全屏"></a>PopupWindow如何全屏</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))</span><br><span class="line">isFocusable = <span class="literal">true</span> <span class="comment">//为了支持返回键响应</span></span><br><span class="line">isClippingEnabled = <span class="literal">false</span> <span class="comment">//为了覆盖到状态栏</span></span><br><span class="line">width = ViewGroup.LayoutParams.MATCH_PARENT</span><br><span class="line">height = ViewGroup.LayoutParams.MATCH_PARENT</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Keep Moving Forward</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PopUpWindow/" rel="tag"># PopUpWindow</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/post/22258c7a.html" rel="prev" title="RecyclerView曝光踩坑-1">
+      <i class="fa fa-chevron-left"></i> RecyclerView曝光踩坑-1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/post/412d5155.html" rel="next" title="RecyclerView曝光踩坑-2">
+      RecyclerView曝光踩坑-2 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PopUpWindow%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">PopUpWindow基础用法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%981%EF%BC%9A%E4%B8%A2%E5%A4%B1contentView%E8%AE%BE%E7%BD%AE%E7%9A%84%E5%AE%BD%E5%BA%A6"><span class="nav-number">1.0.1.</span> <span class="nav-text">问题1：丢失contentView设置的宽度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%90%E9%97%AE%EF%BC%9A%E5%BD%93PopupWindow%E7%9A%84%E5%AE%BD%E5%BA%A6%E8%AE%BE%E7%BD%AE%E4%B8%BAWRAP-CONTENT-%EF%BC%8C%E8%80%8C%E6%88%91%E4%BB%AC%E7%9F%A5%E9%81%93contentView%E7%9A%84%E5%AE%BD%E5%BA%A6%E9%94%81%E6%AD%BB%E4%B8%BAMATCH-PARENT%EF%BC%8C%E9%82%A3%E5%BC%B9%E7%AA%97%E7%9A%84%E5%AE%BD%E5%BA%A6%E6%98%AF%E4%BB%80%E4%B9%88%E5%91%A2%EF%BC%9F"><span class="nav-number">1.0.2.</span> <span class="nav-text">提问：当PopupWindow的宽度设置为WRAP_CONTENT ，而我们知道contentView的宽度锁死为MATCH_PARENT，那弹窗的宽度是什么呢？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PopupWindow%E5%A6%82%E4%BD%95%E5%85%A8%E5%B1%8F"><span class="nav-number">2.</span> <span class="nav-text">PopupWindow如何全屏</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">懒鼠睡zzz</p>
+  <div class="site-description" itemprop="description">选择有时候比努力更重要</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">懒鼠睡zzz</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

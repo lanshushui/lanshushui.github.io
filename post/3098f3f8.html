@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="【Android】函数插桩（Gradle + ASM） 通过上面的大神教程，学习在自定义函数前后进行插桩，满足打点日志的需求。 但如果想要知道APP中什么时候调用系统的方法，例如想要知道APP【哪些地方】【什么时候】调用了 context.getSystemService() 方法，以及当时的堆栈， Hook替换掉context.getSystemService()这一行代码为是最简单的操作 利用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ASM知识点">
+<meta property="og:url" content="http://example.com/post/3098f3f8.html">
+<meta property="og:site_name" content="懒鼠睡的Android">
+<meta property="og:description" content="【Android】函数插桩（Gradle + ASM） 通过上面的大神教程，学习在自定义函数前后进行插桩，满足打点日志的需求。 但如果想要知道APP中什么时候调用系统的方法，例如想要知道APP【哪些地方】【什么时候】调用了 context.getSystemService() 方法，以及当时的堆栈， Hook替换掉context.getSystemService()这一行代码为是最简单的操作 利用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-05T12:58:32.614Z">
+<meta property="article:modified_time" content="2023-09-05T12:58:32.614Z">
+<meta property="article:author" content="懒鼠睡zzz">
+<meta property="article:tag" content="ASM">
+<meta property="article:tag" content="HOOK">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/post/3098f3f8.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ASM知识点 | 懒鼠睡的Android</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">懒鼠睡的Android</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-疑难杂症">
+
+    <a href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" rel="section"><i class="fa fa-th fa-fw"></i>疑难杂症</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/3098f3f8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="懒鼠睡zzz">
+      <meta itemprop="description" content="选择有时候比努力更重要">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="懒鼠睡的Android">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ASM知识点
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-05 20:58:32" itemprop="dateCreated datePublished" datetime="2023-09-05T20:58:32+08:00">2023-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/16ed4d233fd1">【Android】函数插桩（Gradle + ASM）</a></p>
+<p>通过上面的大神教程，学习在自定义函数前后进行插桩，满足打点日志的需求。</p>
+<p>但如果想要知道APP中什么时候调用系统的方法，例如想要知道APP【哪些地方】【什么时候】调用了 context.getSystemService() 方法，以及当时的堆栈，</p>
+<p>Hook替换掉context.getSystemService()这一行代码为是最简单的操作</p>
+<p><em>利用ASM的  <strong>AdviceAdapter</strong> 类和  <strong>INVOKESTATIC</strong>  操作码很容易就实现函数的Hook替换功能</em></p>
+<span id="more"></span>
+
+
+
+<h2 id="1-自定义AdviceAdapter"><a href="#1-自定义AdviceAdapter" class="headerlink" title="1.自定义AdviceAdapter"></a>1.自定义AdviceAdapter</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MethodHookAdapter</span>(</span><br><span class="line">    mv: MethodVisitor,</span><br><span class="line">    desc: String,</span><br><span class="line">    name: String,</span><br><span class="line">    access: <span class="built_in">Int</span></span><br><span class="line">) : AdviceAdapter(Opcodes.ASM5, mv, access, name, desc) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">visitMethodInsn</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        opcode: <span class="type">Int</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">        owner: <span class="type">String</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">        name: <span class="type">String</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">        descriptor: <span class="type">String</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">        isInterface: <span class="type">Boolean</span></span></span></span><br><span class="line"><span class="params"><span class="function">    )</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isHook(opcode,owner,name,descriptor,isInterface)) &#123;</span><br><span class="line">            <span class="comment">//满足hook条件，则替换成自定义的static函数</span></span><br><span class="line">            <span class="keyword">super</span>.visitMethodInsn(</span><br><span class="line">                INVOKESTATIC,</span><br><span class="line">                newOwner,</span><br><span class="line">                newMethodName,</span><br><span class="line">                newMethodDesc,</span><br><span class="line">                <span class="literal">false</span></span><br><span class="line">            )</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">super</span>.visitMethodInsn(opcode, owner, name, descriptor, isInterface)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>但对自定义Hook函数的newMethodDesc有一定的要求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果hook的函数是实例对象的函数，即操作码是INVOKESPECIAL。自定义Hook函数的参数列表必须是 [要Hook的对象类，Hook函数原本的参数列表]</span><br><span class="line">如果hook的函数是静态函数，即操作码是INVOKESTATIC。自定义Hook函数的参数列表则保持一致    [Hook函数原本的参数列表]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>用例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">a</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">b</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HookA</span> &#123;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//hook A.a()方法，参数列表最前面必须加个A的参数</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">hookA</span><span class="params">(A a, <span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">	<span class="comment">//hook A.b()方法，参数列表保持一致</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">hookB</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-Hook参数列表为什么必须这样子设计？"><a href="#2-Hook参数列表为什么必须这样子设计？" class="headerlink" title="2.Hook参数列表为什么必须这样子设计？"></a>2.Hook参数列表为什么必须这样子设计？</h2><h6 id="分析字节码-1"><a href="#分析字节码-1" class="headerlink" title="分析字节码-1"></a><em>分析字节码-1</em></h6><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">void a()&#123;</span><br><span class="line">    Context context= new Activity();</span><br><span class="line">    <span class="comment">//调用实例方法</span></span><br><span class="line">    Object systemService = context.getSystemService(Context.WINDOW_SERVICE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//下面为上面a函数的字节码</span></span><br><span class="line"></span><br><span class="line">.method a()V</span><br><span class="line">.registers <span class="number">3</span></span><br><span class="line"></span><br><span class="line">.line <span class="number">9</span></span><br><span class="line"><span class="comment">//调用Activity()方法，将返回值放进v0寄存器中</span></span><br><span class="line">new-instance v0, Landroid/app/Activity;</span><br><span class="line"><span class="comment">//调用v0寄存器中的实例对象的init方法</span></span><br><span class="line">invoke-direct &#123;v0&#125;, Landroid/app/Activity;-&gt;&lt;<span class="keyword">init</span>&gt;()V</span><br><span class="line"></span><br><span class="line">.line <span class="number">10</span></span><br><span class="line">.local v0, <span class="string">&quot;context&quot;</span>:Landroid/content/Context;</span><br><span class="line"><span class="comment">//将字符串&quot;window&quot;赋值给寄存器v1</span></span><br><span class="line"><span class="keyword">const</span>-string v1, <span class="string">&quot;window&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//调用v0寄存器中的值的getSystemService(String)方法，参数内容是v1寄存器内的值</span></span><br><span class="line">invoke-virtual &#123;v0, v1&#125;, Landroid/content/Context;-&gt;getSystemService(Ljava/lang/String;)Ljava/lang/Object;</span><br><span class="line"><span class="comment">//前一个方法调用的返回值存储到寄存器 v1 中。</span></span><br><span class="line">move-result-<span class="keyword">object</span> v1</span><br><span class="line"></span><br><span class="line">.line <span class="number">11</span></span><br><span class="line">.local v1, <span class="string">&quot;systemService&quot;</span>:Ljava/lang/Object;</span><br><span class="line"><span class="keyword">return</span>-void</span><br><span class="line">.end method</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="分析字节码-2"><a href="#分析字节码-2" class="headerlink" title="分析字节码-2"></a><em>分析字节码-2</em></h6><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">void a()&#123;</span><br><span class="line">    Context context= new Activity();</span><br><span class="line">    <span class="comment">//调用静态方法</span></span><br><span class="line">    Object systemService = Hook.hook(context,Context.WINDOW_SERVICE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//下面为上面a函数的字节码</span></span><br><span class="line"></span><br><span class="line">.method a()V</span><br><span class="line">.registers <span class="number">3</span></span><br><span class="line"></span><br><span class="line">.line <span class="number">9</span></span><br><span class="line"><span class="comment">//调用Activity()方法，将返回值放进v0寄存器中</span></span><br><span class="line">new-instance v0, Landroid/app/Activity;</span><br><span class="line"><span class="comment">//调用v0寄存器中的实例对象的init方法</span></span><br><span class="line">invoke-direct &#123;v0&#125;, Landroid/app/Activity;-&gt;&lt;<span class="keyword">init</span>&gt;()V</span><br><span class="line"></span><br><span class="line">.line <span class="number">10</span></span><br><span class="line">.local v0, <span class="string">&quot;context&quot;</span>:Landroid/content/Context;</span><br><span class="line"><span class="comment">//将字符串&quot;window&quot;赋值给寄存器v1</span></span><br><span class="line"><span class="keyword">const</span>-string v1, <span class="string">&quot;window&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//调用静态方法hook，参数内容是（v0寄存器内的值，v1寄存器内的值）</span></span><br><span class="line">invoke-static &#123;v0, v1&#125;, Lcom/test/Hook;-&gt;hook(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/Object;</span><br><span class="line"><span class="comment">//前一个方法调用的返回值存储到寄存器 v1 中。</span></span><br><span class="line">move-result-<span class="keyword">object</span> v1</span><br><span class="line"></span><br><span class="line">.line <span class="number">11</span></span><br><span class="line">.local v1, <span class="string">&quot;systemService&quot;</span>:Ljava/lang/Object;</span><br><span class="line"><span class="keyword">return</span>-void</span><br><span class="line">.end method</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>可以看出  invoke-virtual {v0, v1}  和 invoke-static {v0, v1} 主要的区别是</strong>:</p>
+<ol>
+<li><strong>invoke-virtual 中的v0是作为实例对象的寄存器。相当于 –》  v0.fun( v1 )</strong></li>
+<li><strong>invoke-static 中的v0是作为参数的寄存器。相当于 –》  fun( v0 , v1 )</strong></li>
+</ol>
+<p><strong>一个invoke-virtual场景下的函数调用，操作栈中一定有1+参数个数个变量</strong></p>
+<p><strong>一个invoke-static场景下的函数调用，操作栈中只有参数个数个变量</strong></p>
+<p>回头看一下第一步的Hook代码，我们将invoke-virtual场景下的函数调用替换成invoke-static调用，所以hook类的静态函数必须多出一个参数来承接 <em><strong>实例对象变量</strong></em></p>
+<h2 id="3-再看一下两个场景下的ASM码"><a href="#3-再看一下两个场景下的ASM码" class="headerlink" title="3.再看一下两个场景下的ASM码"></a>3.再看一下两个场景下的ASM码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">a</span><span class="params">()</span>&#123;</span><br><span class="line">Context context= <span class="keyword">new</span> <span class="title class_">Activity</span>();</span><br><span class="line"><span class="comment">//调用实例方法</span></span><br><span class="line"><span class="type">Object</span> <span class="variable">systemService</span> <span class="operator">=</span> context.getSystemService(Context.WINDOW_SERVICE);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//下面为ASM码</span></span><br><span class="line">methodVisitor = classWriter.visitMethod(<span class="number">0</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;()V&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">methodVisitor.visitCode();</span><br><span class="line">methodVisitor.visitTypeInsn(NEW, <span class="string">&quot;android/app/Activity&quot;</span>);</span><br><span class="line">methodVisitor.visitInsn(DUP);</span><br><span class="line">methodVisitor.visitMethodInsn(INVOKESPECIAL, <span class="string">&quot;android/app/Activity&quot;</span>, <span class="string">&quot;&lt;init&gt;&quot;</span>, <span class="string">&quot;()V&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">methodVisitor.visitVarInsn(ASTORE, <span class="number">1</span>);</span><br><span class="line">methodVisitor.visitVarInsn(ALOAD, <span class="number">1</span>);</span><br><span class="line">methodVisitor.visitLdcInsn(<span class="string">&quot;window&quot;</span>);</span><br><span class="line"><span class="comment">//Hook点，Hook前的代码</span></span><br><span class="line">methodVisitor.visitMethodInsn(INVOKEVIRTUAL, <span class="string">&quot;android/content/Context&quot;</span>, <span class="string">&quot;getSystemService&quot;</span>, <span class="string">&quot;(Ljava/lang/String;)Ljava/lang/Object;&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">methodVisitor.visitVarInsn(ASTORE, <span class="number">2</span>);</span><br><span class="line">methodVisitor.visitInsn(RETURN);</span><br><span class="line">methodVisitor.visitMaxs(<span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">methodVisitor.visitEnd();</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">a</span><span class="params">()</span>&#123;</span><br><span class="line">    Context context= <span class="keyword">new</span> <span class="title class_">Activity</span>();</span><br><span class="line">    <span class="comment">//调用静态方法</span></span><br><span class="line">    <span class="type">Object</span> <span class="variable">systemService</span> <span class="operator">=</span> Hook.hook(context,Context.WINDOW_SERVICE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">methodVisitor = classWriter.visitMethod(<span class="number">0</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;()V&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">methodVisitor.visitCode();</span><br><span class="line">methodVisitor.visitTypeInsn(NEW, <span class="string">&quot;android/app/Activity&quot;</span>);</span><br><span class="line">methodVisitor.visitInsn(DUP);</span><br><span class="line">methodVisitor.visitMethodInsn(INVOKESPECIAL, <span class="string">&quot;android/app/Activity&quot;</span>, <span class="string">&quot;&lt;init&gt;&quot;</span>, <span class="string">&quot;()V&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">methodVisitor.visitVarInsn(ASTORE, <span class="number">1</span>);</span><br><span class="line">methodVisitor.visitVarInsn(ALOAD, <span class="number">1</span>);</span><br><span class="line">methodVisitor.visitLdcInsn(<span class="string">&quot;window&quot;</span>);</span><br><span class="line"><span class="comment">//Hook点，Hook后的代码</span></span><br><span class="line">methodVisitor.visitMethodInsn(INVOKESTATIC, <span class="string">&quot;com/Hook&quot;</span>, <span class="string">&quot;hook&quot;</span>, <span class="string">&quot;(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/Object;&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">methodVisitor.visitVarInsn(ASTORE, <span class="number">2</span>);</span><br><span class="line">methodVisitor.visitInsn(RETURN);</span><br><span class="line">methodVisitor.visitMaxs(<span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">methodVisitor.visitEnd();</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>Keep Moving Forward</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ASM/" rel="tag"># ASM</a>
+              <a href="/tags/HOOK/" rel="tag"># HOOK</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/post/58bbdd0e.html" rel="prev" title="Flow知识点">
+      <i class="fa fa-chevron-left"></i> Flow知识点
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/post/6b67b819.html" rel="next" title="DialogFragment知识点">
+      DialogFragment知识点 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%87%AA%E5%AE%9A%E4%B9%89AdviceAdapter"><span class="nav-number">1.</span> <span class="nav-text">1.自定义AdviceAdapter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Hook%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%85%E9%A1%BB%E8%BF%99%E6%A0%B7%E5%AD%90%E8%AE%BE%E8%AE%A1%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">2.Hook参数列表为什么必须这样子设计？</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%AD%97%E8%8A%82%E7%A0%81-1"><span class="nav-number">2.0.0.0.1.</span> <span class="nav-text">分析字节码-1</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%AD%97%E8%8A%82%E7%A0%81-2"><span class="nav-number">2.0.0.0.2.</span> <span class="nav-text">分析字节码-2</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%86%8D%E7%9C%8B%E4%B8%80%E4%B8%8B%E4%B8%A4%E4%B8%AA%E5%9C%BA%E6%99%AF%E4%B8%8B%E7%9A%84ASM%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">3.再看一下两个场景下的ASM码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">懒鼠睡zzz</p>
+  <div class="site-description" itemprop="description">选择有时候比努力更重要</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">懒鼠睡zzz</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
