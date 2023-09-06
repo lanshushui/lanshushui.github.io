@@ -24,6 +24,8 @@ abbrlink: 7e8ea226
 
 [反射中Class.forName()和ClassLoader.loadClass()的区别](https://www.cnblogs.com/xiohao/p/8853462.html)
 
+[Java对象的初始化顺序？](https://www.zhihu.com/question/49196023)
+
 
 
 ## 同步：
@@ -66,9 +68,13 @@ abbrlink: 7e8ea226
 
 [TCP实现可靠传输](https://www.cnblogs.com/walker993/p/9570902.html)
 
+[TCP拥塞控制机制](https://blog.csdn.net/shuxnhs/article/details/80644531)
+
 [TCP报文格式详解](https://www.cnblogs.com/feng9exe/p/8058891.html)
 
 [TCP的三次握手与四次挥手理解](https://blog.csdn.net/qq_38950316/article/details/81087809)
+
+[TCP Keepalive 和 HTTP Keep-Alive 是一个东西吗？](https://www.xiaolincoding.com/network/3_tcp/tcp_http_keepalive.html#tcp-%E7%9A%84-keepalive)
 
 
 
@@ -130,9 +136,15 @@ abbrlink: 7e8ea226
 
 [压缩包Zip格式详析](https://blog.csdn.net/qq_43278826/article/details/118436116)
 
+[jar包的一些事儿](https://zhuanlan.zhihu.com/p/82320492)
+
 [关于Android的65535限制](https://www.jianshu.com/p/b17ce6e2388c)
 
 
+
+# 打包
+
+[android如何多渠道打包?](https://cloud.tencent.com/developer/article/1906336)
 
 
 
