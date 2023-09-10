@@ -226,6 +226,8 @@ abbrlink: 7e8ea226
 
 [探索 Android View 绘制流程](https://juejin.cn/post/6904192359253147661#heading-0)
 
+[怎么通过Choreographer计算帧率](https://segmentfault.com/a/1190000039888096)
+
 
 
 ## Dex
