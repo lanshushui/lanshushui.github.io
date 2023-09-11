@@ -37,6 +37,29 @@ hidden : true
 
 
 
+# tiktok + appsflyer 延迟深度链接接入
+
+tiktok 深度链接的原理就是  tiktok广告点击时，tiktok就会根据广告数据替换我们提供的归因链接内的模板字符串，然后请求这个链接
+
+
+
+1. [appflyer的SDK接入](https://dev.appsflyer.com/hc/docs/install-android-sdk)
+
+2. [测试Appflyer功能](https://dev.appsflyer.com/hc/docs/testing-android)  ，能成功显示 "af_status": "Non-organic" 就算成功
+
+   - 模拟归因链接点击 只需要在浏览器上请求归因链接
+
+   - 最重要的是 将设备添加在测试名单
+
+3. [接入延迟深度链接代码](https://dev.appsflyer.com/hc/docs/dl_android_ocds_ddl)
+
+4.  向tiktok提供归因链接
+
+   -  按照步骤2先测试一下提供的归因链接是否能成功显示 "af_status": "Non-organic"
+   - 例如归因链接不能有is_retargeting=true 这个数据   [归因链接的结构和参数](https://support.appsflyer.com/hc/zh-cn/articles/207447163-%E5%BD%92%E5%9B%A0%E9%93%BE%E6%8E%A5%E7%9A%84%E7%BB%93%E6%9E%84%E5%92%8C%E5%8F%82%E6%95%B0)
+
+   
+
 # intent和intent-filter的匹配问题
 
 [匹配规则](https://developer.android.com/guide/components/intents-filters?hl=zh-cn)
