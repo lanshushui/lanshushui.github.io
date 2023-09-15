@@ -92,6 +92,8 @@ abbrlink: 7e8ea226
 
 [死锁的四大条件与处理策略](https://cloud.tencent.com/developer/article/1493418)
 
+[常用缓存淘汰算法](https://melonshell.github.io/2020/02/07/ds_cache_eli/)
+
 [面试题 | 等待多个异步任务的结果](https://juejin.cn/post/7121517604644061192)
 
 [Unicode与UTF-8的区别](https://blog.csdn.net/qq_36761831/article/details/82291166)
@@ -253,6 +255,16 @@ abbrlink: 7e8ea226
 ## ANR
 
 [Android性能优化杂谈-如何监控和解决ANR问题](https://blog.csdn.net/ljcITworld/article/details/104420422)
+
+
+
+
+
+# 第三方框架知识点
+
+[Glide 是如何加载 GIF 动图的](https://juejin.cn/post/6939143083866980360)
+
+
 
 
 
