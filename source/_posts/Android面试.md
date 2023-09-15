@@ -186,11 +186,17 @@ abbrlink: 7e8ea226
 
 
 
-## Binder
+## IPC
 
 [Android跨进程通信：图文详解 Binder机制 原理](https://cloud.tencent.com/developer/article/1394290)
 
 [听说你Binder机制学的不错，来面试下这几个问题](https://developer.aliyun.com/article/951459)
+
+[IPC和RPC的区别](https://blog.csdn.net/u013894427/article/details/82789837)
+
+[多个IPC通讯方式以及场景](https://juejin.cn/post/6876046258406948878)
+
+[Android 跨进程双向通信（Messenger与AIDL）详解](https://cloud.tencent.com/developer/article/1385676)
 
 
 
