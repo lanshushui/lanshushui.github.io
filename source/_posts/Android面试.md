@@ -144,7 +144,11 @@ abbrlink: 7e8ea226
 
 [Android onSaveInstanceState/onRestoreInstanceState 原来要这么理解](https://juejin.cn/post/7040819115874844709)
 
+[Zygote中Socket通信能否替换成Binder通信](https://www.jianshu.com/p/7e711b0b6ab1)  ----   [为什么不能在多线程程序中使用fork函数](http://faq.0xffffff.org/question/2014/07/30/why-do-not-use-fork-in-mul-thread-program/)
 
+
+
+​	
 
 ## Broadcast
 
@@ -155,6 +159,8 @@ abbrlink: 7e8ea226
 [17 个必须掌握的 BroadcastReceiver 知识点](https://www.cnblogs.com/yuanhao-1999/p/11817955.html)
 
 [基础-四大组件-BroadCastReceiver里是否可以在onReceive中开启线程](https://www.jianshu.com/p/6679afd12a5a)
+
+[Android8.0隐式广播和自定义签名权限](https://cloud.tencent.com/developer/article/1782420)
 
 
 
@@ -186,6 +192,22 @@ abbrlink: 7e8ea226
 
 
 
+## bitmap
+
+[Glide4.8源码拆解（五）BitmapPool从入门到放弃](https://juejin.cn/post/6844903761698095118)
+
+[Glide硬件位图](https://blog.csdn.net/qfanmingyiq/article/details/116570788)
+
+
+
+## Surface
+
+[浅谈SurfaceView与GLSurfaceView用法](https://www.jianshu.com/p/90a75b9b7115)
+
+[浅谈SurfaceView和TextureView用法](https://juejin.cn/post/7082645693441474573)
+
+
+
 ## handler
 
 [Android全面解析之Handler机制（终篇](https://juejin.cn/post/6887933281686421518)
@@ -194,11 +216,11 @@ abbrlink: 7e8ea226
 
 ## IPC
 
+[IPC和RPC的区别](https://blog.csdn.net/u013894427/article/details/82789837)
+
 [Android跨进程通信：图文详解 Binder机制 原理](https://cloud.tencent.com/developer/article/1394290)
 
 [听说你Binder机制学的不错，来面试下这几个问题](https://developer.aliyun.com/article/951459)
-
-[IPC和RPC的区别](https://blog.csdn.net/u013894427/article/details/82789837)
 
 [多个IPC通讯方式以及场景](https://juejin.cn/post/6876046258406948878)
 
