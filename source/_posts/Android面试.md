@@ -32,11 +32,15 @@ abbrlink: 7e8ea226
 
 [直面底层之字节码看try-catch-finally](https://juejin.cn/post/6949365555329679390)
 
+[java和kotlin的可见性修饰符对比](https://blog.csdn.net/weixin_45850939/article/details/117837389)
+
 
 
 ## 语法原理
 
 [Kotlin Sealed原理](https://juejin.cn/post/6859980718588575757)
+
+[深入理解Kotlin协程（一）——基本概念与原理](https://www.sukaidev.top/2021/02/01/595755ca/)
 
 [协程(13) | 异常处理](https://juejin.cn/post/7093453154297544741#heading-5)
 
@@ -55,6 +59,8 @@ abbrlink: 7e8ea226
 [构造函数以及init执行顺序](https://juejin.cn/post/7088248200707964936)
 
 [抽丝剥茧聊Kotlin协程之聊聊Job和SupervisorJob的区别](https://zhuanlan.zhihu.com/p/451902120)
+
+[Kotlin内联函数inline、noinline、crossinline](https://blog.csdn.net/u013700502/article/details/119923024)
 
 
 
@@ -252,25 +258,15 @@ abbrlink: 7e8ea226
 
 
 
-# 打包
-
-[android如何多渠道打包?](https://cloud.tencent.com/developer/article/1906336)
-
-
-
-## ANR
-
-[Android性能优化杂谈-如何监控和解决ANR问题](https://blog.csdn.net/ljcITworld/article/details/104420422)
-
-
-
-
-
-# 第三方框架知识点
+# 场景知识点
 
 [Glide 是如何加载 GIF 动图的](https://juejin.cn/post/6939143083866980360)
 
+[Android换肤原理](https://cloud.tencent.com/developer/article/1634772)
 
+[Android性能优化杂谈-如何监控和解决ANR问题](https://blog.csdn.net/ljcITworld/article/details/104420422)
+
+[android如何多渠道打包?](https://cloud.tencent.com/developer/article/1906336)
 
 
 
