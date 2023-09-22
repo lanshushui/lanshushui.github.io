@@ -13,7 +13,7 @@ abbrlink: 58bbdd0e
 
 
 
-# 1.Flow 的collect的正常用法
+# Flow 的collect的正常用法
 
 ```kotlin
 mainScope.launch {
@@ -66,9 +66,7 @@ override suspend fun collect(collector: FlowCollector<T>): Nothing {
 
 
 
-
-
-# 2.*zip*操作符和*combine*操作符区别
+# *zip*操作符和*combine*操作符区别
 
 1. zip要求 ：两个流发送数据的次数必须一致，1+1 合并成新的数据
 
@@ -77,6 +75,38 @@ override suspend fun collect(collector: FlowCollector<T>): Nothing {
 2. combine要求：没啥要求，两个流任意一个流的数据刷新，combine流都会取两个流的最新值进行合并
 
 
+
+# tryEmit方法
+
+```kotlin
+/**
+     * Tries to emit a [value] to this shared flow without suspending. It returns `true` if the value was
+     * emitted successfully (see below). When this function returns `false`, it means that a call to a plain [emit]
+     * function would suspend until there is buffer space available.
+     *
+     * This call can return `false` only when the [BufferOverflow] strategy is
+     * [SUSPEND][BufferOverflow.SUSPEND] **and** there are subscribers collecting this shared flow.
+     *
+     * If there are no subscribers, the buffer is not used.
+     * Instead, the most recently emitted value is simply stored into
+     * the replay cache if one was configured, displacing the older elements there,
+     * or dropped if no replay cache was configured. In any case, `tryEmit` returns `true`.
+     *
+     * This method is **thread-safe** and can be safely invoked from concurrent coroutines without
+     * external synchronization.
+     */
+public fun tryEmit(value: T): Boolean
+```
+
+**慎用tryEmit，看备注可知，当strategy是BufferOverflow.SUSPEND时（默认策略），且有subscribers时 就会发送失败，返回false**
+
+
+
+# StateFlow + data class 的问题
+
+data class 重写了equal，判断每个属性是否相等，而不是判断内存地址
+
+而StateFlow 发现 新旧数据 equal时则不会发送新数据
 
 
 
