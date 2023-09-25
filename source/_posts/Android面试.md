@@ -122,8 +122,6 @@ abbrlink: 7e8ea226
 
 [TCP拥塞控制机制](https://blog.csdn.net/shuxnhs/article/details/80644531)
 
-[TCP报文格式详解](https://www.cnblogs.com/feng9exe/p/8058891.html)
-
 [TCP的三次握手与四次挥手理解](https://blog.csdn.net/qq_38950316/article/details/81087809)
 
 [TCP Keepalive 和 HTTP Keep-Alive 是一个东西吗？](https://www.xiaolincoding.com/network/3_tcp/tcp_http_keepalive.html#tcp-%E7%9A%84-keepalive)
@@ -132,7 +130,23 @@ abbrlink: 7e8ea226
 
 
 
+[TCP报文格式详解](https://www.cnblogs.com/feng9exe/p/8058891.html)
+
+[UDP报文格式详解](http://c.biancheng.net/view/6440.html)
+
+[IP报文格式详解](http://c.biancheng.net/view/6411.html)
+
+[一个TCP报文段的最大长度为多少字节？](https://blog.csdn.net/skyattractive/article/details/106608778)
+
+[udp报文大小](https://github.com/steveLauwh/TCP-IP/blob/master/UDP/UDP%20%E6%8A%A5%E6%96%87%E7%9A%84%E5%A4%A7%E5%B0%8F.md)
+
+
+
 # Android
+
+[从JVM到Dalivk再到ART](https://cloud.tencent.com/developer/article/1634762)
+
+[MVC,MVP,MVVM,MVI 了解一下](https://cloud.tencent.com/developer/article/1934004)
 
 
 
@@ -287,6 +301,8 @@ abbrlink: 7e8ea226
 [Android换肤原理](https://cloud.tencent.com/developer/article/1634772)
 
 [Android性能优化杂谈-如何监控和解决ANR问题](https://blog.csdn.net/ljcITworld/article/details/104420422)
+
+[Android 平台 Native Crash 捕获原理详解](https://juejin.cn/post/7124688655796404254)
 
 [android如何多渠道打包?](https://cloud.tencent.com/developer/article/1906336)
 
