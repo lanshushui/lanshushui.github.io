@@ -9,7 +9,7 @@ abbrlink: 6b67b819
 
 
 
-## 1.生命周期
+## 生命周期
 
 
 
@@ -27,9 +27,39 @@ abbrlink: 6b67b819
 
 <!-- more -->
 
+## onCreateDialog调用时机为什么比onCreateView快
+
+```java
+//FragmentStateManager类
+void createView() {
+    //这里触发onCreateDialog
+    LayoutInflater layoutInflater = mFragment.performGetLayoutInflater(
+        mFragment.mSavedFragmentState);
+    //这里触发onCreateView
+    mFragment.performCreateView(layoutInflater, container, mFragment.mSavedFragmentState);
+}
+//fragment类
+LayoutInflater performGetLayoutInflater(@Nullable Bundle savedInstanceState) {
+    mLayoutInflater = onGetLayoutInflater(savedInstanceState);
+    return mLayoutInflater;
+}
+
+//DialogFragment类   重写了fragment的onGetLayoutInflater方法
+public LayoutInflater onGetLayoutInflater(@Nullable Bundle savedInstanceState) {
+    prepareDialog(savedInstanceState);
+    if (mDialog != null) {
+        layoutInflater = layoutInflater.cloneInContext(mDialog.getContext());
+    }
+    return layoutInflater;
+}
+private void prepareDialog(@Nullable Bundle savedInstanceState) {
+    mDialog = onCreateDialog(savedInstanceState);
+}
+```
 
 
-## 2.关键点
+
+## 关键点
 
 ###### requestFeature方法必须在onCreateView方法之前调用
 
@@ -61,9 +91,31 @@ public void onWindowAttributesChanged(WindowManager.LayoutParams params) {
         mWindowManager.updateViewLayout(mDecor, params);
     }
 }
+
 ```
 
 可以看出setLayout等方法必须在mDecor有值时调用才有效，在onCreateDialog方法被调用时mDecor为null，无法进行UI的设置
+
+
+
+##### mDecor初始化的时机
+
+```java
+//DialogFragment类
+public void onStart() {
+    super.onStart();
+    if (mDialog != null) {
+        mDialog.show();
+    }
+}
+//Dialog类
+public void show() {
+    mDecor = mWindow.getDecorView();
+}
+
+```
+
+可以看出mDecor在onStart方法后才会赋值
 
 
 
