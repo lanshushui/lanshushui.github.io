@@ -122,7 +122,7 @@ abbrlink: 7e8ea226
 
 [TCP拥塞控制机制](https://blog.csdn.net/shuxnhs/article/details/80644531)
 
-[TCP的三次握手与四次挥手理解](https://blog.csdn.net/qq_38950316/article/details/81087809)
+[TCP的三次握手与四次挥手理解](https://www.xiaolincoding.com/network/3_tcp/tcp_interview.html#tcp-%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%86)
 
 [TCP Keepalive 和 HTTP Keep-Alive 是一个东西吗？](https://www.xiaolincoding.com/network/3_tcp/tcp_http_keepalive.html#tcp-%E7%9A%84-keepalive)
 
@@ -297,6 +297,8 @@ abbrlink: 7e8ea226
 # 场景知识点
 
 [Glide 是如何加载 GIF 动图的](https://juejin.cn/post/6939143083866980360)
+
+[GIFLIB+FrameSequenceDrawable优化GIF动图](https://sharrychoo.github.io/blog/android-ndk/gif-load-optimizing)
 
 [Android换肤原理](https://cloud.tencent.com/developer/article/1634772)
 
