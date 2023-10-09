@@ -248,6 +248,10 @@ abbrlink: 7e8ea226
 
 [Android 动画：插值器与估值器](https://www.jianshu.com/p/915471529d3c)
 
+[Android补间动画原理分析](https://www.jianshu.com/p/93abf14de14d)
+
+[Android属性动画原理分析](https://www.jianshu.com/p/46f48f1b98a9)
+
 
 
 ## 框架层常用知识
@@ -291,6 +295,8 @@ abbrlink: 7e8ea226
 [压缩包Zip格式详析](https://blog.csdn.net/qq_43278826/article/details/118436116)
 
 [jar包的一些事儿](https://zhuanlan.zhihu.com/p/82320492)
+
+[Class文件结构](https://zhuanlan.zhihu.com/p/25823310)
 
 [关于Android的65535限制](https://www.jianshu.com/p/b17ce6e2388c)
 
