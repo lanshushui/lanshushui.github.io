@@ -38,17 +38,21 @@ abbrlink: 7e8ea226
 
 ## 语法原理
 
-[Kotlin Sealed原理](https://juejin.cn/post/6859980718588575757)
-
-[深入理解Kotlin协程（一）——基本概念与原理](https://www.sukaidev.top/2021/02/01/595755ca/)
-
 [kotlin—lateinit及其实现原理](https://www.jianshu.com/p/940bfde4bf23)
-
-[匿名内部类访问局部变量是否需要 final 修饰](https://blog.csdn.net/qq_39438055/article/details/128924700)
 
 [原理分析Kotlin的延迟初始化](https://juejin.cn/post/6844903607817469966)
 
+[属性委托](https://juejin.cn/post/6844904038589267982)
+
+
+
+[Kotlin Sealed原理](https://juejin.cn/post/6859980718588575757)
+
 [Gson 和 Kotlin Data Class 的避坑指南](https://juejin.cn/post/6908391430977224718#heading-1)
+
+[深入理解Kotlin协程（一）——基本概念与原理](https://www.sukaidev.top/2021/02/01/595755ca/)
+
+[匿名内部类访问局部变量是否需要 final 修饰](https://blog.csdn.net/qq_39438055/article/details/128924700)
 
 [Kotlin 扩展函数实现原理分析](https://www.jianshu.com/p/bab988f5605a)
 
