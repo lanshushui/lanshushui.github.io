@@ -226,6 +226,8 @@ abbrlink: 7e8ea226
 
 [Glide硬件位图](https://blog.csdn.net/qfanmingyiq/article/details/116570788)
 
+[LruCache源码](https://lixiangguo.gitbooks.io/mianshi/content/lrucache/lrucacheyuan-ma.html)
+
 
 
 ## Surface
@@ -329,6 +331,10 @@ abbrlink: 7e8ea226
 [android如何多渠道打包?](https://cloud.tencent.com/developer/article/1906336)
 
 [Kotlin-Android-Extensions 原理](https://cloud.tencent.com/developer/article/1741004)
+
+ [Apk是如何生成的](https://juejin.cn/post/6844904063155322887)
+
+[Android apk安装过程分析](https://www.jianshu.com/p/e02b1f95ea58)
 
 
 
