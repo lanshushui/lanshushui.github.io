@@ -208,6 +208,12 @@ abbrlink: 7e8ea226
 
 
 
+## view
+
+[ImageView的ScaleType的区别](https://www.jianshu.com/p/f0b08c298cac)
+
+
+
 ## bitmap
 
 [Glide4.8源码拆解（五）BitmapPool从入门到放弃](https://juejin.cn/post/6844903761698095118)
