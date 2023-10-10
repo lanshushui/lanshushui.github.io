@@ -46,6 +46,10 @@ abbrlink: 7e8ea226
 
 
 
+[Kotlin 扩展函数原理](https://www.jianshu.com/p/bab988f5605a)
+
+[Kotlin扩展属性原理](https://www.jianshu.com/p/55692cf4b602)
+
 [Kotlin Sealed原理](https://juejin.cn/post/6859980718588575757)
 
 [Gson 和 Kotlin Data Class 的避坑指南](https://juejin.cn/post/6908391430977224718#heading-1)
@@ -53,8 +57,6 @@ abbrlink: 7e8ea226
 [深入理解Kotlin协程（一）——基本概念与原理](https://www.sukaidev.top/2021/02/01/595755ca/)
 
 [匿名内部类访问局部变量是否需要 final 修饰](https://blog.csdn.net/qq_39438055/article/details/128924700)
-
-[Kotlin 扩展函数实现原理分析](https://www.jianshu.com/p/bab988f5605a)
 
 [Kotlin - 伴生对象与静态成员](https://juejin.cn/post/6923557770851680264)
 
