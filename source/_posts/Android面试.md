@@ -34,6 +34,8 @@ abbrlink: 7e8ea226
 
 [java和kotlin的可见性修饰符对比](https://blog.csdn.net/weixin_45850939/article/details/117837389)
 
+[线程池原理分析](https://www.51cto.com/article/672580.html)
+
 
 
 ## 语法原理
@@ -54,8 +56,6 @@ abbrlink: 7e8ea226
 
 [Gson 和 Kotlin Data Class 的避坑指南](https://juejin.cn/post/6908391430977224718#heading-1)
 
-[深入理解Kotlin协程（一）——基本概念与原理](https://www.sukaidev.top/2021/02/01/595755ca/)
-
 [匿名内部类访问局部变量是否需要 final 修饰](https://blog.csdn.net/qq_39438055/article/details/128924700)
 
 [Kotlin - 伴生对象与静态成员](https://juejin.cn/post/6923557770851680264)
@@ -64,7 +64,13 @@ abbrlink: 7e8ea226
 
 [Kotlin内联函数inline、noinline、crossinline](https://blog.csdn.net/u013700502/article/details/119923024)
 
+
+
+[深入理解Kotlin协程（一）——基本概念与原理](https://www.sukaidev.top/2021/02/01/595755ca/)
+
 [抽丝剥茧聊Kotlin协程之聊聊Job和SupervisorJob的区别](https://zhuanlan.zhihu.com/p/451902120)
+
+[delay函数原理](https://juejin.cn/post/7023806836696416293#heading-6)
 
 [协程(13) | 异常处理](https://juejin.cn/post/7093453154297544741#heading-5)
 
