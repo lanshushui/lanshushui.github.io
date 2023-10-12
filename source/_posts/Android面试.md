@@ -40,6 +40,16 @@ abbrlink: 7e8ea226
 
 
 
+## 集合
+
+[HashMap何时会链表转红黑树](https://blog.csdn.net/weixin_38106322/article/details/104388209)
+
+[21个刁钻的HashMap面试题](https://cloud.tencent.com/developer/article/1629452)
+
+[图解LinkedHashMap原理](https://www.jianshu.com/p/8f4f58b4b8ab)
+
+
+
 ## 语法原理
 
 [kotlin—lateinit及其实现原理](https://www.jianshu.com/p/940bfde4bf23)
@@ -91,6 +101,8 @@ abbrlink: 7e8ea226
 [死磕 java同步系列之自己动手写一个锁Lock](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484425&idx=1&sn=9325222b97f0125160ab4098c686c586&source=41#wechat_redirect)
 
 [死磕 java同步系列之AQS起篇](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484424&idx=1&sn=761eb25bd21dbfb4f8be0a458d528976&source=41#wechat_redirect)
+
+[死磕 java同步系列之ReentrantLock源码解析（一）——公平锁、非公平锁](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484423&idx=1&sn=bd944ee6ac83844d76f5db9d869683ea&chksm=c1726c09f605e51f907771be5b494fed1aaf56f90816859b577337b0aa9e1f9b9d692a60431d&scene=178&cur_album_id=1538024362992254978#rd)
 
 [为什么ConcurrentHashMap的读操作不需要加锁](https://www.cnblogs.com/keeya/p/9632958.html)
 
