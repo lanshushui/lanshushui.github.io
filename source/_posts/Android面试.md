@@ -14,6 +14,8 @@ abbrlink: 7e8ea226
 
 [Android三方库源码分析](https://blog.yorek.xyz/android/3rd-library/3rd-library-source-code/)
 
+[网络知识汇总](https://www.xiaolincoding.com/network/1_base/tcp_ip_model.html#%E7%BD%91%E7%BB%9C%E5%B1%82)
+
 <!-- more -->
 
 # Java/Kotlin
@@ -234,7 +236,9 @@ abbrlink: 7e8ea226
 
 [Glide硬件位图](https://blog.csdn.net/qfanmingyiq/article/details/116570788)
 
-[LruCache源码](https://lixiangguo.gitbooks.io/mianshi/content/lrucache/lrucacheyuan-ma.html)
+[LruCache源码分析](https://lixiangguo.gitbooks.io/mianshi/content/lrucache/lrucacheyuan-ma.html)
+
+[DiskLruCache源码分析](https://juejin.cn/post/7097204016735584263)
 
 
 
