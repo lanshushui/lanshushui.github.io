@@ -150,6 +150,10 @@ abbrlink: 7e8ea226
 
 [IP报文格式详解](http://c.biancheng.net/view/6411.html)
 
+[Http报文格式详解](https://www.runoob.com/http/http-messages.html)
+
+
+
 [一个TCP报文段的最大长度为多少字节？](https://blog.csdn.net/skyattractive/article/details/106608778)
 
 [udp报文大小](https://github.com/steveLauwh/TCP-IP/blob/master/UDP/UDP%20%E6%8A%A5%E6%96%87%E7%9A%84%E5%A4%A7%E5%B0%8F.md)
