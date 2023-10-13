@@ -38,6 +38,8 @@ abbrlink: 7e8ea226
 
 [线程池原理分析](https://www.51cto.com/article/672580.html)
 
+[死磕 java线程系列之线程池深入解析——定时任务执行流程](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484396&idx=1&sn=9c2ad1cbbe66ee19a3bf74291187981e&chksm=c1726be2f605e2f44e441c609e52eef4d2db9ab1b73a3b5109b7f22ecb1b903b3635990deb4e&scene=178&cur_album_id=1538024362992254978#rd)
+
 
 
 ## 集合
@@ -47,6 +49,14 @@ abbrlink: 7e8ea226
 [21个刁钻的HashMap面试题](https://cloud.tencent.com/developer/article/1629452)
 
 [图解LinkedHashMap原理](https://www.jianshu.com/p/8f4f58b4b8ab)
+
+[Java优先级队列DelayedWorkQueue原理分析](https://www.jianshu.com/p/587901245c95)
+
+[死磕 java集合之ArrayBlockingQueue源码分析](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484448&idx=1&sn=f99a58bf3dff4e75b8b67b970d64dce5&chksm=c1726c2ef605e538afbf92d59cd39aeea19104a88b1892274ef05a468c000437b6d6eeffafd4&scene=178&cur_album_id=1538024362992254978#rd)
+
+[死磕 java集合之LinkedBlockingQueue源码分析](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484447&idx=1&sn=06f82e53511cb2bc6d30f7035ec85285&chksm=c1726c11f605e5072e3fccb847e1ebd4583e1f5021363474cd3b28d9584913f41538fa5f23c9&scene=178&cur_album_id=1538024362992254978#rd)
+
+[死磕 java集合之CopyOnWriteArrayList源码分析](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484475&idx=1&sn=389ba5a50048607b2432480e128b349c&chksm=c1726c35f605e5235375944fa5fb7e712f1861bce5edb27334b3b678194f659fab9ea23aa64e&scene=178&cur_album_id=1538024362992254978#rd)
 
 
 
@@ -103,6 +113,8 @@ abbrlink: 7e8ea226
 [死磕 java同步系列之AQS起篇](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484424&idx=1&sn=761eb25bd21dbfb4f8be0a458d528976&source=41#wechat_redirect)
 
 [死磕 java同步系列之ReentrantLock源码解析（一）——公平锁、非公平锁](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484423&idx=1&sn=bd944ee6ac83844d76f5db9d869683ea&chksm=c1726c09f605e51f907771be5b494fed1aaf56f90816859b577337b0aa9e1f9b9d692a60431d&scene=178&cur_album_id=1538024362992254978#rd)
+
+[面试 LockSupport.park()会释放锁资源吗？](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484399&idx=1&sn=596171b05e0f374e8a601d83f4d13a76&chksm=c1726be1f605e2f71a39f1738bf8d999ac6d6017851ef5369386d1c4416ab24768508879a49e&scene=178&cur_album_id=1538024362992254978#rd)
 
 [为什么ConcurrentHashMap的读操作不需要加锁](https://www.cnblogs.com/keeya/p/9632958.html)
 
