@@ -104,6 +104,8 @@ abbrlink: 7e8ea226
 
 [Monitor对象](https://zhuanlan.zhihu.com/p/356010805)
 
+[原子性、可见性、有序性 ](https://www.cnblogs.com/yeyang/p/13576636.html)
+
 [volatile的可见性和禁止指令重排序怎么实现的？](https://juejin.cn/post/7110203255480647694)
 
 [synchronized与Lock的区别](https://www.cnblogs.com/iyyy/p/7993788.html)
@@ -252,9 +254,13 @@ abbrlink: 7e8ea226
 
 [ImageView的ScaleType的区别](https://www.jianshu.com/p/f0b08c298cac)
 
+[Android WebView与JS的交互方式总结](https://juejin.cn/post/6844904153605505032)
+
 
 
 ## bitmap
+
+[深入对比Glide 和 Picasso](https://www.jianshu.com/p/fc72001dc18d)
 
 [Glide4.8源码拆解（五）BitmapPool从入门到放弃](https://juejin.cn/post/6844903761698095118)
 
