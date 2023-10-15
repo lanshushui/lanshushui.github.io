@@ -50,6 +50,8 @@ abbrlink: 7e8ea226
 
 [图解LinkedHashMap原理](https://www.jianshu.com/p/8f4f58b4b8ab)
 
+[图解 ArrayDeque 比 LinkedList 快](https://juejin.cn/post/7012811766589554702)
+
 [Java优先级队列DelayedWorkQueue原理分析](https://www.jianshu.com/p/587901245c95)
 
 [死磕 java集合之ArrayBlockingQueue源码分析](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484448&idx=1&sn=f99a58bf3dff4e75b8b67b970d64dce5&chksm=c1726c2ef605e538afbf92d59cd39aeea19104a88b1892274ef05a468c000437b6d6eeffafd4&scene=178&cur_album_id=1538024362992254978#rd)
@@ -273,6 +275,8 @@ abbrlink: 7e8ea226
 
 
 ## Surface
+
+[SurfaceView、TextureView、GLSurfaceView 和 SurfaceTexture](https://www.nxrte.com/jishu/4363.html)
 
 [浅谈SurfaceView与GLSurfaceView用法](https://www.jianshu.com/p/90a75b9b7115)
 
