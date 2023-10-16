@@ -136,6 +136,12 @@ abbrlink: 7e8ea226
 
 [Java常见的GC Root](https://www.jianshu.com/p/dcfe84c50811?from=timeline&isappinstalled=0)
 
+[万字长文！深入理解JVM垃圾收集机制](https://segmentfault.com/a/1190000040108000)
+
+[有了 CMS，为什么还要引入 G1](https://javabetter.cn/sidebar/sanfene/jvm.html#_28-%E6%9C%89%E4%BA%86-cms-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E5%BC%95%E5%85%A5-g1)
+
+[浅谈 JVM GC 的安全点与安全区域](https://www.cnblogs.com/chenchuxin/p/15259439.html)
+
 
 
 ## 杂谈
@@ -248,7 +254,11 @@ abbrlink: 7e8ea226
 
 [Android commit和commitAllowingStateLoss区别及应用场景](https://huxian99.github.io/2016/08/28/cj3qymo360000owxk9zp17alo/)
 
+[FragmentTransaction的detach和remove区别](https://www.jianshu.com/p/1c0c280c122b)
+
 [Fragment三问—B站真题](https://cloud.tencent.com/developer/article/1735492)
+
+[FragmentPagerAdapter与FragmentStatePagerAdapter区别](https://developer.aliyun.com/article/23710)
 
 
 
