@@ -40,6 +40,8 @@ abbrlink: 7e8ea226
 
 [死磕 java线程系列之线程池深入解析——定时任务执行流程](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484396&idx=1&sn=9c2ad1cbbe66ee19a3bf74291187981e&chksm=c1726be2f605e2f44e441c609e52eef4d2db9ab1b73a3b5109b7f22ecb1b903b3635990deb4e&scene=178&cur_album_id=1538024362992254978#rd)
 
+[JDK 动态代理的原理其实很简单](https://juejin.cn/post/6974018412158664734)
+
 
 
 ## 集合
@@ -71,6 +73,8 @@ abbrlink: 7e8ea226
 [属性委托](https://juejin.cn/post/6844904038589267982)
 
 &nbsp;
+
+[Kotlin空安全原理](https://juejin.cn/post/6844904048987127822#heading-7)
 
 [Kotlin 扩展函数原理](https://www.jianshu.com/p/bab988f5605a)
 
@@ -344,6 +348,8 @@ abbrlink: 7e8ea226
 
 [Android事件分发机制一：事件是如何到达activity的？](https://segmentfault.com/a/1190000039196805)
 
+[ACTION_CANCEL到底何时触发](https://juejin.cn/post/7004794729237856287)
+
 
 
 ## 屏幕刷新
@@ -369,6 +375,18 @@ abbrlink: 7e8ea226
 [Class文件结构](https://zhuanlan.zhihu.com/p/25823310)
 
 [关于Android的65535限制](https://www.jianshu.com/p/b17ce6e2388c)
+
+
+
+## 插件化
+
+[一次搞懂—模块化、组件化与插件化](https://www.jianshu.com/p/35bc4f456759)
+
+[深入理解Android插件化技术](https://zhuanlan.zhihu.com/p/33017826)
+
+[插件化之 Activity不用注册,通过来Hook实现](https://juejin.cn/post/6844903799924981774)
+
+[插件化之加载插件的类](https://zhuanlan.zhihu.com/p/563901422)
 
 
 
