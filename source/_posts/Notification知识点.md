@@ -21,7 +21,7 @@ abbrlink: 6082b58e
 
 [Android后台应用开启前台服务Android8到12梳理](https://zhuanlan.zhihu.com/p/652510243)
 
-但实际编码，安卓12在退后台瞬间 也可以开启前台服务
+[官方限制文档](https://developer.android.com/guide/components/foreground-services#wiu-restrictions)
 
 
 
@@ -36,7 +36,9 @@ abbrlink: 6082b58e
                        .setContentText("正在使用麦克风")
    ```
 
+3.[app被强杀时，前台服务会被重新创建，不会自动停止](https://stackoverflow.com/questions/31850252/how-to-kill-a-foreground-service-along-with-the-application)   方法：onTaskRemoved方法中调用stopSelf
 
+​     
 
 ## 常见问题
 
