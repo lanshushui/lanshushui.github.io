@@ -42,6 +42,8 @@ abbrlink: 7e8ea226
 
 [JDK 动态代理的原理其实很简单](https://juejin.cn/post/6974018412158664734)
 
+[双重锁式比线程安全的懒汉式高效在哪里？](https://juejin.cn/post/7038995912034615309)
+
 
 
 ## 集合
@@ -275,6 +277,8 @@ abbrlink: 7e8ea226
 
 
 ## bitmap
+
+[如何加载100M的图片却不撑爆内存](https://segmentfault.com/a/1190000022173010)
 
 [深入对比Glide 和 Picasso](https://www.jianshu.com/p/fc72001dc18d)
 
