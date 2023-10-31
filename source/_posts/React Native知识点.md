@@ -44,9 +44,13 @@ const b = {
 }
 ```
 
-> 因为JS中没有接口的概念，所以ts中判断一个对象是不是实现某个接口，只能通过断言` as `来实现，不能通过` instanceof `    [文档][https://ts.xcatliu.com/basics/type-assertion.html#%E5%B0%86%E4%B8%80%E4%B8%AA%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%E4%B8%BA%E5%85%B6%E4%B8%AD%E4%B8%80%E4%B8%AA%E7%B1%BB%E5%9E%8B]
+> 因为JS中没有接口的概念，所以ts中判断一个对象是不是实现某个接口，只能通过断言` as `来实现，不能通过` instanceof `   [文档](https://ts.xcatliu.com/basics/type-assertion.html#%E5%B0%86%E4%B8%80%E4%B8%AA%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%E4%B8%BA%E5%85%B6%E4%B8%AD%E4%B8%80%E4%B8%AA%E7%B1%BB%E5%9E%8B)
 
 > 判断一个变量是不是函数     if (typeof (animal as Fish).swim === 'function')
+
+> obj对象被用作if语句的条件。如果obj对象存在（即非null和非undefined），则条件为真。否则，条件为假
+
+> 代替kotlin `?: `操作符的方法   表达式对象 || 0，如果对象被视为真（truthy），则整个表达式的结果将是该对象。如果对象被视为假（falsy），则整个表达式的结果将是0
 
 
 
