@@ -52,6 +52,8 @@ const b = {
 
 > 代替kotlin `?: `操作符的方法   表达式对象 || 0，如果对象被视为真（truthy），则整个表达式的结果将是该对象。如果对象被视为假（falsy），则整个表达式的结果将是0
 
+> 使用encodeURIComponent代替encodeURI 。encodeURIComponent函数则更为严格，它会对URL中的所有特殊字符进行编码 
+
 
 
 ## View属性
