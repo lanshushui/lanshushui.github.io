@@ -44,6 +44,8 @@ abbrlink: 7e8ea226
 
 [双重锁式比线程安全的懒汉式高效在哪里？](https://juejin.cn/post/7038995912034615309)
 
+[map和flatmap的区别](https://www.jianshu.com/p/c820afafd94b)
+
 
 
 ## 集合
@@ -53,6 +55,8 @@ abbrlink: 7e8ea226
 [21个刁钻的HashMap面试题](https://cloud.tencent.com/developer/article/1629452)
 
 [图解LinkedHashMap原理](https://www.jianshu.com/p/8f4f58b4b8ab)
+
+[深度解读ArrayMap优势与缺陷](https://gityuan.com/2019/01/13/arraymap/)
 
 [图解 ArrayDeque 比 LinkedList 快](https://juejin.cn/post/7012811766589554702)
 
@@ -294,7 +298,11 @@ abbrlink: 7e8ea226
 
 ## Surface
 
+[SurfaceView 与 TextureView 详解](https://cloud.tencent.com/developer/article/1771629)
+
 [SurfaceView、TextureView、GLSurfaceView 和 SurfaceTexture](https://www.nxrte.com/jishu/4363.html)
+
+[硬件加速&软件绘制](https://ljd1996.github.io/2020/11/09/Android-Surface%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/)
 
 [浅谈SurfaceView与GLSurfaceView用法](https://www.jianshu.com/p/90a75b9b7115)
 
@@ -306,7 +314,9 @@ abbrlink: 7e8ea226
 
 [Android全面解析之Handler机制（终篇](https://juejin.cn/post/6887933281686421518)
 
+[Handler面试40问答案整理](https://ophsysbilla.github.io/2020-11-16-Handler%E9%9D%A2%E8%AF%9540%E9%97%AE%E7%AD%94%E6%A1%88%E6%95%B4%E7%90%86.html)
 
+[修改系统时间对Handler延迟消息有无影响？](https://www.jianshu.com/p/9d4ab4318310)
 
 ## IPC
 
