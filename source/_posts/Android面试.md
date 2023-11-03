@@ -178,6 +178,8 @@ abbrlink: 7e8ea226
 
 # 网络
 
+[HTTPS防止抓包的方法](https://blog.csdn.net/cpcpcp123/article/details/122107538)
+
 [TCP实现可靠传输](https://www.cnblogs.com/walker993/p/9570902.html)
 
 [TCP拥塞控制机制](https://blog.csdn.net/shuxnhs/article/details/80644531)
@@ -211,6 +213,8 @@ abbrlink: 7e8ea226
 [从JVM到Dalivk再到ART](https://cloud.tencent.com/developer/article/1634762)
 
 [MVC,MVP,MVVM,MVI 了解一下](https://cloud.tencent.com/developer/article/1934004)
+
+[Android常见内存泄漏](https://blog.csdn.net/u013309870/article/details/81638113)
 
 
 

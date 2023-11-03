@@ -72,6 +72,8 @@ const b = {
 
   可以使用 `alignSelf` 实现水平居中
 
+  可以使用 `top: '50%'` 实现垂直居中
+
 
 
 ###### 实现LinearLayout的weight效果     
@@ -100,15 +102,96 @@ const b = {
 
   文字颜色 使用 `color` 属性
 
+  文字居中  `textAlign: 'center'   textAlignVertical: 'center'`
+
 
 
 ###### [`FlatList`](https://reactnative.cn/docs/flatlist)实现分页展示
 
 - data: 用于指定 FlatList 要渲染的数据数组。
+
 - renderItem: 用于定义每个数据项的渲染方式的函数。
+
 - windowSize: 用于指定 FlatList 渲染窗口的大小，即同时渲染的数据项的数量。
+
 - removeClippedSubviews: 用于指定是否在数据项滚出视图时将其从 DOM 中移除，以提高性能。
+
 - pagingEnabled: 用于指定是否启用分页模式，即每次滚动只显示一个完整的数据项。
+
+- maxToRenderPerBatch 每次增量渲染的最大数量，性能优化
+
+- initialNumToRender  指定一开始渲染的元素数量，性能优化
+
+- onViewableItemsChanged 可见元素变化
+
+- initialScrollIndex 和getItemLayout 配合使用
+
+  
+
+- handleScrollBeginDrag    按住手指滑动马上触发，即使在最后一页继续滑动也会触发
+
+- onMomentumScrollEnd  与handleScrollBeginDrag对应，可能多次调用
+
+- onScroll 滑动触发，在最后一页继续滑动**不会触发** 
+
+
+
+###### 实现下拉提醒 已全部加载的Toast
+
+```react
+//使用PanResponder判断是否是下滑
+const panResponder = React.useRef(
+    PanResponder.create({
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => {
+            if (gestureState.dy < 0) {
+                //注册onViewableItemsChanged函数 获得当前显示的页数，isAtBottom函数 判断是否是列表最后一页
+                if (!loadMoreEnable.current && isAtBottom()) {
+                    showToast()
+                }
+            }
+        },
+    }),
+)
+```
+
+
+
+手势事件  [PanResponder](https://blog.csdn.net/zramals/article/details/78403508) 
+
+```
+//这个视图是否在触摸开始时想成为响应器？ 
+onStartShouldSetPanResponder:this._onStartShouldSetPanResponder,
+//所以如果一个父视图要防止子视图在触摸开始时成为响应器，它应该有一个 onStartShouldSetResponderCapture 处理程序，返回 true。
+onStartShouldSetPanResponderCapture:this._onStartShouldSetPanResponderCapture,
+//当视图不是响应器时，该指令被在视图上移动的触摸调用：这个视图想“声明”触摸响应吗? 
+onMoveShouldSetPanResponder:this._onMoveShouldSetPanResponder,
+//所以如果一个父视图要防止子视图在移动开始时成为响应器，它应该有一个 onMoveShouldSetPanResponderCapture 处理程序，返回 true。
+onMoveShouldSetPanResponderCapture:this._onMoveShouldSetPanResponderCapture,
+//当前有其他的东西成为响应器并且没有释放它。 
+onPanResponderReject: this._onPanResponderReject,
+//视图现在正在响应触摸事件。这个时候要高亮标明并显示给用户正在发生的事情。
+onPanResponderGrant: this._onPanResponderGrant,
+//手势开始
+onPanResponderStart: this._onPanResponderStart,
+//手势结束
+onPanResponderEnd: this._onPanResponderEnd,
+//用户正移动他们的手指 
+onPanResponderMove: this._onPanResponderMove,
+//在触摸最后被引发，即“touchUp” 
+onPanResponderRelease: this._onPanResponderRelease,
+//其他的东西想成为响应器。这种视图应该释放应答吗？返回 true 就是允许释放 
+onPanResponderTerminationRequest:this._onPanResponderTerminationRequest,
+```
+
+异常正常滑动触发的事件顺序
+
+```
+onMoveShouldSetPanResponderCapture
+onPanResponderGrant
+onPanResponderMove(可能没有)
+onPanResponderEnd
+```
 
 
 
