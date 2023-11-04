@@ -70,6 +70,44 @@
       </tags>
   </entry>
   <entry>
+    <title>Flow知识点</title>
+    <url>/post/58bbdd0e.html</url>
+    <content><![CDATA[<p><a href="https://juejin.cn/post/6989536876096913439">【Kotlin Flow】 一眼看全——Flow操作符大全</a></p>
+<h1 id="Flow-的collect的正常用法"><a href="#Flow-的collect的正常用法" class="headerlink" title="Flow 的collect的正常用法"></a>Flow 的collect的正常用法</h1><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">mainScope.launch &#123;</span><br><span class="line">    flow.collect &#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">mainScope.launch &#123;</span><br><span class="line">    flow2.collect &#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> flow的collect是个suspend函数，内部逻辑是个while(true)死循环，所以不能在collect之后写任何代码，因为执行不到 </p>
+<span id="more"></span>
+
+
+
+<p>下面为 <strong>SharedFlowImpl</strong> 的代码</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">override suspend fun collect(collector: FlowCollector&lt;T&gt;): Nothing &#123;</span><br><span class="line">    val slot = allocateSlot()</span><br><span class="line">    try &#123;</span><br><span class="line">        if (collector is SubscribedFlowCollector) collector.onSubscription()</span><br><span class="line">        val collectorJob = currentCoroutineContext()[Job]</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            var newValue: Any?</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                newValue = tryTakeValue(slot) // attempt no-suspend fast path first</span><br><span class="line">                if (newValue !== NO_VALUE) break</span><br><span class="line">                awaitValue(slot) // await signal that the new value is available</span><br><span class="line">            &#125;</span><br><span class="line">            collectorJob?.ensureActive()</span><br><span class="line">            collector.emit(newValue as T)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        freeSlot(slot)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><font color='red'>如果需要collect一个flow，需要单独起一个协程，该协程内只能collect一个flow，不能在collect函数后面加任何代码</font></p>
+<h1 id="zip操作符和combine操作符区别"><a href="#zip操作符和combine操作符区别" class="headerlink" title="zip操作符和combine操作符区别"></a><em>zip</em>操作符和<em>combine</em>操作符区别</h1><ol>
+<li><p>zip要求 ：两个流发送数据的次数必须一致，1+1 合并成新的数据</p>
+<p>​     如果A流发两个数据，B流发一个数据，则A流的第二个数据因为找不到B流的对应数据，不会触发zip流的合并发送</p>
+</li>
+<li><p>combine要求：没啥要求，两个流任意一个流的数据刷新，combine流都会取两个流的最新值进行合并</p>
+</li>
+</ol>
+<h1 id="tryEmit方法"><a href="#tryEmit方法" class="headerlink" title="tryEmit方法"></a>tryEmit方法</h1><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Tries to emit a [value] to this shared flow without suspending. It returns `true` if the value was</span></span><br><span class="line"><span class="comment">     * emitted successfully (see below). When this function returns `false`, it means that a call to a plain [emit]</span></span><br><span class="line"><span class="comment">     * function would suspend until there is buffer space available.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * This call can return `false` only when the [BufferOverflow] strategy is</span></span><br><span class="line"><span class="comment">     * [SUSPEND][BufferOverflow.SUSPEND] **and** there are subscribers collecting this shared flow.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * If there are no subscribers, the buffer is not used.</span></span><br><span class="line"><span class="comment">     * Instead, the most recently emitted value is simply stored into</span></span><br><span class="line"><span class="comment">     * the replay cache if one was configured, displacing the older elements there,</span></span><br><span class="line"><span class="comment">     * or dropped if no replay cache was configured. In any case, `tryEmit` returns `true`.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * This method is **thread-safe** and can be safely invoked from concurrent coroutines without</span></span><br><span class="line"><span class="comment">     * external synchronization.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">fun</span> <span class="title">tryEmit</span><span class="params">(value: <span class="type">T</span>)</span></span>: <span class="built_in">Boolean</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>慎用tryEmit，看备注可知，当strategy是BufferOverflow.SUSPEND时（默认策略），且有subscribers时 就会发送失败，返回false</strong></p>
+<h1 id="StateFlow-data-class-的问题"><a href="#StateFlow-data-class-的问题" class="headerlink" title="StateFlow + data class 的问题"></a>StateFlow + data class 的问题</h1><p>data class 重写了equal，判断每个属性是否相等，而不是判断内存地址</p>
+<p>而StateFlow 发现 新旧数据 equal时则不会发送新数据</p>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>知识点</category>
+      </categories>
+      <tags>
+        <tag>Flow</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ASM知识点</title>
     <url>/post/3098f3f8.html</url>
     <content><![CDATA[<p><a href="https://www.jianshu.com/p/16ed4d233fd1">【Android】函数插桩（Gradle + ASM）</a></p>
@@ -132,25 +170,58 @@
       </tags>
   </entry>
   <entry>
-    <title>ImageSpan扩展</title>
-    <url>/post/503d328.html</url>
-    <content><![CDATA[<h2 id="支持GIF播放的TextView"><a href="#支持GIF播放的TextView" class="headerlink" title="支持GIF播放的TextView"></a>支持GIF播放的TextView</h2><span id="more"></span>
-
-<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SpanTextView</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span>(</span><br><span class="line">    context: Context,</span><br><span class="line">    attrs: AttributeSet? = <span class="literal">null</span>,</span><br><span class="line">    defStyle: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line">) : TextView(context, attrs, defStyle) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> hasSpanCallback = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> isSpanAttached = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> spanCallbacks: Array&lt;SpanCallback&gt;? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttachedToWindow</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttachedToWindow()</span><br><span class="line">        onAttach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetachedFromWindow</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onDetachedFromWindow()</span><br><span class="line">        onDetach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onStartTemporaryDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onStartTemporaryDetach()</span><br><span class="line">        onDetach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onFinishTemporaryDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onFinishTemporaryDetach()</span><br><span class="line">        onAttach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setText</span><span class="params">(text: <span class="type">CharSequence</span>, type: <span class="type">BufferType</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (getText() === text) &#123;</span><br><span class="line">            <span class="comment">//防止重复设置text导致span中反复调用生命周期方法</span></span><br><span class="line">            <span class="keyword">super</span>.setText(text, type)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">val</span> wasSpanAttached = isSpanAttached</span><br><span class="line">        <span class="keyword">if</span> (hasSpanCallback &amp;&amp; wasSpanAttached) &#123;</span><br><span class="line">            onDetach()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (text <span class="keyword">is</span> Spanned) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                spanCallbacks = text.getSpans(<span class="number">0</span>, text.length, SpanCallback::<span class="keyword">class</span>.java)</span><br><span class="line">                hasSpanCallback = spanCallbacks?.isNotEmpty() == <span class="literal">true</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (e: ArrayIndexOutOfBoundsException) &#123;</span><br><span class="line">                <span class="comment">//</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            spanCallbacks = <span class="literal">null</span></span><br><span class="line">            hasSpanCallback = <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">super</span>.setText(text, type)</span><br><span class="line">        <span class="keyword">if</span> (hasSpanCallback &amp;&amp; wasSpanAttached) &#123;</span><br><span class="line">            onAttach()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        spanCallbacks?.forEach &#123;</span><br><span class="line">            it.onAttach(<span class="keyword">this</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        isSpanAttached = <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        spanCallbacks?.forEach &#123;</span><br><span class="line">            it.onDetach()</span><br><span class="line">        &#125;</span><br><span class="line">        isSpanAttached = <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">interface</span> <span class="title class_">SpanCallback</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(textView: <span class="type">TextView</span>)</span></span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="支持GIF的ImageSpan"><a href="#支持GIF的ImageSpan" class="headerlink" title="支持GIF的ImageSpan"></a>支持GIF的ImageSpan</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GIFImageSpan</span>(d: Drawable) : CustomImageSpan(d) , SpanTextView.SpanCallback &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> curDrawableCallback: Drawable.Callback? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(textView: <span class="type">TextView</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> textViewRef = WeakReference(textView)</span><br><span class="line">        (drawable <span class="keyword">as</span>? GifDrawable)?.apply &#123;</span><br><span class="line">            curDrawableCallback = <span class="keyword">object</span> : Drawable.Callback &#123;</span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">invalidateDrawable</span><span class="params">(who: <span class="type">Drawable</span>)</span></span> &#123;</span><br><span class="line">                    textViewRef.<span class="keyword">get</span>()?.invalidate()</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">scheduleDrawable</span><span class="params">(who: <span class="type">Drawable</span>, what: <span class="type">Runnable</span>, `<span class="keyword">when</span>`: <span class="type">Long</span>)</span></span> &#123;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">unscheduleDrawable</span><span class="params">(who: <span class="type">Drawable</span>, what: <span class="type">Runnable</span>)</span></span> &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            drawable.callback = curDrawableCallback</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!isRunning) &#123;</span><br><span class="line">                start()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        (drawable <span class="keyword">as</span>? GifDrawable)?.apply &#123;</span><br><span class="line">            <span class="keyword">if</span> (isRunning) &#123;</span><br><span class="line">                stop()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        curDrawableCallback = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <title>Fragment知识点</title>
+    <url>/post/1733ce00.html</url>
+    <content><![CDATA[<h2 id="1-关键节点"><a href="#1-关键节点" class="headerlink" title="1.关键节点"></a>1.关键节点</h2><p>Fragment调用生命周期最近的方法</p>
+<p>androidx.fragment.app.FragmentStateManager#moveToExpectedState</p>
+<span id="more"></span>
 
 
 
+<h2 id="2-Commit与CommitNow的区别"><a href="#2-Commit与CommitNow的区别" class="headerlink" title="2.Commit与CommitNow的区别"></a>2.Commit与CommitNow的区别</h2><ol>
+<li><p>commit() &gt;&gt; enqueueAction() &gt;&gt; scheduleCommit() &gt;&gt; execPendingActions()</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">scheduleCommit</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">postponeReady</span> <span class="operator">=</span></span><br><span class="line">            mPostponedTransactions != <span class="literal">null</span> &amp;&amp; !mPostponedTransactions.isEmpty();</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">pendingReady</span> <span class="operator">=</span> mPendingActions != <span class="literal">null</span> &amp;&amp; mPendingActions.size() == <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (postponeReady || pendingReady) &#123;</span><br><span class="line">            mHost.getHandler().removeCallbacks(mExecCommit);</span><br><span class="line">            mHost.getHandler().post(mExecCommit);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>​       </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Runnable</span> <span class="variable">mExecCommit</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        execPendingActions();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以看到commit方法利用Handler机制， 是异步的，所以不清楚fragment什么时候被添加上，不清楚生命周期什么时候被调用</p>
+<p>2.commitNow() &gt;&gt;  execSingleAction() &gt;&gt;  removeRedundantOperationsAndExecute() &gt;&gt; executeOpsTogether()</p>
+<p>删除部分代码，贴入executeOpsTogether重要部分代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span>((newState = <span class="built_in">this</span>.computeExpectedState()) != <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">                 stateWasChanged = <span class="literal">true</span>;</span><br><span class="line">                 <span class="type">int</span> nextStep;</span><br><span class="line">                 <span class="keyword">if</span> (newState &gt; <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">                     nextStep = <span class="built_in">this</span>.mFragment.mState + <span class="number">1</span>;</span><br><span class="line">                     <span class="keyword">switch</span> (nextStep) &#123;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                             <span class="built_in">this</span>.attach();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                             <span class="built_in">this</span>.create();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                             <span class="built_in">this</span>.ensureInflatedView();</span><br><span class="line">                             <span class="built_in">this</span>.createView();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                             <span class="built_in">this</span>.activityCreated();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                             <span class="built_in">this</span>.mFragment.mState = <span class="number">4</span>;</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">                             <span class="built_in">this</span>.start();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                             <span class="built_in">this</span>.mFragment.mState = <span class="number">6</span>;</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">                             <span class="built_in">this</span>.resume();</span><br><span class="line">                     &#125;</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以看到commitNow 是同步的，连同Fragment的各个生命周期OnCreate，OnCreateView都会在同一个Looper消息循环中被调用</p>
+<p>因此在一些迫切需要立刻展示的场景，可以使用commitNow 或者 commitNowAllowingStateLoss</p>
+<h2 id="3-Fragment-onResume调用时，view的WindowToken是空的吗？"><a href="#3-Fragment-onResume调用时，view的WindowToken是空的吗？" class="headerlink" title="3.Fragment onResume调用时，view的WindowToken是空的吗？"></a>3.Fragment onResume调用时，view的WindowToken是空的吗？</h2><p> <em>答案：不一定，如果activity的window没在屏幕上时，那么token就是空的；如果是activity的window已经在屏幕上时，再创建显示一个fragment，此时token就不是空的</em></p>
+<h5 id="Fragment是在Activity的onCreate方法时加入场景下-Fragment的onResume方法调用路径"><a href="#Fragment是在Activity的onCreate方法时加入场景下-Fragment的onResume方法调用路径" class="headerlink" title="Fragment是在Activity的onCreate方法时加入场景下 , Fragment的onResume方法调用路径"></a>Fragment是在Activity的onCreate方法时加入场景下 , Fragment的onResume方法调用路径</h5><p><img src="https://s3.bmp.ovh/imgs/2023/06/12/3dd9a65d555145c1.jpg"></p>
+<p>可以看到 Fragment的onResume是在同一个消息循环中，跟着Activity的onResume方法调用的，</p>
+<p>我们都知道Activity的onResume方法调用，activity的view是还没有add到window上的，所以导致fragment的view有没有add到window上，没有token</p>
+<h5 id="Fragment-的view是什么时候add的？"><a href="#Fragment-的view是什么时候add的？" class="headerlink" title="Fragment 的view是什么时候add的？"></a>Fragment 的view是什么时候add的？</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//FragmentStateManager类</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">createView</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.mFragment.mContainer = container;</span><br><span class="line">    <span class="comment">//Fragment的onCreateView被调用</span></span><br><span class="line">    <span class="built_in">this</span>.mFragment.performCreateView(layoutInflater, container, <span class="built_in">this</span>.mFragment.mSavedFragmentState);</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.mFragment.mView != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="built_in">this</span>.mFragment.mView.setSaveFromParentEnabled(<span class="literal">false</span>);</span><br><span class="line">        <span class="built_in">this</span>.mFragment.mView.setTag(id.fragment_container_view_tag, <span class="built_in">this</span>.mFragment);</span><br><span class="line">        <span class="keyword">if</span> (container != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">//加入父布局</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> <span class="built_in">this</span>.mFragmentStore.findFragmentIndexInContainer(<span class="built_in">this</span>.mFragment);</span><br><span class="line">            <span class="built_in">this</span>.mFragment.mContainer.addView(<span class="built_in">this</span>.mFragment.mView, index);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//Fragment的onViewCreated被调用</span></span><br><span class="line">        <span class="built_in">this</span>.mFragment.performViewCreated();</span><br><span class="line">        <span class="built_in">this</span>.mDispatcher.dispatchOnFragmentViewCreated(<span class="built_in">this</span>.mFragment, <span class="built_in">this</span>.mFragment.mView, <span class="built_in">this</span>.mFragment.mSavedFragmentState, <span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p> 可以看到虽然Fragment 的view在createView时就add到mContainer上，但可惜mContainer还没有add到window上，所以导致一直到onResume时，也拿不到token</p>
+<p>知识场景：Fragment onResume调用时，利用fragment的view 显示一个popupwindow可能会因为拿不到token导致崩溃</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">android.view.WindowManager$BadTokenException: Unable to add window -- token null is not valid; is your activity running?</span><br></pre></td></tr></table></figure>
+
+
+
+<p>解决方法：post一下再显示popupwindow</p>
+<h2 id="探究activity-onCreate方法中-commit-fragment-场景下，fragment的生命周期"><a href="#探究activity-onCreate方法中-commit-fragment-场景下，fragment的生命周期" class="headerlink" title="探究activity onCreate方法中 commit fragment 场景下，fragment的生命周期"></a>探究activity onCreate方法中 commit fragment 场景下，fragment的生命周期</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//FragmentActivity类</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onStart</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.mFragments.noteStateNotSaved();</span><br><span class="line">    <span class="built_in">super</span>.onStart();</span><br><span class="line">    <span class="built_in">this</span>.mStopped = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.mCreated) &#123;</span><br><span class="line">        <span class="built_in">this</span>.mCreated = <span class="literal">true</span>;</span><br><span class="line">        <span class="built_in">this</span>.mFragments.dispatchActivityCreated();  <span class="comment">//this.dispatchStateChange(4);</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.mFragments.execPendingActions();</span><br><span class="line">    <span class="built_in">this</span>.mFragmentLifecycleRegistry.handleLifecycleEvent(Event.ON_START);</span><br><span class="line">    <span class="built_in">this</span>.mFragments.dispatchStart(); <span class="comment">// this.dispatchStateChange(5);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//FragmentStateManager类</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">moveToExpectedState</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (newState &gt; <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">        nextStep = <span class="built_in">this</span>.mFragment.mState + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">switch</span>(nextStep) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="built_in">this</span>.attach();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                <span class="built_in">this</span>.create();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="built_in">this</span>.ensureInflatedView();</span><br><span class="line">                <span class="built_in">this</span>.createView();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                <span class="built_in">this</span>.activityCreated();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                <span class="built_in">this</span>.mFragment.mState = <span class="number">4</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">                <span class="built_in">this</span>.start();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                <span class="built_in">this</span>.mFragment.mState = <span class="number">6</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">                <span class="built_in">this</span>.resume();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到除了fragment的onResume方法外，所有创建的生命周期都在Activity的onStart()中被调用。</p>
+<p>其实Activity的onCreate方法也会调用this.dispatchStateChange(1)，但我们的场景onCreate被调用时才进行commit，导致此时还没有任何的fragment。所有都生命周期堆积在Activity的onStart()中被调用</p>
 <p>Keep Moving Forward</p>
 ]]></content>
       <categories>
-        <category>扩展点</category>
+        <category>知识点</category>
       </categories>
       <tags>
-        <tag>ImageSpan</tag>
+        <tag>Fragment</tag>
       </tags>
   </entry>
   <entry>
@@ -228,58 +299,25 @@
       </tags>
   </entry>
   <entry>
-    <title>Fragment知识点</title>
-    <url>/post/1733ce00.html</url>
-    <content><![CDATA[<h2 id="1-关键节点"><a href="#1-关键节点" class="headerlink" title="1.关键节点"></a>1.关键节点</h2><p>Fragment调用生命周期最近的方法</p>
-<p>androidx.fragment.app.FragmentStateManager#moveToExpectedState</p>
-<span id="more"></span>
+    <title>ImageSpan扩展</title>
+    <url>/post/503d328.html</url>
+    <content><![CDATA[<h2 id="支持GIF播放的TextView"><a href="#支持GIF播放的TextView" class="headerlink" title="支持GIF播放的TextView"></a>支持GIF播放的TextView</h2><span id="more"></span>
+
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SpanTextView</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span>(</span><br><span class="line">    context: Context,</span><br><span class="line">    attrs: AttributeSet? = <span class="literal">null</span>,</span><br><span class="line">    defStyle: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line">) : TextView(context, attrs, defStyle) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> hasSpanCallback = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> isSpanAttached = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> spanCallbacks: Array&lt;SpanCallback&gt;? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttachedToWindow</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttachedToWindow()</span><br><span class="line">        onAttach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetachedFromWindow</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onDetachedFromWindow()</span><br><span class="line">        onDetach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onStartTemporaryDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onStartTemporaryDetach()</span><br><span class="line">        onDetach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onFinishTemporaryDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onFinishTemporaryDetach()</span><br><span class="line">        onAttach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setText</span><span class="params">(text: <span class="type">CharSequence</span>, type: <span class="type">BufferType</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (getText() === text) &#123;</span><br><span class="line">            <span class="comment">//防止重复设置text导致span中反复调用生命周期方法</span></span><br><span class="line">            <span class="keyword">super</span>.setText(text, type)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">val</span> wasSpanAttached = isSpanAttached</span><br><span class="line">        <span class="keyword">if</span> (hasSpanCallback &amp;&amp; wasSpanAttached) &#123;</span><br><span class="line">            onDetach()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (text <span class="keyword">is</span> Spanned) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                spanCallbacks = text.getSpans(<span class="number">0</span>, text.length, SpanCallback::<span class="keyword">class</span>.java)</span><br><span class="line">                hasSpanCallback = spanCallbacks?.isNotEmpty() == <span class="literal">true</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (e: ArrayIndexOutOfBoundsException) &#123;</span><br><span class="line">                <span class="comment">//</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            spanCallbacks = <span class="literal">null</span></span><br><span class="line">            hasSpanCallback = <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">super</span>.setText(text, type)</span><br><span class="line">        <span class="keyword">if</span> (hasSpanCallback &amp;&amp; wasSpanAttached) &#123;</span><br><span class="line">            onAttach()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        spanCallbacks?.forEach &#123;</span><br><span class="line">            it.onAttach(<span class="keyword">this</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        isSpanAttached = <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        spanCallbacks?.forEach &#123;</span><br><span class="line">            it.onDetach()</span><br><span class="line">        &#125;</span><br><span class="line">        isSpanAttached = <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">interface</span> <span class="title class_">SpanCallback</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(textView: <span class="type">TextView</span>)</span></span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="2-Commit与CommitNow的区别"><a href="#2-Commit与CommitNow的区别" class="headerlink" title="2.Commit与CommitNow的区别"></a>2.Commit与CommitNow的区别</h2><ol>
-<li><p>commit() &gt;&gt; enqueueAction() &gt;&gt; scheduleCommit() &gt;&gt; execPendingActions()</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">scheduleCommit</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">postponeReady</span> <span class="operator">=</span></span><br><span class="line">            mPostponedTransactions != <span class="literal">null</span> &amp;&amp; !mPostponedTransactions.isEmpty();</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">pendingReady</span> <span class="operator">=</span> mPendingActions != <span class="literal">null</span> &amp;&amp; mPendingActions.size() == <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (postponeReady || pendingReady) &#123;</span><br><span class="line">            mHost.getHandler().removeCallbacks(mExecCommit);</span><br><span class="line">            mHost.getHandler().post(mExecCommit);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>​       </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Runnable</span> <span class="variable">mExecCommit</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        execPendingActions();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="支持GIF的ImageSpan"><a href="#支持GIF的ImageSpan" class="headerlink" title="支持GIF的ImageSpan"></a>支持GIF的ImageSpan</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GIFImageSpan</span>(d: Drawable) : CustomImageSpan(d) , SpanTextView.SpanCallback &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> curDrawableCallback: Drawable.Callback? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(textView: <span class="type">TextView</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> textViewRef = WeakReference(textView)</span><br><span class="line">        (drawable <span class="keyword">as</span>? GifDrawable)?.apply &#123;</span><br><span class="line">            curDrawableCallback = <span class="keyword">object</span> : Drawable.Callback &#123;</span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">invalidateDrawable</span><span class="params">(who: <span class="type">Drawable</span>)</span></span> &#123;</span><br><span class="line">                    textViewRef.<span class="keyword">get</span>()?.invalidate()</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">scheduleDrawable</span><span class="params">(who: <span class="type">Drawable</span>, what: <span class="type">Runnable</span>, `<span class="keyword">when</span>`: <span class="type">Long</span>)</span></span> &#123;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">unscheduleDrawable</span><span class="params">(who: <span class="type">Drawable</span>, what: <span class="type">Runnable</span>)</span></span> &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            drawable.callback = curDrawableCallback</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!isRunning) &#123;</span><br><span class="line">                start()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        (drawable <span class="keyword">as</span>? GifDrawable)?.apply &#123;</span><br><span class="line">            <span class="keyword">if</span> (isRunning) &#123;</span><br><span class="line">                stop()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        curDrawableCallback = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p>可以看到commit方法利用Handler机制， 是异步的，所以不清楚fragment什么时候被添加上，不清楚生命周期什么时候被调用</p>
-<p>2.commitNow() &gt;&gt;  execSingleAction() &gt;&gt;  removeRedundantOperationsAndExecute() &gt;&gt; executeOpsTogether()</p>
-<p>删除部分代码，贴入executeOpsTogether重要部分代码</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span>((newState = <span class="built_in">this</span>.computeExpectedState()) != <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">                 stateWasChanged = <span class="literal">true</span>;</span><br><span class="line">                 <span class="type">int</span> nextStep;</span><br><span class="line">                 <span class="keyword">if</span> (newState &gt; <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">                     nextStep = <span class="built_in">this</span>.mFragment.mState + <span class="number">1</span>;</span><br><span class="line">                     <span class="keyword">switch</span> (nextStep) &#123;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                             <span class="built_in">this</span>.attach();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                             <span class="built_in">this</span>.create();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                             <span class="built_in">this</span>.ensureInflatedView();</span><br><span class="line">                             <span class="built_in">this</span>.createView();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                             <span class="built_in">this</span>.activityCreated();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                             <span class="built_in">this</span>.mFragment.mState = <span class="number">4</span>;</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">                             <span class="built_in">this</span>.start();</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                             <span class="built_in">this</span>.mFragment.mState = <span class="number">6</span>;</span><br><span class="line">                             <span class="keyword">break</span>;</span><br><span class="line">                         <span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">                             <span class="built_in">this</span>.resume();</span><br><span class="line">                     &#125;</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以看到commitNow 是同步的，连同Fragment的各个生命周期OnCreate，OnCreateView都会在同一个Looper消息循环中被调用</p>
-<p>因此在一些迫切需要立刻展示的场景，可以使用commitNow 或者 commitNowAllowingStateLoss</p>
-<h2 id="3-Fragment-onResume调用时，view的WindowToken是空的吗？"><a href="#3-Fragment-onResume调用时，view的WindowToken是空的吗？" class="headerlink" title="3.Fragment onResume调用时，view的WindowToken是空的吗？"></a>3.Fragment onResume调用时，view的WindowToken是空的吗？</h2><p> <em>答案：不一定，如果activity的window没在屏幕上时，那么token就是空的；如果是activity的window已经在屏幕上时，再创建显示一个fragment，此时token就不是空的</em></p>
-<h5 id="Fragment是在Activity的onCreate方法时加入场景下-Fragment的onResume方法调用路径"><a href="#Fragment是在Activity的onCreate方法时加入场景下-Fragment的onResume方法调用路径" class="headerlink" title="Fragment是在Activity的onCreate方法时加入场景下 , Fragment的onResume方法调用路径"></a>Fragment是在Activity的onCreate方法时加入场景下 , Fragment的onResume方法调用路径</h5><p><img src="https://s3.bmp.ovh/imgs/2023/06/12/3dd9a65d555145c1.jpg"></p>
-<p>可以看到 Fragment的onResume是在同一个消息循环中，跟着Activity的onResume方法调用的，</p>
-<p>我们都知道Activity的onResume方法调用，activity的view是还没有add到window上的，所以导致fragment的view有没有add到window上，没有token</p>
-<h5 id="Fragment-的view是什么时候add的？"><a href="#Fragment-的view是什么时候add的？" class="headerlink" title="Fragment 的view是什么时候add的？"></a>Fragment 的view是什么时候add的？</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//FragmentStateManager类</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">createView</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.mFragment.mContainer = container;</span><br><span class="line">    <span class="comment">//Fragment的onCreateView被调用</span></span><br><span class="line">    <span class="built_in">this</span>.mFragment.performCreateView(layoutInflater, container, <span class="built_in">this</span>.mFragment.mSavedFragmentState);</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.mFragment.mView != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="built_in">this</span>.mFragment.mView.setSaveFromParentEnabled(<span class="literal">false</span>);</span><br><span class="line">        <span class="built_in">this</span>.mFragment.mView.setTag(id.fragment_container_view_tag, <span class="built_in">this</span>.mFragment);</span><br><span class="line">        <span class="keyword">if</span> (container != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">//加入父布局</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> <span class="built_in">this</span>.mFragmentStore.findFragmentIndexInContainer(<span class="built_in">this</span>.mFragment);</span><br><span class="line">            <span class="built_in">this</span>.mFragment.mContainer.addView(<span class="built_in">this</span>.mFragment.mView, index);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//Fragment的onViewCreated被调用</span></span><br><span class="line">        <span class="built_in">this</span>.mFragment.performViewCreated();</span><br><span class="line">        <span class="built_in">this</span>.mDispatcher.dispatchOnFragmentViewCreated(<span class="built_in">this</span>.mFragment, <span class="built_in">this</span>.mFragment.mView, <span class="built_in">this</span>.mFragment.mSavedFragmentState, <span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p> 可以看到虽然Fragment 的view在createView时就add到mContainer上，但可惜mContainer还没有add到window上，所以导致一直到onResume时，也拿不到token</p>
-<p>知识场景：Fragment onResume调用时，利用fragment的view 显示一个popupwindow可能会因为拿不到token导致崩溃</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">android.view.WindowManager$BadTokenException: Unable to add window -- token null is not valid; is your activity running?</span><br></pre></td></tr></table></figure>
-
-
-
-<p>解决方法：post一下再显示popupwindow</p>
-<h2 id="探究activity-onCreate方法中-commit-fragment-场景下，fragment的生命周期"><a href="#探究activity-onCreate方法中-commit-fragment-场景下，fragment的生命周期" class="headerlink" title="探究activity onCreate方法中 commit fragment 场景下，fragment的生命周期"></a>探究activity onCreate方法中 commit fragment 场景下，fragment的生命周期</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//FragmentActivity类</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onStart</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.mFragments.noteStateNotSaved();</span><br><span class="line">    <span class="built_in">super</span>.onStart();</span><br><span class="line">    <span class="built_in">this</span>.mStopped = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.mCreated) &#123;</span><br><span class="line">        <span class="built_in">this</span>.mCreated = <span class="literal">true</span>;</span><br><span class="line">        <span class="built_in">this</span>.mFragments.dispatchActivityCreated();  <span class="comment">//this.dispatchStateChange(4);</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.mFragments.execPendingActions();</span><br><span class="line">    <span class="built_in">this</span>.mFragmentLifecycleRegistry.handleLifecycleEvent(Event.ON_START);</span><br><span class="line">    <span class="built_in">this</span>.mFragments.dispatchStart(); <span class="comment">// this.dispatchStateChange(5);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//FragmentStateManager类</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">moveToExpectedState</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (newState &gt; <span class="built_in">this</span>.mFragment.mState) &#123;</span><br><span class="line">        nextStep = <span class="built_in">this</span>.mFragment.mState + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">switch</span>(nextStep) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="built_in">this</span>.attach();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                <span class="built_in">this</span>.create();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="built_in">this</span>.ensureInflatedView();</span><br><span class="line">                <span class="built_in">this</span>.createView();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                <span class="built_in">this</span>.activityCreated();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                <span class="built_in">this</span>.mFragment.mState = <span class="number">4</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">                <span class="built_in">this</span>.start();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                <span class="built_in">this</span>.mFragment.mState = <span class="number">6</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">                <span class="built_in">this</span>.resume();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到除了fragment的onResume方法外，所有创建的生命周期都在Activity的onStart()中被调用。</p>
-<p>其实Activity的onCreate方法也会调用this.dispatchStateChange(1)，但我们的场景onCreate被调用时才进行commit，导致此时还没有任何的fragment。所有都生命周期堆积在Activity的onStart()中被调用</p>
 <p>Keep Moving Forward</p>
 ]]></content>
       <categories>
-        <category>知识点</category>
+        <category>扩展点</category>
       </categories>
       <tags>
-        <tag>Fragment</tag>
+        <tag>ImageSpan</tag>
       </tags>
   </entry>
   <entry>
@@ -320,34 +358,6 @@
       </categories>
       <tags>
         <tag>LinkMovementMethod</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Notification知识点</title>
-    <url>/post/6082b58e.html</url>
-    <content><![CDATA[<p><a href="https://bbs.huaweicloud.com/blogs/362305">Android通知Notification使用全解析，看这篇就够了</a></p>
-<span id="more"></span>
-
-<h2 id="前台服务"><a href="#前台服务" class="headerlink" title="前台服务"></a>前台服务</h2><p><a href="https://www.rtcdeveloper.cn/cn/community/blog/25759">安卓9以上，在后台使用麦克风或摄像头功能，必须启动一个前台服务</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/652510243">Android后台应用开启前台服务Android8到12梳理</a></p>
-<p><a href="https://developer.android.com/guide/components/foreground-services#wiu-restrictions">官方限制文档</a></p>
-<ol>
-<li><p>因为安卓9才需要启动前台服务，而安卓8.0以上就必须指定NotificationChannel，所以NotificationChannel是必须存在的，不用分版本判断创建</p>
-</li>
-<li><p>案例的NotificationCompat.Builder创建还缺少其他必要参数</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">val builder: NotificationCompat.Builder = NotificationCompat.Builder(baseContext, CHANNEL_ID)</span><br><span class="line">             .setSmallIcon(xxx)</span><br><span class="line">             .setContentTitle(&quot;前台服务&quot;)</span><br><span class="line">             .setContentText(&quot;正在使用麦克风&quot;)</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>3.<a href="https://stackoverflow.com/questions/31850252/how-to-kill-a-foreground-service-along-with-the-application">app被强杀时，前台服务会被重新创建，不会自动停止</a>   方法：onTaskRemoved方法中调用stopSelf</p>
-<p>​     </p>
-<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>1.setSmallIcon方法没有效果，展示效果为白色方块  <a href="https://github.com/invertase/react-native-firebase/issues/1796">问题讨论</a></p>
-<p>  解决方案：生成单独的通知图标透明文件  <a href="https://romannurik.github.io/AndroidAssetStudio/icons-notification.html">官方网站</a></p>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>Notification</category>
-      </categories>
-      <tags>
-        <tag>知识点</tag>
       </tags>
   </entry>
   <entry>
@@ -397,19 +407,130 @@
       </tags>
   </entry>
   <entry>
-    <title>React Native知识点</title>
-    <url>/post/1dcdc51b.html</url>
-    <content><![CDATA[<p><a href="https://zh-hans.react.dev/reference/react/useRef">React 官方文档</a></p>
-<p><a href="https://reactnative.cn/docs/layout-props">React Native官方文档</a></p>
+    <title>Notification知识点</title>
+    <url>/post/6082b58e.html</url>
+    <content><![CDATA[<p><a href="https://bbs.huaweicloud.com/blogs/362305">Android通知Notification使用全解析，看这篇就够了</a></p>
 <span id="more"></span>
 
+<h2 id="前台服务"><a href="#前台服务" class="headerlink" title="前台服务"></a>前台服务</h2><p><a href="https://www.rtcdeveloper.cn/cn/community/blog/25759">安卓9以上，在后台使用麦克风或摄像头功能，必须启动一个前台服务</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/652510243">Android后台应用开启前台服务Android8到12梳理</a></p>
+<p><a href="https://developer.android.com/guide/components/foreground-services#wiu-restrictions">官方限制文档</a></p>
+<ol>
+<li><p>因为安卓9才需要启动前台服务，而安卓8.0以上就必须指定NotificationChannel，所以NotificationChannel是必须存在的，不用分版本判断创建</p>
+</li>
+<li><p>案例的NotificationCompat.Builder创建还缺少其他必要参数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">val builder: NotificationCompat.Builder = NotificationCompat.Builder(baseContext, CHANNEL_ID)</span><br><span class="line">             .setSmallIcon(xxx)</span><br><span class="line">             .setContentTitle(&quot;前台服务&quot;)</span><br><span class="line">             .setContentText(&quot;正在使用麦克风&quot;)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>3.<a href="https://stackoverflow.com/questions/31850252/how-to-kill-a-foreground-service-along-with-the-application">app被强杀时，前台服务会被重新创建，不会自动停止</a>   方法：onTaskRemoved方法中调用stopSelf</p>
+<p>​     </p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>1.setSmallIcon方法没有效果，展示效果为白色方块  <a href="https://github.com/invertase/react-native-firebase/issues/1796">问题讨论</a></p>
+<p>  解决方案：生成单独的通知图标透明文件  <a href="https://romannurik.github.io/AndroidAssetStudio/icons-notification.html">官方网站</a></p>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>Notification</category>
+      </categories>
+      <tags>
+        <tag>知识点</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>React Native知识点</title>
+    <url>/post/1dcdc51b.html</url>
+    <content><![CDATA[<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects">JS官方文档</a></p>
+<p><a href="">TS官方文档</a></p>
+<p><a href="https://zh-hans.react.dev/reference/react/useRef">React 官方文档</a></p>
+<p><a href="https://reactnative.cn/docs/layout-props">React Native官方文档</a></p>
+<p><a href="https://segmentfault.com/a/1190000007535316">理解 JavaScript 的 async&#x2F;await</a></p>
+<span id="more"></span>
+
+<h2 id="常见JS问题"><a href="#常见JS问题" class="headerlink" title="常见JS问题"></a>常见JS问题</h2><blockquote>
+<p><a href="https://cloud.tencent.com/developer/article/1940775">JS中的块级作用域，var、let、const三者的区别</a></p>
+</blockquote>
+<blockquote>
+<p><em>定义接口时</em>，属性间不用写<code>,</code>分隔符   ； 但实现接口时需要加上分隔符</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//定义</span><br><span class="line">interface FlexStyle &#123;</span><br><span class="line">    borderLeftWidth?: number | undefined;</span><br><span class="line">    borderRightWidth?: number | undefined;</span><br><span class="line">&#125;</span><br><span class="line">//实现</span><br><span class="line">const a: FlexStyle = &#123;&#125;</span><br><span class="line"></span><br><span class="line">const b = &#123;</span><br><span class="line">    borderLeftWidth: 5,</span><br><span class="line">    borderRightWidth: 6</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>因为JS中没有接口的概念，所以ts中判断一个对象是不是实现某个接口，只能通过断言<code>as</code>来实现，不能通过<code>instanceof</code>   <a href="https://ts.xcatliu.com/basics/type-assertion.html#%E5%B0%86%E4%B8%80%E4%B8%AA%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%E4%B8%BA%E5%85%B6%E4%B8%AD%E4%B8%80%E4%B8%AA%E7%B1%BB%E5%9E%8B">文档</a></p>
+</blockquote>
+<blockquote>
+<p>判断一个变量是不是函数     if (typeof (animal as Fish).swim &#x3D;&#x3D;&#x3D; ‘function’)</p>
+</blockquote>
+<blockquote>
+<p>obj对象被用作if语句的条件。如果obj对象存在（即非null和非undefined），则条件为真。否则，条件为假</p>
+</blockquote>
+<blockquote>
+<p>代替kotlin <code>?: </code>操作符的方法   表达式对象 || 0，如果对象被视为真（truthy），则整个表达式的结果将是该对象。如果对象被视为假（falsy），则整个表达式的结果将是0</p>
+</blockquote>
+<blockquote>
+<p>使用encodeURIComponent代替encodeURI 。encodeURIComponent函数则更为严格，它会对URL中的所有特殊字符进行编码 </p>
+</blockquote>
 <h2 id="View属性"><a href="#View属性" class="headerlink" title="View属性"></a>View属性</h2><h6 id="实现RelateLayout效果"><a href="#实现RelateLayout效果" class="headerlink" title="实现RelateLayout效果"></a>实现RelateLayout效果</h6><p>  子view使用 <a href="https://reactnative.cn/docs/layout-props#alignself"><code>alignSelf</code></a> 属性选择位置</p>
+<h6 id="实现FrameLayout效果"><a href="#实现FrameLayout效果" class="headerlink" title="实现FrameLayout效果"></a>实现FrameLayout效果</h6><p>  两个需要重叠的view用一个<code>View</code>标签包含起来，需要重叠的子view使用 <a href="https://reactnative.cn/docs/layout-props#position"><code>position</code></a> 属性【absolute】</p>
+<p>  例如把按钮放在视图的底部：  position: ‘absolute’,  bottom:0</p>
+<p>  可以使用 <code>alignSelf</code> 实现水平居中</p>
+<p>  可以使用 <code>top: &#39;50%&#39;</code> 实现垂直居中</p>
 <h6 id="实现LinearLayout的weight效果"><a href="#实现LinearLayout的weight效果" class="headerlink" title="实现LinearLayout的weight效果"></a>实现LinearLayout的weight效果</h6><p>   子view使用  <a href="https://reactnative.cn/docs/layout-props#flex"><code>flex</code> </a>属性选择大小</p>
 <h6 id="控制子View的对其方式"><a href="#控制子View的对其方式" class="headerlink" title="控制子View的对其方式"></a>控制子View的对其方式</h6><p><a href="https://reactnative.cn/docs/layout-props#justifycontent">justifyContent</a>  控制子元素在主轴的对齐方式</p>
 <p><a href="https://reactnative.cn/docs/layout-props#alignitems">alignItems</a> 控制子元素在交叉轴的对齐方式</p>
 <p>例如父View是垂直展示View，<code>justifyContent</code>可以控制子View从底部开始展示，<code>alignItems</code>可以控制子View水平居中</p>
+<h6 id="Image实现圆角"><a href="#Image实现圆角" class="headerlink" title="Image实现圆角"></a>Image实现圆角</h6><p>   <code>borderRadius</code> 设为宽高的一半</p>
 <h6 id="Text控件"><a href="#Text控件" class="headerlink" title="Text控件"></a>Text控件</h6><p>  文字颜色 使用 <code>color</code> 属性</p>
-<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>Keep Moving Forward</p>
+<p>  文字居中  <code>textAlign: &#39;center&#39;   textAlignVertical: &#39;center&#39;</code></p>
+<h6 id="FlatList实现分页展示"><a href="#FlatList实现分页展示" class="headerlink" title="FlatList实现分页展示"></a><a href="https://reactnative.cn/docs/flatlist"><code>FlatList</code></a>实现分页展示</h6><ul>
+<li><p>data: 用于指定 FlatList 要渲染的数据数组。</p>
+</li>
+<li><p>renderItem: 用于定义每个数据项的渲染方式的函数。</p>
+</li>
+<li><p>windowSize: 用于指定 FlatList 渲染窗口的大小，即同时渲染的数据项的数量。</p>
+</li>
+<li><p>removeClippedSubviews: 用于指定是否在数据项滚出视图时将其从 DOM 中移除，以提高性能。</p>
+</li>
+<li><p>pagingEnabled: 用于指定是否启用分页模式，即每次滚动只显示一个完整的数据项。</p>
+</li>
+<li><p>maxToRenderPerBatch 每次增量渲染的最大数量，性能优化</p>
+</li>
+<li><p>initialNumToRender  指定一开始渲染的元素数量，性能优化</p>
+</li>
+<li><p>onViewableItemsChanged 可见元素变化</p>
+</li>
+<li><p>initialScrollIndex 和getItemLayout 配合使用</p>
+</li>
+<li><p>handleScrollBeginDrag    按住手指滑动马上触发，即使在最后一页继续滑动也会触发</p>
+</li>
+<li><p>onMomentumScrollEnd  与handleScrollBeginDrag对应，可能多次调用</p>
+</li>
+<li><p>onScroll 滑动触发，在最后一页继续滑动<strong>不会触发</strong></p>
+</li>
+</ul>
+<h6 id="实现下拉提醒-已全部加载的Toast"><a href="#实现下拉提醒-已全部加载的Toast" class="headerlink" title="实现下拉提醒 已全部加载的Toast"></a>实现下拉提醒 已全部加载的Toast</h6><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//使用PanResponder判断是否是下滑</span><br><span class="line">const panResponder = React.useRef(</span><br><span class="line">    PanResponder.create(&#123;</span><br><span class="line">        onMoveShouldSetPanResponder: () =&gt; true,</span><br><span class="line">        onPanResponderMove: (e: GestureResponderEvent, gestureState: PanResponderGestureState) =&gt; &#123;</span><br><span class="line">            if (gestureState.dy &lt; 0) &#123;</span><br><span class="line">                //注册onViewableItemsChanged函数 获得当前显示的页数，isAtBottom函数 判断是否是列表最后一页</span><br><span class="line">                if (!loadMoreEnable.current &amp;&amp; isAtBottom()) &#123;</span><br><span class="line">                    showToast()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>手势事件  <a href="https://blog.csdn.net/zramals/article/details/78403508">PanResponder</a> </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//这个视图是否在触摸开始时想成为响应器？ </span><br><span class="line">onStartShouldSetPanResponder:this._onStartShouldSetPanResponder,</span><br><span class="line">//所以如果一个父视图要防止子视图在触摸开始时成为响应器，它应该有一个 onStartShouldSetResponderCapture 处理程序，返回 true。</span><br><span class="line">onStartShouldSetPanResponderCapture:this._onStartShouldSetPanResponderCapture,</span><br><span class="line">//当视图不是响应器时，该指令被在视图上移动的触摸调用：这个视图想“声明”触摸响应吗? </span><br><span class="line">onMoveShouldSetPanResponder:this._onMoveShouldSetPanResponder,</span><br><span class="line">//所以如果一个父视图要防止子视图在移动开始时成为响应器，它应该有一个 onMoveShouldSetPanResponderCapture 处理程序，返回 true。</span><br><span class="line">onMoveShouldSetPanResponderCapture:this._onMoveShouldSetPanResponderCapture,</span><br><span class="line">//当前有其他的东西成为响应器并且没有释放它。 </span><br><span class="line">onPanResponderReject: this._onPanResponderReject,</span><br><span class="line">//视图现在正在响应触摸事件。这个时候要高亮标明并显示给用户正在发生的事情。</span><br><span class="line">onPanResponderGrant: this._onPanResponderGrant,</span><br><span class="line">//手势开始</span><br><span class="line">onPanResponderStart: this._onPanResponderStart,</span><br><span class="line">//手势结束</span><br><span class="line">onPanResponderEnd: this._onPanResponderEnd,</span><br><span class="line">//用户正移动他们的手指 </span><br><span class="line">onPanResponderMove: this._onPanResponderMove,</span><br><span class="line">//在触摸最后被引发，即“touchUp” </span><br><span class="line">onPanResponderRelease: this._onPanResponderRelease,</span><br><span class="line">//其他的东西想成为响应器。这种视图应该释放应答吗？返回 true 就是允许释放 </span><br><span class="line">onPanResponderTerminationRequest:this._onPanResponderTerminationRequest,</span><br></pre></td></tr></table></figure>
+
+<p>异常正常滑动触发的事件顺序</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">onMoveShouldSetPanResponderCapture</span><br><span class="line">onPanResponderGrant</span><br><span class="line">onPanResponderMove(可能没有)</span><br><span class="line">onPanResponderEnd</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h6><p><a href="https://reactnative.cn/docs/animated#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB%E7%BB%84%E4%BB%B6">基本用法</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">const MyView = (prop: any) =&gt; &#123;</span><br><span class="line">  const [scaleValue] = useState(new Animated.Value(1));</span><br><span class="line">  const showAnimation = () =&gt; &#123;</span><br><span class="line">    Animated.timing(scaleValue, &#123;</span><br><span class="line">      toValue: 0.75,</span><br><span class="line">      duration: 300,</span><br><span class="line">      useNativeDriver: true,</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  return &lt;Animated.Image</span><br><span class="line">    source=&#123;&#123; uri: &#x27;https://gw.alicdn.com/i1/710600684/O1CN01OwjnvQ1GvJkcNOcpb_!!710600684.jpg_Q75.jpg_.webp&#x27; &#125;&#125;</span><br><span class="line">    style=&#123;&#123;</span><br><span class="line">      width: 40, height: 40, borderRadius: 20, transform: [&#123; scale: scaleValue &#125;]</span><br><span class="line">    &#125;&#125;</span><br><span class="line">  /&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>动画值必须放在state中保存起来</li>
+<li>放大，缩小动画必须放在style的<code>transform</code>属性上，透明度动画必须放在style的<code>opacity</code>属性上</li>
+</ol>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p><code>View</code> 标签视情况，可能会被优化，不会被转换为平台的ViewGroup</p>
+<p><code>View</code> 可以不需要宽高参数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//对应 export </span><br><span class="line">import &#123; A &#125; from &#x27;xxxx&#x27;</span><br><span class="line">//对应 export default</span><br><span class="line">import B from &#x27;xxxx&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Keep Moving Forward</p>
 ]]></content>
       <categories>
         <category>React Native</category>
@@ -502,75 +623,6 @@
       </tags>
   </entry>
   <entry>
-    <title>RecyclerView曝光踩坑-3</title>
-    <url>/post/362a61c3.html</url>
-    <content><![CDATA[<p><a href="https://lanshushui.github.io/post/22258c7a.html">RecyclerView曝光踩坑-1</a></p>
-<p><a href="https://lanshushui.github.io/post/412d5155.html">RecyclerView曝光踩坑-2</a></p>
-<p>背景： 使用RecyclerView+PagerSnapHelper 实现一页一页滑动的效果。</p>
-<p>使用RecyclerView的smoothScrollToPosition实现自动滑页功能。</p>
-<p>当从第一页自动滑向第二页，第二页和第三页的都会被调用onViewAttachedToWindow，导致多余页面上报。</p>
-<span id="more"></span>
-
-
-
-<h2 id="首先让我们看一下问题场景下的-DEBUG-信息"><a href="#首先让我们看一下问题场景下的-DEBUG-信息" class="headerlink" title="首先让我们看一下问题场景下的 DEBUG 信息"></a>首先让我们看一下问题场景下的 DEBUG 信息</h2><p><img src="https://s3.bmp.ovh/imgs/2023/08/07/5d9ab8ba137383e8.jpg"></p>
-<p>LinearLayoutManager的fill函数是布局关键函数，不了解的先去了解一下，这里就不仔细讲了。</p>
-<p>remainingSpace是布局可用空间，截图数值为265。是由<strong>【layoutState.mAvailable的1px】和【layoutState.mExtraFillSpace的264px】</strong>组成。</p>
-<p><strong>我的用例场景一页宽度就是264px</strong>。所以导致会加载进两个页面，导致问题的出现。</p>
-<p>让我们来分析下<strong>【 layoutState.mAvailable的1px】 和 【layoutState.mExtraFillSpace的264px】</strong>   是如何产生的？这有利于我们解决问题</p>
-<h2 id="1-分析smoothScrollToPosition实现逻辑"><a href="#1-分析smoothScrollToPosition实现逻辑" class="headerlink" title="1.分析smoothScrollToPosition实现逻辑"></a>1.分析smoothScrollToPosition实现逻辑</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//RecyclerView</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">smoothScrollToPosition</span><span class="params">(<span class="type">int</span> position)</span> &#123;</span><br><span class="line">    mLayout.smoothScrollToPosition(<span class="built_in">this</span>, mState, position);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//LinearLayoutManager</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">smoothScrollToPosition</span><span class="params">(RecyclerView recyclerView, RecyclerView.State state,</span></span><br><span class="line"><span class="params">                                   <span class="type">int</span> position)</span> &#123;</span><br><span class="line">    <span class="type">LinearSmoothScroller</span> <span class="variable">linearSmoothScroller</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LinearSmoothScroller</span>(recyclerView.getContext());</span><br><span class="line">    <span class="comment">//设置目标位置</span></span><br><span class="line">    linearSmoothScroller.setTargetPosition(position);</span><br><span class="line">    linearSmoothScroller.start(mRecyclerView, <span class="built_in">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//SmoothScroller</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">start</span><span class="params">(RecyclerView recyclerView, LayoutManager layoutManager)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 停止上一个mViewFlinger</span></span><br><span class="line">    recyclerView.mViewFlinger.stop();</span><br><span class="line">    </span><br><span class="line">	<span class="comment">//google建议我们每一次滑动都创建一个新的SmoothScroller，LinearLayoutManager正是这样子操作的，我们自定义LayoutManger注意一下</span></span><br><span class="line">    <span class="keyword">if</span> (mStarted) &#123;</span><br><span class="line">        Log.w(TAG, <span class="string">&quot;An instance of &quot;</span> + <span class="built_in">this</span>.getClass().getSimpleName() + <span class="string">&quot; was started &quot;</span></span><br><span class="line">              + <span class="string">&quot;more than once. Each instance of&quot;</span> + <span class="built_in">this</span>.getClass().getSimpleName() + <span class="string">&quot; &quot;</span></span><br><span class="line">              + <span class="string">&quot;is intended to only be used once. You should create a new instance for &quot;</span></span><br><span class="line">              + <span class="string">&quot;each use.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mRecyclerView = recyclerView;</span><br><span class="line">    mLayoutManager = layoutManager;</span><br><span class="line">    <span class="keyword">if</span> (mTargetPosition == RecyclerView.NO_POSITION) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Invalid target position&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//通知mRecyclerView要滑动到的目前位置</span></span><br><span class="line">    mRecyclerView.mState.mTargetPosition = mTargetPosition;</span><br><span class="line">    mRunning = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">//标志为等待执行</span></span><br><span class="line">    mPendingInitialRun = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">//这里很重要，会尝试在已有布局中找是否存在目标View，找不到就是null。  我们的案例是一页一页滑动的，所以是肯定找不到下一个页的View</span></span><br><span class="line">    mTargetView = findViewByPosition(getTargetPosition());</span><br><span class="line">    <span class="comment">//onStart空实现</span></span><br><span class="line">    onStart();</span><br><span class="line">    <span class="comment">//最重要的是这里，调用mViewFlinger的postOnAnimation实现滑动</span></span><br><span class="line">    <span class="comment">//ViewFlinger就是个Runnable,下面会分析</span></span><br><span class="line">    mRecyclerView.mViewFlinger.postOnAnimation();</span><br><span class="line"></span><br><span class="line">    mStarted = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>总结：调用RecyclerView的smoothScrollToPosition 会一路跑到SmoothScroller的start方法，启用ViewFlinger。</p>
-<p>这里面最重要的逻辑是  </p>
-<ul>
-<li>​     赋值SmoothScroller的mTargetPosition，mPendingInitialRun设为true，标志为等待执行，并尝试给mTargetView赋值</li>
-<li>​     调用ViewFlinger的postOnAnimation 开始动画</li>
-</ul>
-<h2 id="2-简单分析ViewFlinger"><a href="#2-简单分析ViewFlinger" class="headerlink" title="2.简单分析ViewFlinger"></a>2.简单分析ViewFlinger</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//RecyclerView的内部类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ViewFlinger</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//第一段代码   尝试滑动消费，一旦smoothScroller.onAnimation被调用，isPendingInitialRun设置成false</span></span><br><span class="line">        <span class="keyword">if</span> (scroller.computeScrollOffset()) &#123;</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">            smoothScroller.onAnimation(consumedX, consumedY);</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//第二段代码   如果isPendingInitialRun还是true，即第一段代码没有被调用，   传入0，0 ，让smoothScroller至少要被调用1次</span></span><br><span class="line">        <span class="keyword">if</span> (smoothScroller != <span class="literal">null</span> &amp;&amp; smoothScroller.isPendingInitialRun()) &#123;</span><br><span class="line">            smoothScroller.onAnimation(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>ViewFlinger是个Runnable，主要看run方法，可以看出滑动的逻辑主要还是Scroller。</li>
-<li>但我们smoothScrollToPosition一路走下来，只是设置了mTargetPosition，并不会对ViewFlinger的mOverScroller做出任何改变，它没有任何滑动数据，所以scroller.computeScrollOffset()会返回false， smoothScroller.onAnimation不会在第一段代码中被调用</li>
-<li>走向了第二段代码，又跑回了SmoothScroller的onAnimation方法</li>
-</ul>
-<h2 id="3-简单分析SmoothScroller"><a href="#3-简单分析SmoothScroller" class="headerlink" title="3.简单分析SmoothScroller"></a>3.简单分析SmoothScroller</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">onAnimation</span><span class="params">(<span class="type">int</span> dx, <span class="type">int</span> dy)</span> &#123;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// 下面的 if 块存在可以让 LayoutManager 在正确的位置滚动 1 个像素方向，以便使 LayoutManager 绘制两页的视图，</span></span><br><span class="line">    <span class="comment">//因此 在进一步滚动之前可以找到目标视图。这样做是为了防止初始滚动距离滚动超过视图，</span></span><br><span class="line">    <span class="comment">//这会导致看起来很紧张的动画。</span></span><br><span class="line">    <span class="keyword">if</span> (mPendingInitialRun &amp;&amp; mTargetView == <span class="literal">null</span> &amp;&amp; mLayoutManager != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">PointF</span> <span class="variable">pointF</span> <span class="operator">=</span> computeScrollVectorForPosition(mTargetPosition);</span><br><span class="line">        <span class="keyword">if</span> (pointF != <span class="literal">null</span> &amp;&amp; (pointF.x != <span class="number">0</span> || pointF.y != <span class="number">0</span>)) &#123;</span><br><span class="line">            recyclerView.scrollStep(</span><br><span class="line">                (<span class="type">int</span>) Math.signum(pointF.x),</span><br><span class="line">                (<span class="type">int</span>) Math.signum(pointF.y),</span><br><span class="line">                <span class="literal">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mPendingInitialRun = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>  google的注释解答了一切</p>
-<p>  如果这个SmoothScroller 【从来没有运行过】 &amp;&amp;【还找不到目前View】，将会调用recyclerView.scrollStep向正确方向滑动1px。</p>
-<p><strong><font color="#FF0000">这个就是layoutState.mAvailable的1px由来</font></strong></p>
-<h2 id="4-分析从scrollStep到最重要的fill方法调用链"><a href="#4-分析从scrollStep到最重要的fill方法调用链" class="headerlink" title="4.分析从scrollStep到最重要的fill方法调用链"></a>4.分析从scrollStep到最重要的fill方法调用链</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">--recyclerView.scrollStep(1px)</span><br><span class="line">--layoutManager.scrollHorizontallyBy(1px)</span><br><span class="line">--layoutManager.scrollBy(1px)</span><br><span class="line">     --updateLayoutState(1px)</span><br><span class="line">        -- calculateExtraLayoutSpace()</span><br><span class="line">           --getExtraLayoutSpace()  </span><br><span class="line"> --layoutManager.fill(RecyclerView.Recycler recycler, LayoutState layoutState,State state, boolean stopOnFocusable)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">updateLayoutState</span><span class="params">(<span class="type">int</span> layoutDirection, <span class="type">int</span> requiredSpace,</span></span><br><span class="line"><span class="params">                               <span class="type">boolean</span> canUseExistingSpace, RecyclerView.State state)</span> &#123;</span><br><span class="line">    <span class="comment">//mAvailable设置为1px</span></span><br><span class="line">    mLayoutState.mAvailable = requiredSpace;</span><br><span class="line">    <span class="comment">//计算额外需要空间</span></span><br><span class="line">    calculateExtraLayoutSpace(state, mReusableIntPair);</span><br><span class="line">    <span class="comment">//mExtraFillSpace设置为264px</span></span><br><span class="line">    mLayoutState.mExtraFillSpace = mReusableIntPair[<span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">calculateExtraLayoutSpace</span><span class="params">(<span class="meta">@NonNull</span> RecyclerView.State state,</span></span><br><span class="line"><span class="params">                                         <span class="meta">@NonNull</span> <span class="type">int</span>[] extraLayoutSpace)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">extraLayoutSpaceStart</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">extraLayoutSpaceEnd</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//计算额外需要空间</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">extraScrollSpace</span> <span class="operator">=</span> getExtraLayoutSpace(state);</span><br><span class="line">    <span class="keyword">if</span> (mLayoutState.mLayoutDirection == LayoutState.LAYOUT_START) &#123;</span><br><span class="line">        extraLayoutSpaceStart = extraScrollSpace;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        extraLayoutSpaceEnd = extraScrollSpace;</span><br><span class="line">    &#125;</span><br><span class="line">    extraLayoutSpace[<span class="number">0</span>] = extraLayoutSpaceStart;</span><br><span class="line">    extraLayoutSpace[<span class="number">1</span>] = extraLayoutSpaceEnd;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> <span class="title function_">getExtraLayoutSpace</span><span class="params">(RecyclerView.State state)</span> &#123;   <span class="comment">// 这个也是ViewPager2实现多页加载的核心函数</span></span><br><span class="line">    <span class="comment">//如果有目标位置，返回RecyclerView的宽度/高度，否则返回0</span></span><br><span class="line">    <span class="keyword">if</span> (state.hasTargetScrollPosition()) &#123;</span><br><span class="line">        <span class="keyword">return</span> mOrientationHelper.getTotalSpace();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    到此为之 ，remainingSpace的265【layoutState.mAvailable的1px和layoutState.mExtraFillSpace的264px组成】是如何生成知道了。</p>
-<ol>
-<li>步骤1 .smoothScrollToPosition调用，设置了targetPosition，但因为只有一页View，是找不到mTargetView。调用ViewFlinger滑动，</li>
-<li>步骤2.但ViewFlinger没有滑动数据，调用SmoothScroller的onAnimation(0,0)方法</li>
-<li>步骤3.SmoothScroller如果还没有运行过，且找不到mTargetView，会向滑动方向滑动1px。mLayoutState.mAvailable&#x3D;1px</li>
-<li>步骤4.因为targetPosition不是空，会增加一页额外空间。  mLayoutState.mExtraFillSpace &#x3D; 一页空间;</li>
-<li>步骤5. fill View时，1px+一页空间 会导致加入两个页面</li>
-</ol>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>从第三步分析解决，只有找不到mTargetView时，才会走下面步骤的逻辑。那我们只要提前让mTargetView不为null就行了。</p>
-<p>我们学习一下源码的思路，在调用smoothScrollToPosition滑向下一页前，手动滑动1px，让目标View提前出现在屏幕上，这样子smoothScrollToPosition调用时就mTargetView就能被找到，不是null了</p>
-<p>滑向下一页的正确代码：</p>
-<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">recyclerView?.scrollBy(<span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">recyclerView?.smoothScrollToPosition(position + <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>解决方案很简单，就一行代码，但知道怎么解决却花了几天时间研究RecyclerView源码   。。。。。。。。。。</p>
-]]></content>
-      <categories>
-        <category>疑难杂症</category>
-      </categories>
-      <tags>
-        <tag>RecyclerView</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>RecyclerView曝光踩坑-2</title>
     <url>/post/412d5155.html</url>
     <content><![CDATA[<p><a href="https://lanshushui.github.io/post/22258c7a.html">RecyclerView曝光踩坑-1</a></p>
@@ -648,6 +700,95 @@
       </tags>
   </entry>
   <entry>
+    <title>RecyclerView曝光踩坑-3</title>
+    <url>/post/362a61c3.html</url>
+    <content><![CDATA[<p><a href="https://lanshushui.github.io/post/22258c7a.html">RecyclerView曝光踩坑-1</a></p>
+<p><a href="https://lanshushui.github.io/post/412d5155.html">RecyclerView曝光踩坑-2</a></p>
+<p>背景： 使用RecyclerView+PagerSnapHelper 实现一页一页滑动的效果。</p>
+<p>使用RecyclerView的smoothScrollToPosition实现自动滑页功能。</p>
+<p>当从第一页自动滑向第二页，第二页和第三页的都会被调用onViewAttachedToWindow，导致多余页面上报。</p>
+<span id="more"></span>
+
+
+
+<h2 id="首先让我们看一下问题场景下的-DEBUG-信息"><a href="#首先让我们看一下问题场景下的-DEBUG-信息" class="headerlink" title="首先让我们看一下问题场景下的 DEBUG 信息"></a>首先让我们看一下问题场景下的 DEBUG 信息</h2><p><img src="https://s3.bmp.ovh/imgs/2023/08/07/5d9ab8ba137383e8.jpg"></p>
+<p>LinearLayoutManager的fill函数是布局关键函数，不了解的先去了解一下，这里就不仔细讲了。</p>
+<p>remainingSpace是布局可用空间，截图数值为265。是由<strong>【layoutState.mAvailable的1px】和【layoutState.mExtraFillSpace的264px】</strong>组成。</p>
+<p><strong>我的用例场景一页宽度就是264px</strong>。所以导致会加载进两个页面，导致问题的出现。</p>
+<p>让我们来分析下<strong>【 layoutState.mAvailable的1px】 和 【layoutState.mExtraFillSpace的264px】</strong>   是如何产生的？这有利于我们解决问题</p>
+<h2 id="1-分析smoothScrollToPosition实现逻辑"><a href="#1-分析smoothScrollToPosition实现逻辑" class="headerlink" title="1.分析smoothScrollToPosition实现逻辑"></a>1.分析smoothScrollToPosition实现逻辑</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//RecyclerView</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">smoothScrollToPosition</span><span class="params">(<span class="type">int</span> position)</span> &#123;</span><br><span class="line">    mLayout.smoothScrollToPosition(<span class="built_in">this</span>, mState, position);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//LinearLayoutManager</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">smoothScrollToPosition</span><span class="params">(RecyclerView recyclerView, RecyclerView.State state,</span></span><br><span class="line"><span class="params">                                   <span class="type">int</span> position)</span> &#123;</span><br><span class="line">    <span class="type">LinearSmoothScroller</span> <span class="variable">linearSmoothScroller</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LinearSmoothScroller</span>(recyclerView.getContext());</span><br><span class="line">    <span class="comment">//设置目标位置</span></span><br><span class="line">    linearSmoothScroller.setTargetPosition(position);</span><br><span class="line">    linearSmoothScroller.start(mRecyclerView, <span class="built_in">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//SmoothScroller</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">start</span><span class="params">(RecyclerView recyclerView, LayoutManager layoutManager)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 停止上一个mViewFlinger</span></span><br><span class="line">    recyclerView.mViewFlinger.stop();</span><br><span class="line">    </span><br><span class="line">	<span class="comment">//google建议我们每一次滑动都创建一个新的SmoothScroller，LinearLayoutManager正是这样子操作的，我们自定义LayoutManger注意一下</span></span><br><span class="line">    <span class="keyword">if</span> (mStarted) &#123;</span><br><span class="line">        Log.w(TAG, <span class="string">&quot;An instance of &quot;</span> + <span class="built_in">this</span>.getClass().getSimpleName() + <span class="string">&quot; was started &quot;</span></span><br><span class="line">              + <span class="string">&quot;more than once. Each instance of&quot;</span> + <span class="built_in">this</span>.getClass().getSimpleName() + <span class="string">&quot; &quot;</span></span><br><span class="line">              + <span class="string">&quot;is intended to only be used once. You should create a new instance for &quot;</span></span><br><span class="line">              + <span class="string">&quot;each use.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mRecyclerView = recyclerView;</span><br><span class="line">    mLayoutManager = layoutManager;</span><br><span class="line">    <span class="keyword">if</span> (mTargetPosition == RecyclerView.NO_POSITION) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Invalid target position&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//通知mRecyclerView要滑动到的目前位置</span></span><br><span class="line">    mRecyclerView.mState.mTargetPosition = mTargetPosition;</span><br><span class="line">    mRunning = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">//标志为等待执行</span></span><br><span class="line">    mPendingInitialRun = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">//这里很重要，会尝试在已有布局中找是否存在目标View，找不到就是null。  我们的案例是一页一页滑动的，所以是肯定找不到下一个页的View</span></span><br><span class="line">    mTargetView = findViewByPosition(getTargetPosition());</span><br><span class="line">    <span class="comment">//onStart空实现</span></span><br><span class="line">    onStart();</span><br><span class="line">    <span class="comment">//最重要的是这里，调用mViewFlinger的postOnAnimation实现滑动</span></span><br><span class="line">    <span class="comment">//ViewFlinger就是个Runnable,下面会分析</span></span><br><span class="line">    mRecyclerView.mViewFlinger.postOnAnimation();</span><br><span class="line"></span><br><span class="line">    mStarted = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>总结：调用RecyclerView的smoothScrollToPosition 会一路跑到SmoothScroller的start方法，启用ViewFlinger。</p>
+<p>这里面最重要的逻辑是  </p>
+<ul>
+<li>​     赋值SmoothScroller的mTargetPosition，mPendingInitialRun设为true，标志为等待执行，并尝试给mTargetView赋值</li>
+<li>​     调用ViewFlinger的postOnAnimation 开始动画</li>
+</ul>
+<h2 id="2-简单分析ViewFlinger"><a href="#2-简单分析ViewFlinger" class="headerlink" title="2.简单分析ViewFlinger"></a>2.简单分析ViewFlinger</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//RecyclerView的内部类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ViewFlinger</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//第一段代码   尝试滑动消费，一旦smoothScroller.onAnimation被调用，isPendingInitialRun设置成false</span></span><br><span class="line">        <span class="keyword">if</span> (scroller.computeScrollOffset()) &#123;</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">            smoothScroller.onAnimation(consumedX, consumedY);</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//第二段代码   如果isPendingInitialRun还是true，即第一段代码没有被调用，   传入0，0 ，让smoothScroller至少要被调用1次</span></span><br><span class="line">        <span class="keyword">if</span> (smoothScroller != <span class="literal">null</span> &amp;&amp; smoothScroller.isPendingInitialRun()) &#123;</span><br><span class="line">            smoothScroller.onAnimation(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>ViewFlinger是个Runnable，主要看run方法，可以看出滑动的逻辑主要还是Scroller。</li>
+<li>但我们smoothScrollToPosition一路走下来，只是设置了mTargetPosition，并不会对ViewFlinger的mOverScroller做出任何改变，它没有任何滑动数据，所以scroller.computeScrollOffset()会返回false， smoothScroller.onAnimation不会在第一段代码中被调用</li>
+<li>走向了第二段代码，又跑回了SmoothScroller的onAnimation方法</li>
+</ul>
+<h2 id="3-简单分析SmoothScroller"><a href="#3-简单分析SmoothScroller" class="headerlink" title="3.简单分析SmoothScroller"></a>3.简单分析SmoothScroller</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">onAnimation</span><span class="params">(<span class="type">int</span> dx, <span class="type">int</span> dy)</span> &#123;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// 下面的 if 块存在可以让 LayoutManager 在正确的位置滚动 1 个像素方向，以便使 LayoutManager 绘制两页的视图，</span></span><br><span class="line">    <span class="comment">//因此 在进一步滚动之前可以找到目标视图。这样做是为了防止初始滚动距离滚动超过视图，</span></span><br><span class="line">    <span class="comment">//这会导致看起来很紧张的动画。</span></span><br><span class="line">    <span class="keyword">if</span> (mPendingInitialRun &amp;&amp; mTargetView == <span class="literal">null</span> &amp;&amp; mLayoutManager != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">PointF</span> <span class="variable">pointF</span> <span class="operator">=</span> computeScrollVectorForPosition(mTargetPosition);</span><br><span class="line">        <span class="keyword">if</span> (pointF != <span class="literal">null</span> &amp;&amp; (pointF.x != <span class="number">0</span> || pointF.y != <span class="number">0</span>)) &#123;</span><br><span class="line">            recyclerView.scrollStep(</span><br><span class="line">                (<span class="type">int</span>) Math.signum(pointF.x),</span><br><span class="line">                (<span class="type">int</span>) Math.signum(pointF.y),</span><br><span class="line">                <span class="literal">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mPendingInitialRun = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  google的注释解答了一切</p>
+<p>  如果这个SmoothScroller 【从来没有运行过】 &amp;&amp;【还找不到目前View】，将会调用recyclerView.scrollStep向正确方向滑动1px。</p>
+<p><strong><font color="#FF0000">这个就是layoutState.mAvailable的1px由来</font></strong></p>
+<h2 id="4-分析从scrollStep到最重要的fill方法调用链"><a href="#4-分析从scrollStep到最重要的fill方法调用链" class="headerlink" title="4.分析从scrollStep到最重要的fill方法调用链"></a>4.分析从scrollStep到最重要的fill方法调用链</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">--recyclerView.scrollStep(1px)</span><br><span class="line">--layoutManager.scrollHorizontallyBy(1px)</span><br><span class="line">--layoutManager.scrollBy(1px)</span><br><span class="line">     --updateLayoutState(1px)</span><br><span class="line">        -- calculateExtraLayoutSpace()</span><br><span class="line">           --getExtraLayoutSpace()  </span><br><span class="line"> --layoutManager.fill(RecyclerView.Recycler recycler, LayoutState layoutState,State state, boolean stopOnFocusable)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">updateLayoutState</span><span class="params">(<span class="type">int</span> layoutDirection, <span class="type">int</span> requiredSpace,</span></span><br><span class="line"><span class="params">                               <span class="type">boolean</span> canUseExistingSpace, RecyclerView.State state)</span> &#123;</span><br><span class="line">    <span class="comment">//mAvailable设置为1px</span></span><br><span class="line">    mLayoutState.mAvailable = requiredSpace;</span><br><span class="line">    <span class="comment">//计算额外需要空间</span></span><br><span class="line">    calculateExtraLayoutSpace(state, mReusableIntPair);</span><br><span class="line">    <span class="comment">//mExtraFillSpace设置为264px</span></span><br><span class="line">    mLayoutState.mExtraFillSpace = mReusableIntPair[<span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">calculateExtraLayoutSpace</span><span class="params">(<span class="meta">@NonNull</span> RecyclerView.State state,</span></span><br><span class="line"><span class="params">                                         <span class="meta">@NonNull</span> <span class="type">int</span>[] extraLayoutSpace)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">extraLayoutSpaceStart</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">extraLayoutSpaceEnd</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//计算额外需要空间</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">extraScrollSpace</span> <span class="operator">=</span> getExtraLayoutSpace(state);</span><br><span class="line">    <span class="keyword">if</span> (mLayoutState.mLayoutDirection == LayoutState.LAYOUT_START) &#123;</span><br><span class="line">        extraLayoutSpaceStart = extraScrollSpace;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        extraLayoutSpaceEnd = extraScrollSpace;</span><br><span class="line">    &#125;</span><br><span class="line">    extraLayoutSpace[<span class="number">0</span>] = extraLayoutSpaceStart;</span><br><span class="line">    extraLayoutSpace[<span class="number">1</span>] = extraLayoutSpaceEnd;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="type">int</span> <span class="title function_">getExtraLayoutSpace</span><span class="params">(RecyclerView.State state)</span> &#123;   <span class="comment">// 这个也是ViewPager2实现多页加载的核心函数</span></span><br><span class="line">    <span class="comment">//如果有目标位置，返回RecyclerView的宽度/高度，否则返回0</span></span><br><span class="line">    <span class="keyword">if</span> (state.hasTargetScrollPosition()) &#123;</span><br><span class="line">        <span class="keyword">return</span> mOrientationHelper.getTotalSpace();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    到此为之 ，remainingSpace的265【layoutState.mAvailable的1px和layoutState.mExtraFillSpace的264px组成】是如何生成知道了。</p>
+<ol>
+<li>步骤1 .smoothScrollToPosition调用，设置了targetPosition，但因为只有一页View，是找不到mTargetView。调用ViewFlinger滑动，</li>
+<li>步骤2.但ViewFlinger没有滑动数据，调用SmoothScroller的onAnimation(0,0)方法</li>
+<li>步骤3.SmoothScroller如果还没有运行过，且找不到mTargetView，会向滑动方向滑动1px。mLayoutState.mAvailable&#x3D;1px</li>
+<li>步骤4.因为targetPosition不是空，会增加一页额外空间。  mLayoutState.mExtraFillSpace &#x3D; 一页空间;</li>
+<li>步骤5. fill View时，1px+一页空间 会导致加入两个页面</li>
+</ol>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>从第三步分析解决，只有找不到mTargetView时，才会走下面步骤的逻辑。那我们只要提前让mTargetView不为null就行了。</p>
+<p>我们学习一下源码的思路，在调用smoothScrollToPosition滑向下一页前，手动滑动1px，让目标View提前出现在屏幕上，这样子smoothScrollToPosition调用时就mTargetView就能被找到，不是null了</p>
+<p>滑向下一页的正确代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">recyclerView?.scrollBy(<span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">recyclerView?.smoothScrollToPosition(position + <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>解决方案很简单，就一行代码，但知道怎么解决却花了几天时间研究RecyclerView源码   。。。。。。。。。。</p>
+]]></content>
+      <categories>
+        <category>疑难杂症</category>
+      </categories>
+      <tags>
+        <tag>RecyclerView</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Systrace使用技巧</title>
+    <url>/post/1c5b60a8.html</url>
+    <content><![CDATA[<p><em>建议Pyenv 进行Python的版本管理</em></p>
+<p><a href="https://www.bilibili.com/video/BV1KJ411Q7qu/?spm_id_from=333.999.0.0&vd_source=f02f9d2b6ca3710611c51219432586fa">Perfetto使用技巧</a></p>
+<p>adb命令： adb pull &#x2F;data&#x2F;local&#x2F;traces</p>
+<span id="more"></span>
+
+
+
+<h2 id="1-Systrace的使用-关于Android-Systrace的使用"><a href="#1-Systrace的使用-关于Android-Systrace的使用" class="headerlink" title="1. Systrace的使用    关于Android Systrace的使用"></a>1. Systrace的使用    <a href="https://blog.csdn.net/qq_40494059/article/details/124826281">关于Android Systrace的使用</a></h2><p><img src="/images/Systrace.png" alt="systrace"></p>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>使用技巧</category>
+      </categories>
+      <tags>
+        <tag>Systrace</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ViewModel知识点</title>
     <url>/post/4500f14b.html</url>
     <content><![CDATA[<p>ViewModel出现了调用onCleared方法 又马上被创建的情况</p>
@@ -673,64 +814,6 @@
       </categories>
       <tags>
         <tag>ViewModel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Systrace使用技巧</title>
-    <url>/post/1c5b60a8.html</url>
-    <content><![CDATA[<p><em>建议Pyenv 进行Python的版本管理</em></p>
-<p><a href="https://www.bilibili.com/video/BV1KJ411Q7qu/?spm_id_from=333.999.0.0&vd_source=f02f9d2b6ca3710611c51219432586fa">Perfetto使用技巧</a></p>
-<p>adb命令： adb pull &#x2F;data&#x2F;local&#x2F;traces</p>
-<span id="more"></span>
-
-
-
-<h2 id="1-Systrace的使用-关于Android-Systrace的使用"><a href="#1-Systrace的使用-关于Android-Systrace的使用" class="headerlink" title="1. Systrace的使用    关于Android Systrace的使用"></a>1. Systrace的使用    <a href="https://blog.csdn.net/qq_40494059/article/details/124826281">关于Android Systrace的使用</a></h2><p><img src="/images/Systrace.png" alt="systrace"></p>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>使用技巧</category>
-      </categories>
-      <tags>
-        <tag>Systrace</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Flow知识点</title>
-    <url>/post/58bbdd0e.html</url>
-    <content><![CDATA[<p><a href="https://juejin.cn/post/6989536876096913439">【Kotlin Flow】 一眼看全——Flow操作符大全</a></p>
-<h1 id="Flow-的collect的正常用法"><a href="#Flow-的collect的正常用法" class="headerlink" title="Flow 的collect的正常用法"></a>Flow 的collect的正常用法</h1><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">mainScope.launch &#123;</span><br><span class="line">    flow.collect &#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">mainScope.launch &#123;</span><br><span class="line">    flow2.collect &#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> flow的collect是个suspend函数，内部逻辑是个while(true)死循环，所以不能在collect之后写任何代码，因为执行不到 </p>
-<span id="more"></span>
-
-
-
-<p>下面为 <strong>SharedFlowImpl</strong> 的代码</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">override suspend fun collect(collector: FlowCollector&lt;T&gt;): Nothing &#123;</span><br><span class="line">    val slot = allocateSlot()</span><br><span class="line">    try &#123;</span><br><span class="line">        if (collector is SubscribedFlowCollector) collector.onSubscription()</span><br><span class="line">        val collectorJob = currentCoroutineContext()[Job]</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            var newValue: Any?</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                newValue = tryTakeValue(slot) // attempt no-suspend fast path first</span><br><span class="line">                if (newValue !== NO_VALUE) break</span><br><span class="line">                awaitValue(slot) // await signal that the new value is available</span><br><span class="line">            &#125;</span><br><span class="line">            collectorJob?.ensureActive()</span><br><span class="line">            collector.emit(newValue as T)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        freeSlot(slot)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><font color='red'>如果需要collect一个flow，需要单独起一个协程，该协程内只能collect一个flow，不能在collect函数后面加任何代码</font></p>
-<h1 id="zip操作符和combine操作符区别"><a href="#zip操作符和combine操作符区别" class="headerlink" title="zip操作符和combine操作符区别"></a><em>zip</em>操作符和<em>combine</em>操作符区别</h1><ol>
-<li><p>zip要求 ：两个流发送数据的次数必须一致，1+1 合并成新的数据</p>
-<p>​     如果A流发两个数据，B流发一个数据，则A流的第二个数据因为找不到B流的对应数据，不会触发zip流的合并发送</p>
-</li>
-<li><p>combine要求：没啥要求，两个流任意一个流的数据刷新，combine流都会取两个流的最新值进行合并</p>
-</li>
-</ol>
-<h1 id="tryEmit方法"><a href="#tryEmit方法" class="headerlink" title="tryEmit方法"></a>tryEmit方法</h1><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Tries to emit a [value] to this shared flow without suspending. It returns `true` if the value was</span></span><br><span class="line"><span class="comment">     * emitted successfully (see below). When this function returns `false`, it means that a call to a plain [emit]</span></span><br><span class="line"><span class="comment">     * function would suspend until there is buffer space available.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * This call can return `false` only when the [BufferOverflow] strategy is</span></span><br><span class="line"><span class="comment">     * [SUSPEND][BufferOverflow.SUSPEND] **and** there are subscribers collecting this shared flow.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * If there are no subscribers, the buffer is not used.</span></span><br><span class="line"><span class="comment">     * Instead, the most recently emitted value is simply stored into</span></span><br><span class="line"><span class="comment">     * the replay cache if one was configured, displacing the older elements there,</span></span><br><span class="line"><span class="comment">     * or dropped if no replay cache was configured. In any case, `tryEmit` returns `true`.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * This method is **thread-safe** and can be safely invoked from concurrent coroutines without</span></span><br><span class="line"><span class="comment">     * external synchronization.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">fun</span> <span class="title">tryEmit</span><span class="params">(value: <span class="type">T</span>)</span></span>: <span class="built_in">Boolean</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>慎用tryEmit，看备注可知，当strategy是BufferOverflow.SUSPEND时（默认策略），且有subscribers时 就会发送失败，返回false</strong></p>
-<h1 id="StateFlow-data-class-的问题"><a href="#StateFlow-data-class-的问题" class="headerlink" title="StateFlow + data class 的问题"></a>StateFlow + data class 的问题</h1><p>data class 重写了equal，判断每个属性是否相等，而不是判断内存地址</p>
-<p>而StateFlow 发现 新旧数据 equal时则不会发送新数据</p>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>知识点</category>
-      </categories>
-      <tags>
-        <tag>Flow</tag>
       </tags>
   </entry>
   <entry>
@@ -782,6 +865,64 @@
       </tags>
   </entry>
   <entry>
+    <title>协程Cancel知识点</title>
+    <url>/post/a442dbbf.html</url>
+    <content><![CDATA[<p>参考文档：<a href="https://juejin.cn/post/7158008928930906148#heading-0">Kotlin 协程的取消机制超详细解读</a></p>
+<span id="more"></span>
+
+
+
+<p><em>协程被cancel后，只有在【运行前】或者【跑到挂起点】才会退出</em></p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> job= CoroutineScope(Dispatchers.Default + SupervisorJob()).launch &#123;</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>, <span class="string">&quot;开始&quot;</span>)</span><br><span class="line">    Thread.sleep(<span class="number">5000</span>)</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>,<span class="string">&quot;协程是否被cancel <span class="subst">$&#123;!isActive&#125;</span>&quot;</span>)</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>,<span class="string">&quot;协程还在跑&quot;</span>)</span><br><span class="line">    delay(<span class="number">1000</span>)</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>,<span class="string">&quot;协程跑完了&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">viewModelScope.launch &#123;</span><br><span class="line">    delay(<span class="number">1000</span>)</span><br><span class="line">    job.cancel()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对应的日志内容</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">2023-07-03 10:45:21.397 12710-12776 协程测试                    com.sodo.live                        I  协程是否被cancel true</span><br><span class="line">2023-07-03 10:45:21.398 12710-12776 协程测试                    com.sodo.live                        I  协程还在跑</span><br></pre></td></tr></table></figure>
+
+
+
+<p>代码的目的是在协程运行在Thread.sleep(5000)时，cancel掉协程</p>
+<p>看日志可以看出，协程虽然被cancel了，但还在跑，直到运行到挂起点，才退出协程</p>
+<p>看参考文档可以知道，此时运行到delay代码时，抛出了CancellationException异常，导致协程结束</p>
+<p>协程的调度线程和cancel代码执行线程是同一个时，一般不用太关注这一点，因为符合时序，调用cancel时，协程一定处于被调度前或者运行在挂起点。</p>
+<p>但不在同一线程时，可能会出现协程运行在某一行时，调用cancel的场景，但协程此时并不会停止执行，会继续运行到挂起点，这可能就会出现问题</p>
+<p>例如资源找不到，View找不到</p>
+<p>错误代码样例：</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Activity</span>  &#123;</span><br><span class="line">    <span class="keyword">var</span> job:Job?=<span class="literal">null</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        job= CoroutineScope(Dispatchers.Default + SupervisorJob()).launch &#123;</span><br><span class="line">            <span class="keyword">val</span> subView =view.findViewById(R.id.test)</span><br><span class="line">            delay(<span class="number">1000</span>)</span><br><span class="line">            subView.gone()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDestroy</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy()</span><br><span class="line">        job?.cancel()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>概率不大，但也有可能出现崩溃。findViewById过程中，Activity被Destroy了，找不到View出现崩溃</p>
+<p>虽然onDestroy方法中协程被cancel了，但协程还是会继续执行delay之前的代码</p>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>知识点</category>
+      </categories>
+      <tags>
+        <tag>协程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>启动优化想法</title>
+    <url>/post/6af44e8.html</url>
+    <content><![CDATA[<p>一些小想法</p>
+<span id="more"></span>
+
+
+
+<h2 id="1、所需SDK多线程初始化"><a href="#1、所需SDK多线程初始化" class="headerlink" title="1、所需SDK多线程初始化"></a>1、所需SDK多线程初始化</h2><h2 id="2-首页数据预拉取"><a href="#2-首页数据预拉取" class="headerlink" title="2. 首页数据预拉取"></a>2. 首页数据预拉取</h2><h2 id="3-首页豆腐块View预Inflate"><a href="#3-首页豆腐块View预Inflate" class="headerlink" title="3. 首页豆腐块View预Inflate"></a>3. 首页豆腐块View预Inflate</h2><p>在首页setContentView之前异步inflate View</p>
+<p>使用 AsyncLayoutInflater + SimplePool技术</p>
+<h2 id="4-预连接图片域名的TCP"><a href="#4-预连接图片域名的TCP" class="headerlink" title="4. 预连接图片域名的TCP"></a>4. 预连接图片域名的TCP</h2><p>Glide接入OKHttp后，域名不支持Http2.0的情况下，默认最多支持5个相同域名的并发TCP连接。图片域名一般是固定的，我们可以在APP启动时使用Glide预加载5个该域名图片。</p>
+<p>甚至不需要图片url，把域名直接抛给Glide也行，虽然会解析成图片失败，但我们的目的只是建立TCP连接，所以Http的失败并没有关系。</p>
+<p>提前使用Glide加载网络图片，也提前了Glide相关初始化和线程池的创建。</p>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>想法</category>
+      </categories>
+      <tags>
+        <tag>启动优化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>小知识点</title>
     <url>/post/89f567a5.html</url>
     <content><![CDATA[<p>小知识点</p>
@@ -807,6 +948,31 @@
       </categories>
       <tags>
         <tag>使用提醒</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>崩溃知识点</title>
+    <url>/post/30488343.html</url>
+    <content><![CDATA[<p>一个java层捕捉崩溃的写法</p>
+<span id="more"></span>
+
+
+
+<h2 id="手动进行消息的loop，并捕捉异常"><a href="#手动进行消息的loop，并捕捉异常" class="headerlink" title="手动进行消息的loop，并捕捉异常"></a>手动进行消息的loop，并捕捉异常</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> static void startCatchLooper() &#123;</span><br><span class="line">    new Handler(Looper.getMainLooper()).post(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            loopInner();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> static void loopInner() &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Looper.loop();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e.getMessage() != <span class="literal">null</span>) &#123;</span><br><span class="line">            Message message = getMessage();</span><br><span class="line">            <span class="comment">//如果忽略该异常，则直接return，否则继续抛出Throwable</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">catch</span>(message,e))&#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">throw</span> e;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="获得当前执行的Message"><a href="#获得当前执行的Message" class="headerlink" title="获得当前执行的Message"></a>获得当前执行的Message</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> static Message getMessage() &#123;</span><br><span class="line">    MessageQueue messageQueue;</span><br><span class="line">    Looper mainLooper = Looper.getMainLooper();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">23</span>) &#123;</span><br><span class="line">            messageQueue = mainLooper.getQueue();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Field fieldQueue = Looper.<span class="keyword">class</span>.getDeclaredField(<span class="string">&quot;mQueue&quot;</span>);</span><br><span class="line">            fieldQueue.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            messageQueue = (MessageQueue) fieldQueue.<span class="keyword">get</span>(mainLooper);</span><br><span class="line">        &#125;</span><br><span class="line">        Field fieldMessages = MessageQueue.<span class="keyword">class</span>.getDeclaredField(<span class="string">&quot;mMessages&quot;</span>);</span><br><span class="line">        fieldMessages.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> (Message) fieldMessages.<span class="keyword">get</span>(messageQueue);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable ignored) &#123;</span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>知识点</category>
+      </categories>
+      <tags>
+        <tag>崩溃</tag>
       </tags>
   </entry>
   <entry>
@@ -849,28 +1015,6 @@
       </categories>
       <tags>
         <tag>泛型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>启动优化想法</title>
-    <url>/post/6af44e8.html</url>
-    <content><![CDATA[<p>一些小想法</p>
-<span id="more"></span>
-
-
-
-<h2 id="1、所需SDK多线程初始化"><a href="#1、所需SDK多线程初始化" class="headerlink" title="1、所需SDK多线程初始化"></a>1、所需SDK多线程初始化</h2><h2 id="2-首页数据预拉取"><a href="#2-首页数据预拉取" class="headerlink" title="2. 首页数据预拉取"></a>2. 首页数据预拉取</h2><h2 id="3-首页豆腐块View预Inflate"><a href="#3-首页豆腐块View预Inflate" class="headerlink" title="3. 首页豆腐块View预Inflate"></a>3. 首页豆腐块View预Inflate</h2><p>在首页setContentView之前异步inflate View</p>
-<p>使用 AsyncLayoutInflater + SimplePool技术</p>
-<h2 id="4-预连接图片域名的TCP"><a href="#4-预连接图片域名的TCP" class="headerlink" title="4. 预连接图片域名的TCP"></a>4. 预连接图片域名的TCP</h2><p>Glide接入OKHttp后，域名不支持Http2.0的情况下，默认最多支持5个相同域名的并发TCP连接。图片域名一般是固定的，我们可以在APP启动时使用Glide预加载5个该域名图片。</p>
-<p>甚至不需要图片url，把域名直接抛给Glide也行，虽然会解析成图片失败，但我们的目的只是建立TCP连接，所以Http的失败并没有关系。</p>
-<p>提前使用Glide加载网络图片，也提前了Glide相关初始化和线程池的创建。</p>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>想法</category>
-      </categories>
-      <tags>
-        <tag>启动优化</tag>
       </tags>
   </entry>
   <entry>
@@ -919,67 +1063,6 @@
       </categories>
       <tags>
         <tag>点9图</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>崩溃知识点</title>
-    <url>/post/30488343.html</url>
-    <content><![CDATA[<p>一个java层捕捉崩溃的写法</p>
-<span id="more"></span>
-
-
-
-<h2 id="手动进行消息的loop，并捕捉异常"><a href="#手动进行消息的loop，并捕捉异常" class="headerlink" title="手动进行消息的loop，并捕捉异常"></a>手动进行消息的loop，并捕捉异常</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> static void startCatchLooper() &#123;</span><br><span class="line">    new Handler(Looper.getMainLooper()).post(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            loopInner();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> static void loopInner() &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Looper.loop();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e.getMessage() != <span class="literal">null</span>) &#123;</span><br><span class="line">            Message message = getMessage();</span><br><span class="line">            <span class="comment">//如果忽略该异常，则直接return，否则继续抛出Throwable</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">catch</span>(message,e))&#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">throw</span> e;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="获得当前执行的Message"><a href="#获得当前执行的Message" class="headerlink" title="获得当前执行的Message"></a>获得当前执行的Message</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> static Message getMessage() &#123;</span><br><span class="line">    MessageQueue messageQueue;</span><br><span class="line">    Looper mainLooper = Looper.getMainLooper();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">23</span>) &#123;</span><br><span class="line">            messageQueue = mainLooper.getQueue();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Field fieldQueue = Looper.<span class="keyword">class</span>.getDeclaredField(<span class="string">&quot;mQueue&quot;</span>);</span><br><span class="line">            fieldQueue.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            messageQueue = (MessageQueue) fieldQueue.<span class="keyword">get</span>(mainLooper);</span><br><span class="line">        &#125;</span><br><span class="line">        Field fieldMessages = MessageQueue.<span class="keyword">class</span>.getDeclaredField(<span class="string">&quot;mMessages&quot;</span>);</span><br><span class="line">        fieldMessages.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> (Message) fieldMessages.<span class="keyword">get</span>(messageQueue);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable ignored) &#123;</span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>知识点</category>
-      </categories>
-      <tags>
-        <tag>崩溃</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>协程Cancel知识点</title>
-    <url>/post/a442dbbf.html</url>
-    <content><![CDATA[<p>参考文档：<a href="https://juejin.cn/post/7158008928930906148#heading-0">Kotlin 协程的取消机制超详细解读</a></p>
-<span id="more"></span>
-
-
-
-<p><em>协程被cancel后，只有在【运行前】或者【跑到挂起点】才会退出</em></p>
-<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> job= CoroutineScope(Dispatchers.Default + SupervisorJob()).launch &#123;</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>, <span class="string">&quot;开始&quot;</span>)</span><br><span class="line">    Thread.sleep(<span class="number">5000</span>)</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>,<span class="string">&quot;协程是否被cancel <span class="subst">$&#123;!isActive&#125;</span>&quot;</span>)</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>,<span class="string">&quot;协程还在跑&quot;</span>)</span><br><span class="line">    delay(<span class="number">1000</span>)</span><br><span class="line">    MLog.info(<span class="string">&quot;协程测试&quot;</span>,<span class="string">&quot;协程跑完了&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">viewModelScope.launch &#123;</span><br><span class="line">    delay(<span class="number">1000</span>)</span><br><span class="line">    job.cancel()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对应的日志内容</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">2023-07-03 10:45:21.397 12710-12776 协程测试                    com.sodo.live                        I  协程是否被cancel true</span><br><span class="line">2023-07-03 10:45:21.398 12710-12776 协程测试                    com.sodo.live                        I  协程还在跑</span><br></pre></td></tr></table></figure>
-
-
-
-<p>代码的目的是在协程运行在Thread.sleep(5000)时，cancel掉协程</p>
-<p>看日志可以看出，协程虽然被cancel了，但还在跑，直到运行到挂起点，才退出协程</p>
-<p>看参考文档可以知道，此时运行到delay代码时，抛出了CancellationException异常，导致协程结束</p>
-<p>协程的调度线程和cancel代码执行线程是同一个时，一般不用太关注这一点，因为符合时序，调用cancel时，协程一定处于被调度前或者运行在挂起点。</p>
-<p>但不在同一线程时，可能会出现协程运行在某一行时，调用cancel的场景，但协程此时并不会停止执行，会继续运行到挂起点，这可能就会出现问题</p>
-<p>例如资源找不到，View找不到</p>
-<p>错误代码样例：</p>
-<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Activity</span>  &#123;</span><br><span class="line">    <span class="keyword">var</span> job:Job?=<span class="literal">null</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        job= CoroutineScope(Dispatchers.Default + SupervisorJob()).launch &#123;</span><br><span class="line">            <span class="keyword">val</span> subView =view.findViewById(R.id.test)</span><br><span class="line">            delay(<span class="number">1000</span>)</span><br><span class="line">            subView.gone()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDestroy</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy()</span><br><span class="line">        job?.cancel()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>概率不大，但也有可能出现崩溃。findViewById过程中，Activity被Destroy了，找不到View出现崩溃</p>
-<p>虽然onDestroy方法中协程被cancel了，但协程还是会继续执行delay之前的代码</p>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>知识点</category>
-      </categories>
-      <tags>
-        <tag>协程</tag>
       </tags>
   </entry>
 </search>
