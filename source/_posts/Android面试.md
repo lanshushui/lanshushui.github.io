@@ -344,6 +344,10 @@ abbrlink: 7e8ea226
 
 [Android属性动画原理分析](https://www.jianshu.com/p/46f48f1b98a9)
 
+[View 的 translationX、 translationY ， X、Y 和 Left、Top，Right、Bottom之间的关系](https://blog.csdn.net/qijingwang/article/details/89955912)
+
+[属性动画是如何在移动时响应用户点击事件的？补间动画不支持动画后的位置点击](http://bbs.apehorde.com/blog/articles/258)
+
 
 
 ## 框架层常用知识
