@@ -298,6 +298,8 @@ abbrlink: 7e8ea226
 
 [DiskLruCache源码分析](https://juejin.cn/post/7097204016735584263)
 
+[assets与res/raw资源目录的区别](https://www.jianshu.com/p/f3a4bbc2a2ea)
+
 
 
 ## Surface
@@ -354,7 +356,7 @@ abbrlink: 7e8ea226
 
 [HandlerThread使用介绍以及源码解析](https://www.cnblogs.com/leipDao/p/8005520.html)
 
-[IntentService的使用和源码分析 ](https://www.cnblogs.com/feidu/p/8074268.html)
+[IntentService的使用和源码分析 ](https://www.cnblogs.com/feidu/p/8074268.html)     [Service中stopSelf(int startId)说明](https://blog.csdn.net/Liu_yunzhao/article/details/78145569)
 
 [compileSdkVersion、minSdkVersion、targetSdkVersion的区别](https://www.jianshu.com/p/4444513a17b7)
 
@@ -371,6 +373,8 @@ abbrlink: 7e8ea226
 [Android事件分发机制一：事件是如何到达activity的？](https://segmentfault.com/a/1190000039196805)
 
 [ACTION_CANCEL到底何时触发](https://juejin.cn/post/7004794729237856287)
+
+[Android系统中长按事件的实现机制解析 ](https://blog.csdn.net/asce1885/article/details/7855308)  -- *没有设置长按监听，长按松手仍可触发点击*
 
 
 
