@@ -28,7 +28,7 @@
 <meta property="og:description" content="JS官方文档 TS官方文档 React 官方文档 React Native官方文档 理解 JavaScript 的 async&#x2F;await">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-10-20T15:19:07.669Z">
-<meta property="article:modified_time" content="2023-11-03T13:32:50.645Z">
+<meta property="article:modified_time" content="2023-11-08T15:57:45.701Z">
 <meta property="article:author" content="懒鼠睡zzz">
 <meta property="article:tag" content="知识点">
 <meta name="twitter:card" content="summary">
@@ -214,7 +214,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-11-03 21:32:50" itemprop="dateModified" datetime="2023-11-03T21:32:50+08:00">2023-11-03</time>
+                <time title="修改时间：2023-11-08 23:57:45" itemprop="dateModified" datetime="2023-11-08T23:57:45+08:00">2023-11-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -305,7 +305,7 @@
 <li><p>onScroll 滑动触发，在最后一页继续滑动<strong>不会触发</strong></p>
 </li>
 </ul>
-<h6 id="实现下拉提醒-已全部加载的Toast"><a href="#实现下拉提醒-已全部加载的Toast" class="headerlink" title="实现下拉提醒 已全部加载的Toast"></a>实现下拉提醒 已全部加载的Toast</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//使用PanResponder判断是否是下滑</span><br><span class="line">const panResponder = React.useRef(</span><br><span class="line">    PanResponder.create(&#123;</span><br><span class="line">        onMoveShouldSetPanResponder: () =&gt; true,</span><br><span class="line">        onPanResponderMove: (e: GestureResponderEvent, gestureState: PanResponderGestureState) =&gt; &#123;</span><br><span class="line">            if (gestureState.dy &lt; 0) &#123;</span><br><span class="line">                //注册onViewableItemsChanged函数 获得当前显示的页数，isAtBottom函数 判断是否是列表最后一页</span><br><span class="line">                if (!loadMoreEnable.current &amp;&amp; isAtBottom()) &#123;</span><br><span class="line">                    showToast()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h6 id="实现下拉提醒-已全部加载的Toast"><a href="#实现下拉提醒-已全部加载的Toast" class="headerlink" title="实现下拉提醒 已全部加载的Toast"></a>实现下拉提醒 已全部加载的Toast</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//使用PanResponder判断是否是下滑</span><br><span class="line">const panResponder = React.useRef(</span><br><span class="line">    PanResponder.create(&#123;</span><br><span class="line">        onMoveShouldSetPanResponder: () =&gt; &#123;</span><br><span class="line">        return true</span><br><span class="line">      &#125;,</span><br><span class="line">      onStartShouldSetPanResponder: () =&gt; &#123;</span><br><span class="line">        return true</span><br><span class="line">      &#125;,</span><br><span class="line">      onMoveShouldSetPanResponderCapture: () =&gt; true,</span><br><span class="line">        onPanResponderGrant: (e: GestureResponderEvent, gestureState: PanResponderGestureState) =&gt; &#123;</span><br><span class="line">            if (gestureState.vy &lt; 0) &#123;</span><br><span class="line">                //注册onViewableItemsChanged函数 获得当前显示的页数，isAtBottom函数 判断是否是列表最后一页</span><br><span class="line">                if (!loadMoreEnable.current &amp;&amp; isAtBottom()) &#123;</span><br><span class="line">                    showToast()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 
 
@@ -327,6 +327,13 @@
 <h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p><code>View</code> 标签视情况，可能会被优化，不会被转换为平台的ViewGroup</p>
 <p><code>View</code> 可以不需要宽高参数</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//对应 export </span><br><span class="line">import &#123; A &#125; from &#x27;xxxx&#x27;</span><br><span class="line">//对应 export default</span><br><span class="line">import B from &#x27;xxxx&#x27;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>不能在useEffect定义一个回调形式的闭包去读取useState的值</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//错误写法</span><br><span class="line">const View = (prop: any) =&gt; &#123;</span><br><span class="line">    const [followState, setFollowState] = useState(&#123;isFollow: true&#125;)</span><br><span class="line">    useEffect(() =&gt; &#123;</span><br><span class="line">        const listener = (map: Map&lt;number, boolean&gt;) =&gt; &#123;</span><br><span class="line">            const isFollow = map.get(uid) || false</span><br><span class="line">            if (followState.isFollow != isFollow) &#123; //不能这样子去读取当前组件的followState</span><br><span class="line">                setFollowState(&#123;isFollow: isFollow&#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        addFollowListener(listener)</span><br><span class="line">        return () =&gt; &#123;</span><br><span class="line">            removeFollowListener(listener)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, [])</span><br><span class="line">&#125;</span><br><span class="line">//因为listener对象只在页面加载完毕进行有且一次的初始化，无论后续followState怎么变化，listener闭包里拿到的followState都是第一次的值</span><br></pre></td></tr></table></figure>
+
+
 
 
 
