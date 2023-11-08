@@ -174,6 +174,8 @@ abbrlink: 7e8ea226
 
 [7 种 JVM 垃圾收集器，看完我跪了。。](https://cloud.tencent.com/developer/article/1592943)
 
+[进程和线程的概念、区别及进程线程间通信](https://cloud.tencent.com/developer/article/1688297)
+
 
 
 # 网络
@@ -183,6 +185,8 @@ abbrlink: 7e8ea226
 [TCP实现可靠传输](https://www.cnblogs.com/walker993/p/9570902.html)
 
 [TCP拥塞控制机制](https://blog.csdn.net/shuxnhs/article/details/80644531)
+
+[一文带你搞定TCP重传](https://cloud.tencent.com/developer/article/1916609)
 
 [TCP的三次握手与四次挥手理解](https://www.xiaolincoding.com/network/3_tcp/tcp_interview.html#tcp-%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%86)
 
@@ -281,6 +285,10 @@ abbrlink: 7e8ea226
 [ImageView的ScaleType的区别](https://www.jianshu.com/p/f0b08c298cac)
 
 [Android WebView与JS的交互方式总结](https://juejin.cn/post/6844904153605505032)
+
+[Android深入理解RecyclerView的缓存机制](https://blog.csdn.net/Listron/article/details/107952703)
+
+[Android ListView 与 RecyclerView 对比浅析：缓存机制](https://cloud.tencent.com/developer/article/1005658)
 
 
 

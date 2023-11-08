@@ -142,9 +142,15 @@ const b = {
 //使用PanResponder判断是否是下滑
 const panResponder = React.useRef(
     PanResponder.create({
-        onMoveShouldSetPanResponder: () => true,
-        onPanResponderMove: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-            if (gestureState.dy < 0) {
+        onMoveShouldSetPanResponder: () => {
+        return true
+      },
+      onStartShouldSetPanResponder: () => {
+        return true
+      },
+      onMoveShouldSetPanResponderCapture: () => true,
+        onPanResponderGrant: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => {
+            if (gestureState.vy < 0) {
                 //注册onViewableItemsChanged函数 获得当前显示的页数，isAtBottom函数 判断是否是列表最后一页
                 if (!loadMoreEnable.current && isAtBottom()) {
                     showToast()
@@ -238,6 +244,30 @@ import { A } from 'xxxx'
 //对应 export default
 import B from 'xxxx'
 ```
+
+> 不能在useEffect定义一个回调形式的闭包去读取useState的值
+
+```react
+//错误写法
+const View = (prop: any) => {
+    const [followState, setFollowState] = useState({isFollow: true})
+    useEffect(() => {
+        const listener = (map: Map<number, boolean>) => {
+            const isFollow = map.get(uid) || false
+            if (followState.isFollow != isFollow) { //不能这样子去读取当前组件的followState
+                setFollowState({isFollow: isFollow})
+            }
+        }
+        addFollowListener(listener)
+        return () => {
+            removeFollowListener(listener)
+        }
+    }, [])
+}
+//因为listener对象只在页面加载完毕进行有且一次的初始化，无论后续followState怎么变化，listener闭包里拿到的followState都是第一次的值
+```
+
+
 
 
 
