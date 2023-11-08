@@ -46,6 +46,8 @@ abbrlink: 7e8ea226
 
 [map和flatmap的区别](https://www.jianshu.com/p/c820afafd94b)
 
+[Callable 和 Runnable 的不同之处](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Java%20%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%2078%20%e8%ae%b2-%e5%ae%8c/48%20Callable%20%e5%92%8c%20Runnable%20%e7%9a%84%e4%b8%8d%e5%90%8c%ef%bc%9f.md)
+
 
 
 ## 集合
@@ -79,6 +81,10 @@ abbrlink: 7e8ea226
 [属性委托](https://juejin.cn/post/6844904038589267982)
 
 &nbsp;
+
+[匿名内部类/Lambda Java和Kotlin谁会导致内存泄漏](https://mp.weixin.qq.com/s/BpwZsdGoIbhyRCDz6GD_tg)
+
+[匿名类转换为Lambda表达式有一些条件和限制](https://xmlx.live/2023/03/19/%E6%B5%85%E8%BF%B0java%E4%B8%AD%E7%9A%84%E5%8C%BF%E5%90%8D%E7%B1%BBAnonymousClass%E8%BD%AC%E6%8D%A2%E4%B8%BALambda/)
 
 [Kotlin空安全原理](https://juejin.cn/post/6844904048987127822#heading-7)
 
@@ -118,6 +124,8 @@ abbrlink: 7e8ea226
 
 [原子性、可见性、有序性 ](https://www.cnblogs.com/yeyang/p/13576636.html)
 
+[指令重排序场景](https://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%2078%20%E8%AE%B2-%E5%AE%8C/57%20%E4%BB%80%E4%B9%88%E6%98%AF%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9F.md)
+
 [volatile的可见性和禁止指令重排序怎么实现的？](https://juejin.cn/post/7110203255480647694)
 
 [synchronized与Lock的区别](https://www.cnblogs.com/iyyy/p/7993788.html)
@@ -131,6 +139,10 @@ abbrlink: 7e8ea226
 [面试 LockSupport.park()会释放锁资源吗？](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484399&idx=1&sn=596171b05e0f374e8a601d83f4d13a76&chksm=c1726be1f605e2f71a39f1738bf8d999ac6d6017851ef5369386d1c4416ab24768508879a49e&scene=178&cur_album_id=1538024362992254978#rd)
 
 [为什么ConcurrentHashMap的读操作不需要加锁](https://www.cnblogs.com/keeya/p/9632958.html)
+
+[为何每次用完 ThreadLocal 都要调用 remove()](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Java%20%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%2078%20%e8%ae%b2-%e5%ae%8c/47%20%e5%86%85%e5%ad%98%e6%b3%84%e6%bc%8f%e2%80%94%e2%80%94%e4%b8%ba%e4%bd%95%e6%af%8f%e6%ac%a1%e7%94%a8%e5%ae%8c%20ThreadLocal%20%e9%83%bd%e8%a6%81%e8%b0%83%e7%94%a8%20remove%28%29%ef%bc%9f.md)
+
+[AtomicInteger 在高并发下性能不好，如何解决？为什么？](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Java%20%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%2078%20%e8%ae%b2-%e5%ae%8c/40%20AtomicInteger%20%e5%9c%a8%e9%ab%98%e5%b9%b6%e5%8f%91%e4%b8%8b%e6%80%a7%e8%83%bd%e4%b8%8d%e5%a5%bd%ef%bc%8c%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3%ef%bc%9f%e4%b8%ba%e4%bb%80%e4%b9%88%ef%bc%9f.md)
 
 
 
