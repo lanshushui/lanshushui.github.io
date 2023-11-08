@@ -392,6 +392,8 @@ abbrlink: 7e8ea226
 
 [探索 Android View 绘制流程](https://juejin.cn/post/6904192359253147661#heading-0)
 
+[比较一下requestLayout和invalidate方法](https://juejin.cn/post/6904518722564653070)
+
 [怎么通过Choreographer计算帧率](https://segmentfault.com/a/1190000039888096)
 
 
@@ -443,6 +445,8 @@ abbrlink: 7e8ea226
  [Apk是如何生成的](https://juejin.cn/post/6844904063155322887)
 
 [Android apk安装过程分析](https://www.jianshu.com/p/e02b1f95ea58)
+
+[微信抢红包算法](https://juejin.cn/post/7080343105177665544)
 
 
 
