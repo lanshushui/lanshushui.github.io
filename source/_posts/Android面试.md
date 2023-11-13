@@ -176,6 +176,8 @@ abbrlink: 7e8ea226
 
 [Unicode与UTF-8的区别](https://blog.csdn.net/qq_36761831/article/details/82291166)
 
+[Java base64加密解密](https://www.cnblogs.com/xuwc/p/14058183.html)
+
 [并发和并行的区别](https://www.jianshu.com/p/cbf9588b2afb)
 
 [ClassNotFoundException和NoClassDefFoundError的区别](https://segmentfault.com/a/1190000021292121)
@@ -193,6 +195,8 @@ abbrlink: 7e8ea226
 # 网络
 
 [HTTPS防止抓包的方法](https://blog.csdn.net/cpcpcp123/article/details/122107538)
+
+[为什么选择使用 UDP 协议发起 DNS 查询](https://github.com/sisterAn/blog/issues/108)
 
 [TCP实现可靠传输](https://www.cnblogs.com/walker993/p/9570902.html)
 
@@ -320,6 +324,10 @@ abbrlink: 7e8ea226
 
 [assets与res/raw资源目录的区别](https://www.jianshu.com/p/f3a4bbc2a2ea)
 
+[Bitmap在Native的数据是怎么回收的](https://juejin.cn/post/7131403037519642631)
+
+[RGB888 转 RGB565](https://www.cnblogs.com/zhujin/p/16320225.html)  --取高位
+
 
 
 ## Surface
@@ -369,6 +377,8 @@ abbrlink: 7e8ea226
 [View 的 translationX、 translationY ， X、Y 和 Left、Top，Right、Bottom之间的关系](https://blog.csdn.net/qijingwang/article/details/89955912)
 
 [属性动画是如何在移动时响应用户点击事件的？补间动画不支持动画后的位置点击](http://bbs.apehorde.com/blog/articles/258)
+
+[为什么调用View的`setTranslationX/Y/Z`一系列方法，在硬件加速下，不会导致View的`draw`方法回调呢](https://wanandroid.com/wenda/show/15582)
 
 
 
