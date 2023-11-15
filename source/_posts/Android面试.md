@@ -20,6 +20,10 @@ abbrlink: 7e8ea226
 
 # Java/Kotlin
 
+[Kotlin中没有synchronized,volatile关键字,没有wait(),notify()和notifyAll()方法](https://blog.csdn.net/sergeycao/article/details/53894787)
+
+[Kotlin进阶之与Java交互](https://zhuanlan.zhihu.com/p/27958831)
+
 
 
 ## 类/基础：
@@ -47,6 +51,8 @@ abbrlink: 7e8ea226
 [map和flatmap的区别](https://www.jianshu.com/p/c820afafd94b)
 
 [Callable 和 Runnable 的不同之处](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Java%20%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%2078%20%e8%ae%b2-%e5%ae%8c/48%20Callable%20%e5%92%8c%20Runnable%20%e7%9a%84%e4%b8%8d%e5%90%8c%ef%bc%9f.md)
+
+[InterruptedException被抛出后，线程的中断状态会被清除](https://blog.csdn.net/u011403239/article/details/119849670)
 
 
 
@@ -254,6 +260,8 @@ abbrlink: 7e8ea226
 
 [Zygote中Socket通信能否替换成Binder通信](https://www.jianshu.com/p/7e711b0b6ab1)  ----   [为什么不能在多线程程序中使用fork函数](http://faq.0xffffff.org/question/2014/07/30/why-do-not-use-fork-in-mul-thread-program/)
 
+[可以重复setContentView，但可能触发一些问题](https://juejin.cn/post/7091260989504815112)
+
 
 
 ## Broadcast
@@ -423,6 +431,8 @@ abbrlink: 7e8ea226
 [探索 Android View 绘制流程](https://juejin.cn/post/6904192359253147661#heading-0)
 
 [比较一下requestLayout和invalidate方法](https://juejin.cn/post/6904518722564653070)
+
+[requestLayout可能触发onDraw](https://juejin.cn/post/6844904001972994055)
 
 [怎么通过Choreographer计算帧率](https://segmentfault.com/a/1190000039888096)
 
