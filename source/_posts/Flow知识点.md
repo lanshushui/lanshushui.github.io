@@ -112,4 +112,14 @@ data class 重写了equal，判断每个属性是否相等，而不是判断内�
 
 
 
+# LiveData和StateFlow 优缺点
+
+- `StateFlow` 需要将初始状态传递给构造函数，而 `LiveData` 不需要
+
+- LiveData观察者的回调永远发生在主线程；value 是 nullable 的；`LiveData` 是不防抖的；`LiveData` 的 `transformation` 工作在主线程
+- Flow属于 Kotlin 协程的一部分，仅 Kotlin 使用；value 空安全；防抖；提供很多操作符支持切换线程
+- 当 View 进入 `STOPPED` 状态时，`LiveData.observe()` 会自动取消注册使用方，而从 `StateFlow` 或任何其他数据流收集数据的操作并不会自动停止。如需实现相同的行为，您需要从 `Lifecycle.repeatOnLifecycle` 块收集数据流。
+
+
+
 Keep Moving Forward

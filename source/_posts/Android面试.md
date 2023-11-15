@@ -104,7 +104,13 @@ abbrlink: 7e8ea226
 
 [Kotlin内联函数inline、noinline、crossinline](https://blog.csdn.net/u013700502/article/details/119923024)
 
+
+
 &nbsp;
+
+[Kotlin 协程的优点](https://zhuanlan.zhihu.com/p/505394996)
+
+[LiveData和StateFlow 优缺点](https://lanshushui.github.io/post/58bbdd0e.html)
 
 [深入理解Kotlin协程（一）——基本概念与原理](https://www.sukaidev.top/2021/02/01/595755ca/)
 
@@ -391,6 +397,8 @@ abbrlink: 7e8ea226
 [compileSdkVersion、minSdkVersion、targetSdkVersion的区别](https://www.jianshu.com/p/4444513a17b7)
 
 [SharedPreferences apply方法引发ANR](https://juejin.cn/post/7110618131000721416)
+
+[ SP的缺点和MMKV的优势](https://www.jianshu.com/p/8f346d1984a2)    [MMKV的不足](https://juejin.cn/post/6887800985272451086)
 
 
 
