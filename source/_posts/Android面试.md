@@ -138,6 +138,8 @@ abbrlink: 7e8ea226
 
 [指令重排序场景](https://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%2078%20%E8%AE%B2-%E5%AE%8C/57%20%E4%BB%80%E4%B9%88%E6%98%AF%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9F.md)
 
+[Kotlin协程-并发安全的几种解决方案](https://juejin.cn/post/7124855163956772872)
+
 [volatile的可见性和禁止指令重排序怎么实现的？](https://juejin.cn/post/7110203255480647694)
 
 [synchronized与Lock的区别](https://www.cnblogs.com/iyyy/p/7993788.html)
