@@ -54,7 +54,11 @@ abbrlink: 7e8ea226
 [Callable 和 Runnable 的不同之处](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Java%20%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%2078%20%e8%ae%b2-%e5%ae%8c/48%20Callable%20%e5%92%8c%20Runnable%20%e7%9a%84%e4%b8%8d%e5%90%8c%ef%bc%9f.md)
 
 [InterruptedException被抛出后，线程的中断状态会被清除](https://blog.csdn.net/u011403239/article/details/119849670)
+
+
+
 [JDK 动态代理的原理其实很简单](https://juejin.cn/post/6974018412158664734)
+
 [CGLIB动态代理](https://mp.weixin.qq.com/s?__biz=Mzg3ODY2MzU2MQ==&mid=2247489820&idx=5&sn=200aef14ffb8b584e4e68b9003e3f472&chksm=cf111bfaf86692ec91ee39b192b2c1ed3f484486affe121a20a0411b57f51feed11ce5e3bba3&token=1436311520&lang=zh_CN#rd)
 
 ## 集合
@@ -110,8 +114,6 @@ abbrlink: 7e8ea226
 [构造函数以及init执行顺序](https://juejin.cn/post/7088248200707964936)
 
 [Kotlin内联函数inline、noinline、crossinline](https://blog.csdn.net/u013700502/article/details/119923024)
-
-
 
 &nbsp;
 
@@ -344,9 +346,14 @@ abbrlink: 7e8ea226
 [assets与res/raw资源目录的区别](https://www.jianshu.com/p/f3a4bbc2a2ea)
 
 [Bitmap在Native的数据是怎么回收的](https://juejin.cn/post/7131403037519642631)
+
 [RGB888 转 RGB565](https://www.cnblogs.com/zhujin/p/16320225.html)  --取高位
 
-[Android 中图片压缩分析(上)](https://cloud.tencent.com/developer/article/1006307)   [Android中图片压缩分析(下)](https://cloud.tencent.com/developer/article/1006352)## Surface
+[Android 中图片压缩分析(上)](https://cloud.tencent.com/developer/article/1006307)   [Android中图片压缩分析(下)](https://cloud.tencent.com/developer/article/1006352)
+
+
+
+## Surface
 
 [SurfaceView 与 TextureView 详解](https://cloud.tencent.com/developer/article/1771629)
 
@@ -367,6 +374,8 @@ abbrlink: 7e8ea226
 [Handler面试40问答案整理](https://ophsysbilla.github.io/2020-11-16-Handler%E9%9D%A2%E8%AF%9540%E9%97%AE%E7%AD%94%E6%A1%88%E6%95%B4%E7%90%86.html)
 
 [修改系统时间对Handler延迟消息有无影响？](https://www.jianshu.com/p/9d4ab4318310)
+
+
 
 ## IPC
 
