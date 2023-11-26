@@ -54,7 +54,14 @@ const b = {
 
 > 使用encodeURIComponent代替encodeURI 。encodeURIComponent函数则更为严格，它会对URL中的所有特殊字符进行编码 
 
+> proto3碰上 `JSON.stringify` ，默认将enums转为String [官方文档](https://protobuf.dev/programming-guides/proto3/#json)    对象obj中定义了一个toJSON方法 可以影响`JSON.stringify`输出
 
+> JSON.stringify方法在处理Map对象时会将其转换为空对象。处理方案:  转一层数组
+>
+> ```
+> const data = JSON.stringify(Array.from(map))
+> const map = new Map<string, boolean>(JSON.parse(res))
+> ```
 
 ## View属性
 

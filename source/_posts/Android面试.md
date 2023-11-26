@@ -20,6 +20,10 @@ abbrlink: 7e8ea226
 
 # Java/Kotlin
 
+[Kotlin中没有synchronized,volatile关键字,没有wait(),notify()和notifyAll()方法](https://blog.csdn.net/sergeycao/article/details/53894787)
+
+[Kotlin进阶之与Java交互](https://zhuanlan.zhihu.com/p/27958831)
+
 
 
 ## 类/基础：
@@ -42,17 +46,16 @@ abbrlink: 7e8ea226
 
 [死磕 java线程系列之线程池深入解析——定时任务执行流程](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484396&idx=1&sn=9c2ad1cbbe66ee19a3bf74291187981e&chksm=c1726be2f605e2f44e441c609e52eef4d2db9ab1b73a3b5109b7f22ecb1b903b3635990deb4e&scene=178&cur_album_id=1538024362992254978#rd)
 
+
 [双重锁式比线程安全的懒汉式高效在哪里？](https://juejin.cn/post/7038995912034615309)
 
 [map和flatmap的区别](https://www.jianshu.com/p/c820afafd94b)
 
 [Callable 和 Runnable 的不同之处](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Java%20%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%2078%20%e8%ae%b2-%e5%ae%8c/48%20Callable%20%e5%92%8c%20Runnable%20%e7%9a%84%e4%b8%8d%e5%90%8c%ef%bc%9f.md)
 
+[InterruptedException被抛出后，线程的中断状态会被清除](https://blog.csdn.net/u011403239/article/details/119849670)
 [JDK 动态代理的原理其实很简单](https://juejin.cn/post/6974018412158664734)
-
 [CGLIB动态代理](https://mp.weixin.qq.com/s?__biz=Mzg3ODY2MzU2MQ==&mid=2247489820&idx=5&sn=200aef14ffb8b584e4e68b9003e3f472&chksm=cf111bfaf86692ec91ee39b192b2c1ed3f484486affe121a20a0411b57f51feed11ce5e3bba3&token=1436311520&lang=zh_CN#rd)
-
-
 
 ## 集合
 
@@ -108,7 +111,13 @@ abbrlink: 7e8ea226
 
 [Kotlin内联函数inline、noinline、crossinline](https://blog.csdn.net/u013700502/article/details/119923024)
 
+
+
 &nbsp;
+
+[Kotlin 协程的优点](https://zhuanlan.zhihu.com/p/505394996)
+
+[LiveData和StateFlow 优缺点](https://lanshushui.github.io/post/58bbdd0e.html)
 
 [深入理解Kotlin协程（一）——基本概念与原理](https://www.sukaidev.top/2021/02/01/595755ca/)
 
@@ -129,6 +138,8 @@ abbrlink: 7e8ea226
 [原子性、可见性、有序性 ](https://www.cnblogs.com/yeyang/p/13576636.html)
 
 [指令重排序场景](https://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%2078%20%E8%AE%B2-%E5%AE%8C/57%20%E4%BB%80%E4%B9%88%E6%98%AF%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9F.md)
+
+[Kotlin协程-并发安全的几种解决方案](https://juejin.cn/post/7124855163956772872)
 
 [volatile的可见性和禁止指令重排序怎么实现的？](https://juejin.cn/post/7110203255480647694)
 
@@ -180,6 +191,8 @@ abbrlink: 7e8ea226
 
 [Unicode与UTF-8的区别](https://blog.csdn.net/qq_36761831/article/details/82291166)
 
+[Java base64加密解密](https://www.cnblogs.com/xuwc/p/14058183.html)
+
 [并发和并行的区别](https://www.jianshu.com/p/cbf9588b2afb)
 
 [ClassNotFoundException和NoClassDefFoundError的区别](https://segmentfault.com/a/1190000021292121)
@@ -199,6 +212,8 @@ abbrlink: 7e8ea226
 # 网络
 
 [HTTPS防止抓包的方法](https://blog.csdn.net/cpcpcp123/article/details/122107538)
+
+[为什么选择使用 UDP 协议发起 DNS 查询](https://github.com/sisterAn/blog/issues/108)
 
 [TCP实现可靠传输](https://www.cnblogs.com/walker993/p/9570902.html)
 
@@ -249,6 +264,8 @@ abbrlink: 7e8ea226
 [Android onSaveInstanceState/onRestoreInstanceState 原来要这么理解](https://juejin.cn/post/7040819115874844709)
 
 [Zygote中Socket通信能否替换成Binder通信](https://www.jianshu.com/p/7e711b0b6ab1)  ----   [为什么不能在多线程程序中使用fork函数](http://faq.0xffffff.org/question/2014/07/30/why-do-not-use-fork-in-mul-thread-program/)
+
+[可以重复setContentView，但可能触发一些问题](https://juejin.cn/post/7091260989504815112)
 
 
 
@@ -326,11 +343,10 @@ abbrlink: 7e8ea226
 
 [assets与res/raw资源目录的区别](https://www.jianshu.com/p/f3a4bbc2a2ea)
 
-[Android 中图片压缩分析(上)](https://cloud.tencent.com/developer/article/1006307)   [Android中图片压缩分析(下)](https://cloud.tencent.com/developer/article/1006352)
+[Bitmap在Native的数据是怎么回收的](https://juejin.cn/post/7131403037519642631)
+[RGB888 转 RGB565](https://www.cnblogs.com/zhujin/p/16320225.html)  --取高位
 
-
-
-## Surface
+[Android 中图片压缩分析(上)](https://cloud.tencent.com/developer/article/1006307)   [Android中图片压缩分析(下)](https://cloud.tencent.com/developer/article/1006352)## Surface
 
 [SurfaceView 与 TextureView 详解](https://cloud.tencent.com/developer/article/1771629)
 
@@ -378,6 +394,8 @@ abbrlink: 7e8ea226
 
 [属性动画是如何在移动时响应用户点击事件的？补间动画不支持动画后的位置点击](http://bbs.apehorde.com/blog/articles/258)
 
+[为什么调用View的`setTranslationX/Y/Z`一系列方法，在硬件加速下，不会导致View的`draw`方法回调呢](https://wanandroid.com/wenda/show/15582)
+
 
 
 ## 框架层常用知识
@@ -389,6 +407,8 @@ abbrlink: 7e8ea226
 [compileSdkVersion、minSdkVersion、targetSdkVersion的区别](https://www.jianshu.com/p/4444513a17b7)
 
 [SharedPreferences apply方法引发ANR](https://juejin.cn/post/7110618131000721416)
+
+[ SP的缺点和MMKV的优势](https://www.jianshu.com/p/8f346d1984a2)    [MMKV的不足](https://juejin.cn/post/6887800985272451086)
 
 
 
@@ -413,6 +433,8 @@ abbrlink: 7e8ea226
 [探索 Android View 绘制流程](https://juejin.cn/post/6904192359253147661#heading-0)
 
 [比较一下requestLayout和invalidate方法](https://juejin.cn/post/6904518722564653070)
+
+[requestLayout可能触发onDraw](https://juejin.cn/post/6844904001972994055)
 
 [怎么通过Choreographer计算帧率](https://segmentfault.com/a/1190000039888096)
 
