@@ -192,6 +192,8 @@ abbrlink: 7e8ea226
 
 [进程和线程的概念、区别及进程线程间通信](https://cloud.tencent.com/developer/article/1688297)
 
+[Java对象会不会分配到栈中？](https://mp.weixin.qq.com/s?__biz=Mzg3ODY2MzU2MQ==&mid=2247489634&idx=3&sn=8e20b79659ba9a0bbabd781f628fdab9&chksm=cf111a84f86693922d2b9b0c01dc935db0a409662a680f11a985de317c9c8e832c27cd5a7650&token=1436311520&lang=zh_CN#rd)
+
 
 
 # 网络
