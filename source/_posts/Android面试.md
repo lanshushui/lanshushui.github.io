@@ -24,6 +24,8 @@ abbrlink: 7e8ea226
 
 ## 类/基础：
 
+[Kotlin的const和val区别](https://juejin.cn/post/6921311759005548557)
+
 [java对象生命周期](https://blog.csdn.net/qq_25005909/article/details/78981512)
 
 [反射中Class.forName()和ClassLoader.loadClass()的区别](https://www.cnblogs.com/xiohao/p/8853462.html)
@@ -40,13 +42,15 @@ abbrlink: 7e8ea226
 
 [死磕 java线程系列之线程池深入解析——定时任务执行流程](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484396&idx=1&sn=9c2ad1cbbe66ee19a3bf74291187981e&chksm=c1726be2f605e2f44e441c609e52eef4d2db9ab1b73a3b5109b7f22ecb1b903b3635990deb4e&scene=178&cur_album_id=1538024362992254978#rd)
 
-[JDK 动态代理的原理其实很简单](https://juejin.cn/post/6974018412158664734)
-
 [双重锁式比线程安全的懒汉式高效在哪里？](https://juejin.cn/post/7038995912034615309)
 
 [map和flatmap的区别](https://www.jianshu.com/p/c820afafd94b)
 
 [Callable 和 Runnable 的不同之处](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Java%20%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%2078%20%e8%ae%b2-%e5%ae%8c/48%20Callable%20%e5%92%8c%20Runnable%20%e7%9a%84%e4%b8%8d%e5%90%8c%ef%bc%9f.md)
+
+[JDK 动态代理的原理其实很简单](https://juejin.cn/post/6974018412158664734)
+
+[CGLIB动态代理](https://mp.weixin.qq.com/s?__biz=Mzg3ODY2MzU2MQ==&mid=2247489820&idx=5&sn=200aef14ffb8b584e4e68b9003e3f472&chksm=cf111bfaf86692ec91ee39b192b2c1ed3f484486affe121a20a0411b57f51feed11ce5e3bba3&token=1436311520&lang=zh_CN#rd)
 
 
 
@@ -319,6 +323,8 @@ abbrlink: 7e8ea226
 [DiskLruCache源码分析](https://juejin.cn/post/7097204016735584263)
 
 [assets与res/raw资源目录的区别](https://www.jianshu.com/p/f3a4bbc2a2ea)
+
+[Android 中图片压缩分析(上)](https://cloud.tencent.com/developer/article/1006307)   [Android中图片压缩分析(下)](https://cloud.tencent.com/developer/article/1006352)
 
 
 
