@@ -23,6 +23,21 @@ abbrlink: 1dcdc51b
 
 <!-- more -->
 
+## 常见知识
+
+`View` 标签视情况，可能会被优化，不会被转换为平台的ViewGroup
+
+`View` 可以不需要宽高参数
+
+```
+//对应 export 
+import { A } from 'xxxx'
+//对应 export default
+import B from 'xxxx'
+```
+
+
+
 ## 常见JS问题
 
 > [JS中的块级作用域，var、let、const三者的区别](https://cloud.tencent.com/developer/article/1940775)
@@ -239,20 +254,9 @@ const MyView = (prop: any) => {
 
 
 
-## 常见问题
+## 问题场景
 
-`View` 标签视情况，可能会被优化，不会被转换为平台的ViewGroup
-
-`View` 可以不需要宽高参数
-
-```react
-//对应 export 
-import { A } from 'xxxx'
-//对应 export default
-import B from 'xxxx'
-```
-
-> 不能在useEffect定义一个回调形式的闭包去读取useState的值
+> 不能在useEffect,useCallback中定义一个回调形式的闭包去读取useState的值，用useRef形式读取可能修改的变量
 
 ```react
 //错误写法
@@ -273,6 +277,16 @@ const View = (prop: any) => {
 }
 //因为listener对象只在页面加载完毕进行有且一次的初始化，无论后续followState怎么变化，listener闭包里拿到的followState都是第一次的值
 ```
+
+
+
+> FlatList全屏上下滑，定位到初始渲染位置的场景，需要设置initialScrollIndex和getItemLayout属性。
+>
+> 但item的高度是通过一个全屏的view的onLayout方法确定下来的，在存在StatusBar场景下，onLayout方法多次回调，返回的高度也是变化的，导致FlatList出现渲染偏移的问题
+
+***解决方法**：给FlatList设置key属性，每一次高度变化，变化key属性，渲染一个全选的FlatList*
+
+
 
 
 
