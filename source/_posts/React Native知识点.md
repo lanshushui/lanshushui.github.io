@@ -65,7 +65,22 @@ const b = {
 
 > obj对象被用作if语句的条件。如果obj对象存在（即非null和非undefined），则条件为真。否则，条件为假
 
+>  ?? 是空值合并操作符。它用于检查一个值是否为 null 或 undefined，如果是的话就返回另一个指定的默认值 
+>
+> ```
+> const result = someValue ?? defaultValue;
+> ```
+
+>  ??= 类似于 ??，但是如果左侧的值为 null 或 undefined，则会将右侧的值赋给左侧的变量。
+>
+> ```
+> let myVar: string | undefined = undefined;
+> myVar ??= "default";
+> ```
+
 > 代替kotlin `?: `操作符的方法   表达式对象 || 0，如果对象被视为真（truthy），则整个表达式的结果将是该对象。如果对象被视为假（falsy），则整个表达式的结果将是0
+
+> 虽然没有kotlin `?: `操作符，但有 `boolean ? A : B `操作符
 
 > 使用encodeURIComponent代替encodeURI 。encodeURIComponent函数则更为严格，它会对URL中的所有特殊字符进行编码 
 
@@ -77,6 +92,8 @@ const b = {
 > const data = JSON.stringify(Array.from(map))
 > const map = new Map<string, boolean>(JSON.parse(res))
 > ```
+
+> 异步的箭头函数 const myfunc  = async () => {}
 
 ## View属性
 
