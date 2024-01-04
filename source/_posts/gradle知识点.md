@@ -143,6 +143,12 @@ private fun applyMavenPublishPluginInternal(project: Project) {
 
 
 
+## 5.Maven插件
+
+[发布aar包到maven仓库以及 maven插件 和 maven-publish 插件的区别](https://cloud.tencent.com/developer/article/1911642)	
+
+
+
 
 
 Keep Moving Forward
