@@ -9,6 +9,8 @@ abbrlink: 728a6632
 
 [Android Studio Build Output控制台输出乱码解决](https://blog.csdn.net/github_2011/article/details/109135258)
 
+[我想调试下build.gradle | Gradle 调试](https://cloud.tencent.com/developer/article/1951717)
+
 [关于 Gradle 你应该知道的知识点](https://juejin.cn/post/7064350945756332040#heading-1)
 
 > Gradle生命周期一般分为三个阶段l
@@ -19,9 +21,13 @@ abbrlink: 728a6632
 
 
 
+[Android编译速度优化——模块Aar方案实现](https://github.com/zhupeipei/AndroidBuildAccPlugin)
+
 
 
 <!-- more -->
+
+[Task#finalizedBy 函数](https://cloud.tencent.com/developer/article/2253820)
 
 
 
@@ -89,6 +95,40 @@ private fun applyMavenPublishPluginInternal(project: Project) {
 }
 ```
 
+```kotlin
+//配置Maven参数
+private fun configMavenPublish(subProject: Project, appExtension: AppExtension?) {
+        subProject.afterEvaluate {
+            if (!subProject.pluginManager.hasPlugin("maven-publish")) {
+                return@afterEvaluate
+            }
+            subProject.extensions.configure<PublishingExtension>("publishing") { publishingExt ->
+                publishingExt.publications { publicationContainer ->
+                    val publicationName = "xxx"
+                    if (publicationContainer.findByName(publicationName) == null) {
+                        publicationContainer.create(
+                            publicationName,
+                            MavenPublication::class.java
+                        ) {
+                            with(it) {
+                                groupId = mavenModel.groupId
+                                artifactId = mavenModel.artifactId
+                                version = mavenModel.version
+                                from(subProject.components.getByName(buildTypeName))
+                            }
+                        }
+                    }
+                }
+                publishingExt.repositories { repositoryHandler ->
+                    repositoryHandler.maven {
+                        it.setUrl(MAVEN_PUBLISH_URL)
+                    }
+                }
+            }
+        }
+    }
+```
+
 
 
 ## 3.Project相关API
@@ -97,13 +137,18 @@ private fun applyMavenPublishPluginInternal(project: Project) {
 
 > project.*rootProject* != project   判断应用插件的是不是根项目
 
+> project.path ==":"   说明是根项目
+
 > project.extensions.create("BuildAccExtension", BuildAccExtension::class.*java*)    创建ext
 
 > project.afterEvaluate，是所有模块都已经配置完后才触发，如果注册了多个project.afterEvaluate回调，那么执行顺序等同于注册顺序
 >
 > project.afterEvaluate{   //可以通过it 参数拿到project   }
 
+> project.pluginManager.hasPlugin("maven-publish")   project.plugins.hasPlugin("com.android.application") 判断是否存在某个插件（必须在project.afterEvaluate后使用）
 
+>  project.pluginManager.apply("maven-publish") apply某个插件
+>
 
 
 
@@ -124,13 +169,24 @@ private fun applyMavenPublishPluginInternal(project: Project) {
 > 2. *gradle*.addBuildListener
 >
 > ```kotlin
-> project.gradle.addBuildListener(object : BuildListenerWrapper() {
->     override fun projectsEvaluated(gradle: Gradle) {
->         super.projectsEvaluated(gradle)
+> gradle.addBuildListener(new BuildListener() {
+>     void buildStarted(Gradle var1) {
+>         println '开始构建'
 >     }
-> 
->     override fun buildFinished(buildResult: BuildResult) {
->         super.buildFinished(buildResult)
+>     void settingsEvaluated(Settings var1) {
+>         // var1.gradle.rootProject 这里访问 Project 对象时会报错，
+>         // 因为还未完成 Project 的初始化。
+>         println 'settings 评估完成（settings.gradle 中代码执行完毕）'
+>     }
+>     void projectsLoaded(Gradle var1) {
+>         println '项目结构加载完成（初始化阶段结束）'
+>         println '初始化结束，可访问根项目：' + var1.gradle.rootProject
+>     }
+>     void projectsEvaluated(Gradle var1) {
+>         println '所有项目评估完成（配置阶段结束）'
+>     }
+>     void buildFinished(BuildResult var1) {
+>         println '构建结束 '
 >     }
 > })
 > ```
@@ -141,6 +197,28 @@ private fun applyMavenPublishPluginInternal(project: Project) {
  val version = runCatching{project.gradle.gradleVersion.split(".")[0].toInt() }.getOrNull() ?: 0  
 ```
 
+4.获得运行的任务名称
+
+```groovy
+
+List<TaskExecutionRequest> taskRequests = gradle.startParameter.getTaskRequests();
+if (taskRequests.size() > 0) {
+    String taskName = taskRequests.get(0).toString();
+    if (taskName.contains("assembledebug")) {
+        println  "assembledebug"
+    }
+}
+```
+
+6.获得项目所有构建变体
+
+```kotlin
+val appExtension = runCatching { mAppProject?.extensions?.getByType(AppExtension::class.java) }.getOrNull()
+appExtension.applicationVariants.forEach { applicationVariant ->
+
+                                         }
+```
+
 
 
 ## 5.Maven插件
@@ -148,6 +226,72 @@ private fun applyMavenPublishPluginInternal(project: Project) {
 [发布aar包到maven仓库以及 maven插件 和 maven-publish 插件的区别](https://cloud.tencent.com/developer/article/1911642)	
 
 
+
+## 6.configurations
+
+[Gradle 理解：configuration、dependency](https://juejin.cn/post/6844904088446959623)
+
+
+
+
+
+## 7.Cmd命令
+
+```kotlin
+fun Project.execCmd(cmd: String): String {
+    try {
+        val stdOut = ByteArrayOutputStream()
+        project.exec {
+            it.executable = "sh"
+            it.args = listOf("-c", cmd)
+            it.standardOutput = stdOut
+            it.errorOutput = stdOut
+        }
+        val result = stdOut.toString()
+        return result
+    } catch (e: Exception) {
+        return ""
+    }
+}
+```
+
+判断某个模块是否有本地修改
+
+```kotlin
+ val result = project.execCmd("git -C ${project.projectDir.absolutePath} status --porcelain")
+```
+
+获得最新commitId
+
+```kotlin
+fun getCommitId(project: Project): String? {
+    val projectDir = project.projectDir.absolutePath
+    val commitRes = project.execCmd("cd $projectDir && git log | head -n 1")
+    if (commitRes.startsWith("commit ")) {
+        return commitRes.substring(7).replace("\n", "")
+    }
+    return null
+}
+```
+
+
+
+## 有用方法集合
+
+1.获取local.properties文件的值        **gradle.properties的值在gradle文件中可以通过变量名引用获取**
+
+```groovy
+def getPropertyFromLocalProperties(key, Object defaultValue) {
+    File file = project.rootProject.file('local.properties');
+    if (file.exists()) {
+        Properties properties = new Properties()
+        properties.load(file.newDataInputStream())
+        return properties.getOrDefault(key, defaultValue)
+    } else {
+        return defaultValue
+    }
+}
+```
 
 
 
