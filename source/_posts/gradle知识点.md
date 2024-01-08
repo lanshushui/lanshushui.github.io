@@ -31,7 +31,7 @@ abbrlink: 728a6632
 
 
 
-## 1.setting.gradle
+## setting.gradle
 
 可以通过如下方式注册需要参与构建的模块，项目名称中 `:` 代表项目的分隔符, 类似路径中的 `/`. 如果以 `:` 开头则表示相对于 `root project`
 
@@ -61,7 +61,17 @@ include(":webviewlib")
 
 
 
-## 2.Plugin插件用法
+## buildscript
+
+[buildscript 的脚本执行顺序](https://juejin.cn/post/6935605583743549476)
+
+[如果我们想在gradle脚本中使用外部的jar包!!](https://cloud.tencent.com/developer/article/1837160)
+
+[classpath implementation的区别](https://juejin.cn/s/gradle%20dependencies%20classpath%20implementation)
+
+
+
+## Plugin插件用法
 
 ```kotlin
 class BuildAccPlugin : Plugin<Project> {
@@ -131,7 +141,7 @@ private fun configMavenPublish(subProject: Project, appExtension: AppExtension?)
 
 
 
-## 3.Project相关API
+## Project相关API
 
 > project.gradle 获得gradle
 
@@ -152,7 +162,7 @@ private fun configMavenPublish(subProject: Project, appExtension: AppExtension?)
 
 
 
-## 4.gradle相关API
+## gradle相关API
 
 > 通过project.gradle 获得gradle
 
@@ -221,21 +231,25 @@ appExtension.applicationVariants.forEach { applicationVariant ->
 
 
 
-## 5.Maven插件
+## Maven插件
 
 [发布aar包到maven仓库以及 maven插件 和 maven-publish 插件的区别](https://cloud.tencent.com/developer/article/1911642)	
 
 
 
-## 6.configurations
+## configurations
 
 [Gradle 理解：configuration、dependency](https://juejin.cn/post/6844904088446959623)
 
+[ testImplementation和 androidTestImplementation 的区别](https://stackoverflow.com/questions/52076775/android-difference-between-testimplementation-and-androidtestimplementation-in-b)
+
+[configurations.all vs configurations](https://juejin.cn/s/gradle%20configurations.all%20vs%20configurations)
 
 
 
 
-## 7.Cmd命令
+
+## Cmd命令
 
 ```kotlin
 fun Project.execCmd(cmd: String): String {
