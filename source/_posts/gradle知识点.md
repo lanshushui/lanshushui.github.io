@@ -23,6 +23,8 @@ abbrlink: 728a6632
 
 [Android编译速度优化——模块Aar方案实现](https://github.com/zhupeipei/AndroidBuildAccPlugin)
 
+[ 输出项目第三方库以及本地依赖库的权限信息](https://github.com/Omooo/Android-Notes/blob/master/blogs/Android/Gradle/%E4%BE%9D%E8%B5%96%E6%9D%83%E9%99%90%E4%BF%A1%E6%81%AF.md)
+
 
 
 <!-- more -->
@@ -58,6 +60,8 @@ rootProject.name = "WebviewDemo"
 include(":app")
 include(":webviewlib")
 ```
+
+> 模块之间的互相依赖我们通常使用 `implementation(project(":$modulePath"))` 的语法进行引用。注意，Gradle 以 “:” 为文件路径分隔符，如果 a 模块引用的 b 模块放置在某个深层的文件（例如 “/commons/utils/b”）中，则需要完整的路径引用：`project(":commons:utils:b")`
 
 
 
@@ -237,7 +241,7 @@ appExtension.applicationVariants.forEach { applicationVariant ->
 
 
 
-## configurations
+## dependency 以及 configurations
 
 [Gradle 理解：configuration、dependency](https://juejin.cn/post/6844904088446959623)
 
@@ -245,7 +249,9 @@ appExtension.applicationVariants.forEach { applicationVariant ->
 
 [configurations.all vs configurations](https://juejin.cn/s/gradle%20configurations.all%20vs%20configurations)
 
+[一篇文章深入gradle（上篇）:依赖机制](https://oubindo.github.io/2019/09/05/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%B7%B1%E5%85%A5gradle%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89:%E4%BE%9D%E8%B5%96%E6%9C%BA%E5%88%B6/)
 
+[Android gradle dependency tree change（依赖树变化）监控实现](https://cloud.tencent.com/developer/article/2332005)
 
 
 
