@@ -255,7 +255,7 @@ appExtension.applicationVariants.forEach { applicationVariant ->
 
 
 
-## Cmd命令
+## 命令
 
 ```kotlin
 fun Project.execCmd(cmd: String): String {
@@ -292,6 +292,35 @@ fun getCommitId(project: Project): String? {
     }
     return null
 }
+```
+
+gradle命令传参
+
+```groovy
+./gradlew xxxtask -Pc='aaa'
+在Gradle命令中，-Pc表示你正在设置一个名为"c"（或者在-P后面的任何内容）的项目属性。Gradle允许你使用-P选项将属性传递给构建脚本。
+在你的例子中，你将属性"c"的值设置为字符串’aaa’。这意味着你的Gradle构建脚本可以在构建过程中使用这个名为"c"的属性及其值
+task myTask {
+    doLast {
+        def propertyCValue = project.hasProperty('c') ? project.c : '默认值'
+        println "属性'c'的值是：$propertyCValue"
+    }
+}
+
+```
+
+module的gradle文件下编写找到它依赖的子project的实际project对象
+
+```groovy
+project.configurations.each { 
+    it.dependencies.each { 
+        if (!(it instanceof org.gradle.api.artifacts.ProjectDependency)) { 
+            return 
+        } 
+        def sProject = it.getDependencyProject()
+    }
+}
+
 ```
 
 

@@ -16,7 +16,23 @@ abbrlink: 7e8ea226
 
 [网络知识汇总](https://www.xiaolincoding.com/network/1_base/tcp_ip_model.html#%E7%BD%91%E7%BB%9C%E5%B1%82)
 
+[javaguide](https://javaguide.cn/java/basis/java-basic-questions-01.html)
+
+[Java 全栈知识体系](https://pdai.tech/)
+
 <!-- more -->
+
+
+
+# 算法
+
+[多线程编程](https://offer.hi-dhl.com/#/multi-thread/01-printThread)
+
+[CodeTop](https://codetop.cc/home)
+
+[代码随想录](https://programmercarl.com/)
+
+
 
 # Java/Kotlin
 
@@ -208,6 +224,8 @@ abbrlink: 7e8ea226
 [进程和线程的概念、区别及进程线程间通信](https://cloud.tencent.com/developer/article/1688297)
 
 [Java对象会不会分配到栈中？](https://mp.weixin.qq.com/s?__biz=Mzg3ODY2MzU2MQ==&mid=2247489634&idx=3&sn=8e20b79659ba9a0bbabd781f628fdab9&chksm=cf111a84f86693922d2b9b0c01dc935db0a409662a680f11a985de317c9c8e832c27cd5a7650&token=1436311520&lang=zh_CN#rd)
+
+[JVM内存结构和Java内存模型](https://zhuanlan.zhihu.com/p/38348646)
 
 
 
@@ -462,6 +480,8 @@ abbrlink: 7e8ea226
 [Class文件结构](https://zhuanlan.zhihu.com/p/25823310)
 
 [关于Android的65535限制](https://www.jianshu.com/p/b17ce6e2388c)
+
+[为什么dex文件比class文件更适合移动端](https://www.cnblogs.com/webor2006/p/16609029.html	)
 
 
 
