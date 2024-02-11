@@ -75,6 +75,14 @@ include(":webviewlib")
 
 
 
+> kts中引入自定义gradle脚本文件    *apply*(from = File("${*rootDir*}/app/test.gradle"))，如果是相对目录，相对的是apply的项目的对应目录
+
+> 哪个project 进行apply操作，test.gradle就能通过project属性访问到所属的项目
+
+> kts如何调用ext中的自定义方法  val projectOrAAr = ext.get("projectOrAAr") as groovy.lang.Closure<Object>
+
+
+
 ## Plugin插件用法
 
 ```kotlin
@@ -238,6 +246,8 @@ appExtension.applicationVariants.forEach { applicationVariant ->
 ## Maven插件
 
 [发布aar包到maven仓库以及 maven插件 和 maven-publish 插件的区别](https://cloud.tencent.com/developer/article/1911642)	
+
+[发布 Android library 到 Maven 解析](https://www.jb51.net/article/263003.htm)
 
 
 
