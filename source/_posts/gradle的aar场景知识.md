@@ -52,16 +52,100 @@ abbrlink: 59f16662
             <artifactId>library2</artifactId>
             <version>unspecified</version>
             <scope>compile</scope>
+            -------------------或者--------------
+            <groupId>com.ct.ct</groupId>
+      		<artifactId>library2</artifactId>
+      		<version>5.0.0_DEBUG</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
 ```
 
-会像其他远端依赖一样被打包进pom中，相关字段为library2项目的配置信息，version字段默认为unspecified
+会像其他远端依赖一样被打包进pom中，
 
-(library2项目的build.gradle也可以配置这个字段) 
+1.当library2没有配置maven-publish插件时，相关字段为library2项目的配置信息，version字段默认为unspecified
+
+2.当library2也有配置maven-publish插件时，相关字段则会根据library1打包的类型去读取library2的publications.debug或者publications.release来填写
 
 > 从pom文件来看是被完全当成远端依赖来处理了
+
+
+
+##### 3.打包Aar时上传源码操作
+
+```groovy
+// 上传源码的 task
+task sourceJar(type: Jar) {
+    // 如果有Kotlin那么就需要打入dir : getSrcDirs
+    if (project.hasProperty("kotlin")) {
+        println '====> project kotlin'
+        from android.sourceSets.main.java.getSrcDirs()
+    } else if (project.hasProperty("android")) {
+        println '====> project java'
+        from android.sourceSets.main.java.sourceFiles
+    } else {
+        println '====> project java & kotlin'
+        from sourceSets.main.allSource
+    }
+    archiveClassifier = "sources"
+}
+publishing {
+    publications { PublicationContainer publicationContainer ->
+        release(MavenPublication) {
+            from components.release
+            artifact sourceJar // 上传源码
+            groupId = GROUP_ID
+            artifactId = ARTIFACT_ID
+            version = VERSION
+        }
+    }
+}
+```
+
+但我这个版本 【agp 8.1.2   gradle-8.0】好像不需要设置artifact sourceJar，默认会带源码，设置了artifact sourceJar还会报错
+
+```
+What went wrong:
+A problem was found with the configuration of task ':library1:sourceJar' (type 'Jar').
+- Gradle detected a problem with the following location:
+'C:\AarProject\library1\build\libs\library1-sources.jar'.
+
+Reason: Task ':library1:generateMetadataFileForReleasePublication'
+uses this output of task ':library1:sourceJar'
+without declaring an explicit or implicit dependency. This can lead to incorrect results being
+produced, depending on what order the tasks are executed.
+```
+
+解决方案：
+
+```groovy
+release(MavenPublication) {
+    from components.release
+    artifact sourceJar // 上传源码
+    groupId = GROUP_ID
+    artifactId = ARTIFACT_ID
+    version = VERSION
+}
+//在这里之后才能找到generateMetadataFileForReleasePublication任务
+tasks.named("generateMetadataFileForReleasePublication"){
+    dependsOn "androidSourcesJar"
+}
+```
+
+又会出现 【 multiple **artifacts** with the identical extension and classifier 】的问题，因为打包已经默认出现了-source.jar 的问题，需要修改sourceJar的archiveClassifier为其他字符串
+
+
+
+##### 4.当library1同时依赖library3的源码和aar包时，编译运行都不会报错
+
+> 优先选择源码，但如果引用的library3的aar包有library3源码没有的类，那library1还是可以引用到该类
+
+所以为了避免aar和源码混淆，当一个library源码化时，必须剔除项目中所有该library的aar依赖
+
+
+
+
 
 
 

@@ -354,4 +354,21 @@ def getPropertyFromLocalProperties(key, Object defaultValue) {
 
 
 
+## Groovy语法
+
+> 方法支持返回多个值，以[]包括起来，返回的是list集合，但调用的地方会自动解耦；
+
+```
+def A={ String a ,String b ->
+    String c= a+b
+    println(c)
+}
+def B={
+    return ["a","b"]
+}
+A(B())
+```
+
+
+
 Keep Moving Forward
