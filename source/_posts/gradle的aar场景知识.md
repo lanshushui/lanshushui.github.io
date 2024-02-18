@@ -98,6 +98,7 @@ publishing {
             groupId = GROUP_ID
             artifactId = ARTIFACT_ID
             version = VERSION
+            //这里的闭包代码config阶段就被运行了
         }
     }
 }

@@ -13,7 +13,7 @@ abbrlink: 728a6632
 
 [关于 Gradle 你应该知道的知识点](https://juejin.cn/post/7064350945756332040#heading-1)
 
-> Gradle生命周期一般分为三个阶段l
+> Gradle生命周期一般分为三个阶段
 >
 > 1. 初始化阶段，解析setting.gradle文件，确定需要引入哪些模块；
 > 2. 配置阶段，解析每个project的build.gradle文件，build.gradle就是一堆代码的集合，只是用dsl的语言风格描述出来，看着像配置语言。同时汇总所有project生成有向无环图来确定每个task的依赖关系；
@@ -178,40 +178,93 @@ private fun configMavenPublish(subProject: Project, appExtension: AppExtension?)
 
 > 通过project.gradle 获得gradle
 
-> 1. gradle.addProjectEvaluationListener
->
+> 每一次运行gradle任务，所有gradle文件获得的gradle变量都是同一个对象
+
 > ```kotlin
-> project.gradle.addProjectEvaluationListener(object : ProjectEvaluationListenerWrapper() {
->     override fun afterEvaluate(subProject: Project, projectState: ProjectState) {
->         super.afterEvaluate(subProject, projectState)
+> //setting.gradle.kts
+> gradle.addBuildListener(object : BuildListener {
+>     override fun settingsEvaluated(settings: Settings) {
+>         println("addBuildListener--------settingsEvaluated")
+>     }
+> 
+>     override fun projectsLoaded(gradle: Gradle) {
+>         println("addBuildListener--------projectsLoaded")
+>     }
+> 
+>     override fun projectsEvaluated(gradle: Gradle) {
+>         println("addBuildListener--------projectsEvaluated")
+>     }
+> 
+>     override fun buildFinished(result: BuildResult) {
+>         println("addBuildListener--------buildFinished")
 >     }
 > })
+> gradle.addProjectEvaluationListener(object :ProjectEvaluationListener{
+>     override fun beforeEvaluate(project: Project) {
+>         println("addProjectEvaluationListener--------beforeEvaluate----------- $project")
+>     }
+> 
+>     override fun afterEvaluate(project: Project, state: ProjectState) {
+>         println("addProjectEvaluationListener--------afterEvaluate-----------$project")
+>     }
+> 
+> })
+> 
+> //app build.gradle
+> println("1---------rootProject")
+> beforeEvaluate {
+>     println("4---------rootProject-beforeEvaluate")
+> }
+> println("2---------rootProject")
+> afterEvaluate {
+>     println("5---------rootProject-afterEvaluate")
+> }
+> println("3---------rootProject")
+> 
+> //library1 build.gradle
+> println("1---------library1")
+> beforeEvaluate {
+>     println("4---------library1-beforeEvaluate")
+> }
+> println("2---------library1")
+> afterEvaluate {
+>     println("5---------library1-afterEvaluate")
+> }
+> println("3---------library1")
 > ```
 
-> 2. *gradle*.addBuildListener
->
-> ```kotlin
-> gradle.addBuildListener(new BuildListener() {
->     void buildStarted(Gradle var1) {
->         println '开始构建'
->     }
->     void settingsEvaluated(Settings var1) {
->         // var1.gradle.rootProject 这里访问 Project 对象时会报错，
->         // 因为还未完成 Project 的初始化。
->         println 'settings 评估完成（settings.gradle 中代码执行完毕）'
->     }
->     void projectsLoaded(Gradle var1) {
->         println '项目结构加载完成（初始化阶段结束）'
->         println '初始化结束，可访问根项目：' + var1.gradle.rootProject
->     }
->     void projectsEvaluated(Gradle var1) {
->         println '所有项目评估完成（配置阶段结束）'
->     }
->     void buildFinished(BuildResult var1) {
->         println '构建结束 '
->     }
-> })
-> ```
+```
+//////////////////////// 运行结果////////////////////////////////
+addBuildListener--------settingsEvaluated
+addBuildListener--------projectsLoaded
+
+> Configure project :
+addProjectEvaluationListener--------beforeEvaluate----------- root project 'AarProject'
+addProjectEvaluationListener--------afterEvaluate-----------root project 'AarProject'
+
+> Configure project :app
+addProjectEvaluationListener--------beforeEvaluate----------- project ':app'
+1---------rootProject
+2---------rootProject
+3---------rootProject
+addProjectEvaluationListener--------afterEvaluate-----------project ':app'
+5---------rootProject-afterEvaluate
+
+> Configure project :library1
+addProjectEvaluationListener--------beforeEvaluate----------- project ':library1'
+1---------library1
+2---------library1
+3---------library1
+addProjectEvaluationListener--------afterEvaluate-----------project ':library1'
+5---------library1-afterEvaluate
+
+addBuildListener--------projectsEvaluated
+
+> Task :prepareKotlinBuildScriptModel UP-TO-DATE
+addBuildListener--------buildFinished
+
+BUILD SUCCESSFUL in 2s
+```
 
 3.获得项目gradle版本   
 
@@ -285,7 +338,21 @@ fun Project.execCmd(cmd: String): String {
 }
 ```
 
-判断某个模块是否有本地修改
+> project.exec是以project对象的目录启动命令
+
+> window系统下执行命令
+
+```groovy
+String path = project.path
+String cmd = "gradlew ${path}:publishReleasePublicationToMavenRepository"
+rootProject.exec {
+    commandLine 'cmd','/c',cmd
+}
+```
+
+> cmd执行graldew命令时，会额外启动Gradle Daemon执行命令，重新跑一遍初始化阶段，配置阶段
+
+> 判断某个模块是否有本地修改
 
 ```kotlin
  val result = project.execCmd("git -C ${project.projectDir.absolutePath} status --porcelain")
