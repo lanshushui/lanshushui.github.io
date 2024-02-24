@@ -146,7 +146,19 @@ tasks.named("generateMetadataFileForReleasePublication"){
 
 
 
+##### 5.'java-library'是升级版的java插件，内部会apply 'java'插件
 
+和maven插件一样，也会产生pom文件，产物也是jar
+
+
+
+##### 6.annotationProcessor依赖不会引入其项目源码以及其项目依赖
+
+> annotationProcessor本质是将本项目的class文件传给AbstractProcessor类处理生成新文件，打包后不需要AbstractProcessor类的
+
+如果项目library1-compile是java库，并有AbstractProcessor的子类，那它的gradle文件里的 **annotationProcessor 'com.google.auto.service:auto-service:1.0-rc4'** 作用是解析【AutoService】注解，生成META-INF文件夹
+
+依赖library1-compile的项目library2 则可以用kapt或annotationProcessor来依赖library1-compile，作用是解析【自定义】注解，生成对应class类
 
 
 

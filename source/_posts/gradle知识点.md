@@ -321,9 +321,11 @@ appExtension.applicationVariants.forEach { applicationVariant ->
 ## 命令
 
 ```kotlin
+//cmd执行graldew命令时，会额外启动Gradle Daemon执行命令，重新跑一遍初始化阶段，配置阶段
 fun Project.execCmd(cmd: String): String {
     try {
         val stdOut = ByteArrayOutputStream()
+        //project.exec是以project对象的目录启动命令
         project.exec {
             it.executable = "sh"
             it.args = listOf("-c", cmd)
@@ -338,8 +340,6 @@ fun Project.execCmd(cmd: String): String {
 }
 ```
 
-> project.exec是以project对象的目录启动命令
-
 > window系统下执行命令
 
 ```groovy
@@ -350,54 +350,46 @@ rootProject.exec {
 }
 ```
 
-> cmd执行graldew命令时，会额外启动Gradle Daemon执行命令，重新跑一遍初始化阶段，配置阶段
-
-> 判断某个模块是否有本地修改
+> GIT命令
 
 ```kotlin
- val result = project.execCmd("git -C ${project.projectDir.absolutePath} status --porcelain")
-```
+//判断某个模块是否有本地修改 
+project.execCmd("git -C ${project.projectDir.absolutePath} status --porcelain")
 
-获得最新commitId
-
-```kotlin
-fun getCommitId(project: Project): String? {
-    val projectDir = project.projectDir.absolutePath
-    val commitRes = project.execCmd("cd $projectDir && git log | head -n 1")
-    if (commitRes.startsWith("commit ")) {
-        return commitRes.substring(7).replace("\n", "")
-    }
-    return null
+//根据commitId 获得commit的信息(不包含作者，时间的)
+static def getCommitMsg(String commitId, Gradle gradle) {
+    String cmd = "git log --pretty=format:\"%s\" $commitId -1"
+    return execCmd(cmd, gradle.rootProject).trim()
 }
+//获得project最新的提交CommitId
+static def getProjectLastCommitId(String projectPath, Gradle gradle) {
+    String cmd = "git log -n 1 --oneline --format=%H $projectPath"
+    return execCmd(cmd, gradle.rootProject).trim()
+}
+//获得文件每一行的git信息
+execCmd("git blame config/aarPomConfig.yml", gradle.rootProject).eachLine{}
 ```
 
-gradle命令传参
+> gradle命令传参
+>
 
 ```groovy
 ./gradlew xxxtask -Pc='aaa'
 在Gradle命令中，-Pc表示你正在设置一个名为"c"（或者在-P后面的任何内容）的项目属性。Gradle允许你使用-P选项将属性传递给构建脚本。
 在你的例子中，你将属性"c"的值设置为字符串’aaa’。这意味着你的Gradle构建脚本可以在构建过程中使用这个名为"c"的属性及其值
-task myTask {
-    doLast {
-        def propertyCValue = project.hasProperty('c') ? project.c : '默认值'
-        println "属性'c'的值是：$propertyCValue"
-    }
-}
-
+//方式1
+project.hasProperty('c') ? project.c : '默认值'
+//方式2
+gradle.startParameter.projectProperties.containsKey("c")
 ```
 
-module的gradle文件下编写找到它依赖的子project的实际project对象
 
-```groovy
-project.configurations.each { 
-    it.dependencies.each { 
-        if (!(it instanceof org.gradle.api.artifacts.ProjectDependency)) { 
-            return 
-        } 
-        def sProject = it.getDependencyProject()
-    }
-}
 
+父项目task中如何启动另一个子项目的task
+
+```
+1.使用cmd命令，但会起一个新的gradle环境执行命令
+2.将子项目task内的代码封装在一个函数中，保存在project.ext.xxx中，然后父项目 project(":子项目").ext.xxx()
 ```
 
 
