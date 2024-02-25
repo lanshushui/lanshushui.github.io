@@ -14,13 +14,23 @@ abbrlink: 7e8ea226
 
 [Android三方库源码分析](https://blog.yorek.xyz/android/3rd-library/3rd-library-source-code/)
 
+<!-- more -->
+
+# 第三方知识库
+
 [网络知识汇总](https://www.xiaolincoding.com/network/1_base/tcp_ip_model.html#%E7%BD%91%E7%BB%9C%E5%B1%82)
 
 [javaguide](https://javaguide.cn/java/basis/java-basic-questions-01.html)
 
 [Java 全栈知识体系](https://pdai.tech/)
 
-<!-- more -->
+[Omooo/Android_QA](https://github.com/Omooo/Android_QA/blob/master/Answer.md)
+
+[Note-Android/Docs/Android知识点汇总.md](https://github.com/xieyuliang/Note-Android/blob/master/Docs/Android%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB.md#activity)
+
+[Android面试题-基础题(18题)](https://blog.csdn.net/feather_wch/article/details/81135996)
+
+
 
 
 
@@ -31,6 +41,8 @@ abbrlink: 7e8ea226
 [CodeTop](https://codetop.cc/home)
 
 [代码随想录](https://programmercarl.com/)
+
+
 
 
 
@@ -118,6 +130,8 @@ abbrlink: 7e8ea226
 [Kotlin 扩展函数原理](https://www.jianshu.com/p/bab988f5605a)
 
 [Kotlin扩展属性原理](https://www.jianshu.com/p/55692cf4b602)
+
+[android开发kotlin顶级函数和拓展函数的实现原理](https://www.cnblogs.com/yongfengnice/p/17113149.html)
 
 [Kotlin Sealed原理](https://juejin.cn/post/6859980718588575757)
 
@@ -269,6 +283,8 @@ abbrlink: 7e8ea226
 
 [从JVM到Dalivk再到ART](https://cloud.tencent.com/developer/article/1634762)
 
+[Android设备的Architecture架构：arm64-v8a armeabi-v7a](https://zhuanlan.zhihu.com/p/444118258)
+
 [MVC,MVP,MVVM,MVI 了解一下](https://cloud.tencent.com/developer/article/1934004)
 
 [Android常见内存泄漏](https://blog.csdn.net/u013309870/article/details/81638113)
@@ -300,6 +316,8 @@ abbrlink: 7e8ea226
 [基础-四大组件-BroadCastReceiver里是否可以在onReceive中开启线程](https://www.jianshu.com/p/6679afd12a5a)
 
 [Android8.0隐式广播和自定义签名权限](https://cloud.tencent.com/developer/article/1782420)
+
+[APP在从未启动过的情况下能否收到静态广播](https://blog.csdn.net/cpcpcp123/article/details/122398837)
 
 
 
@@ -344,6 +362,8 @@ abbrlink: 7e8ea226
 [Android深入理解RecyclerView的缓存机制](https://blog.csdn.net/Listron/article/details/107952703)
 
 [Android ListView 与 RecyclerView 对比浅析：缓存机制](https://cloud.tencent.com/developer/article/1005658)
+
+[RecyclerView实现吸顶效果](https://juejin.cn/post/6914668855688167437)
 
 
 
@@ -516,6 +536,8 @@ abbrlink: 7e8ea226
  [Apk是如何生成的](https://juejin.cn/post/6844904063155322887)
 
 [Android apk安装过程分析](https://www.jianshu.com/p/e02b1f95ea58)
+
+[Android使用APT实现简单版ButterKnife](https://juejin.cn/post/7023945025977335839)
 
 [微信抢红包算法](https://juejin.cn/post/7080343105177665544)
 
