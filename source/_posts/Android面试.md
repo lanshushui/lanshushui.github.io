@@ -295,6 +295,8 @@ abbrlink: 7e8ea226
 
 [Android 绘制流程](https://juejin.cn/post/6900457708638437390)
 
+[Android 11源码分析： Application的初始化流程](https://juejin.cn/post/6994333129011904526/)
+
 [ViewModel 凭什么能保存重建数据](https://juejin.cn/post/6844903913045360648)
 
 [Android onSaveInstanceState/onRestoreInstanceState 原来要这么理解](https://juejin.cn/post/7040819115874844709)
@@ -517,7 +519,21 @@ abbrlink: 7e8ea226
 
 
 
-# 场景知识点
+## 第三方源码
+
+[面试突击：OkHttp 原理八连问](https://www.51cto.com/article/689330.html)
+
+[LeakCanary原理从0到1](https://juejin.cn/post/6936452012058312740)
+
+[Runtime.getRuntime().gc()只是建议虚拟机进行垃圾回收，并不会强制垃圾回收。那LeakCanary在这个方法后延迟100ms然后检测内存泄漏，会不会导致误检测？](https://github.com/Tencent/matrix/wiki/Matrix-Android-ResourceCanary)
+
+[EventBus源码解析](https://www.hurryyu.com/2020/01/12/EventBus%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/)
+
+[Retrofit源码与设计 7 连问](https://blog.51cto.com/u_15375308/4872022)
+
+
+
+## 场景知识点
 
 [Glide 是如何加载 GIF 动图的](https://juejin.cn/post/6939143083866980360)
 
