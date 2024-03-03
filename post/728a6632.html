@@ -28,7 +28,7 @@
 <meta property="og:description" content="Android Studio Build Output控制台输出乱码解决 我想调试下build.gradle | Gradle 调试 关于 Gradle 你应该知道的知识点  Gradle生命周期一般分为三个阶段  初始化阶段，解析setting.gradle文件，确定需要引入哪些模块； 配置阶段，解析每个project的build.gradle文件，build.gradle就是一堆代码的集合，只">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-30T15:20:03.866Z">
-<meta property="article:modified_time" content="2024-02-24T07:52:17.020Z">
+<meta property="article:modified_time" content="2024-03-01T13:50:13.308Z">
 <meta property="article:author" content="懒鼠睡zzz">
 <meta property="article:tag" content="Gradle">
 <meta name="twitter:card" content="summary">
@@ -214,7 +214,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-02-24 15:52:17" itemprop="dateModified" datetime="2024-02-24T15:52:17+08:00">2024-02-24</time>
+                <time title="修改时间：2024-03-01 21:50:13" itemprop="dateModified" datetime="2024-03-01T21:50:13+08:00">2024-03-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -332,6 +332,7 @@
 <p><a target="_blank" rel="noopener" href="https://juejin.cn/s/gradle%20configurations.all%20vs%20configurations">configurations.all vs configurations</a></p>
 <p><a target="_blank" rel="noopener" href="https://oubindo.github.io/2019/09/05/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%B7%B1%E5%85%A5gradle%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89:%E4%BE%9D%E8%B5%96%E6%9C%BA%E5%88%B6/">一篇文章深入gradle（上篇）:依赖机制</a></p>
 <p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2332005">Android gradle dependency tree change（依赖树变化）监控实现</a></p>
+<p><a target="_blank" rel="noopener" href="https://geminiwen.com/archives/106.html#directory072201682836024864">理解依赖AAR是怎么处理的，内有gradle源码链接</a></p>
 <h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//cmd执行graldew命令时，会额外启动Gradle Daemon执行命令，重新跑一遍初始化阶段，配置阶段</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Project.<span class="title">execCmd</span><span class="params">(cmd: <span class="type">String</span>)</span></span>: String &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">val</span> stdOut = ByteArrayOutputStream()</span><br><span class="line">        <span class="comment">//project.exec是以project对象的目录启动命令</span></span><br><span class="line">        project.exec &#123;</span><br><span class="line">            it.executable = <span class="string">&quot;sh&quot;</span></span><br><span class="line">            it.args = listOf(<span class="string">&quot;-c&quot;</span>, cmd)</span><br><span class="line">            it.standardOutput = stdOut</span><br><span class="line">            it.errorOutput = stdOut</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">val</span> result = stdOut.toString()</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
