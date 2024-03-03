@@ -316,6 +316,8 @@ appExtension.applicationVariants.forEach { applicationVariant ->
 
 [Android gradle dependency tree change（依赖树变化）监控实现](https://cloud.tencent.com/developer/article/2332005)
 
+[理解依赖AAR是怎么处理的，内有gradle源码链接](https://geminiwen.com/archives/106.html#directory072201682836024864)
+
 
 
 ## 命令

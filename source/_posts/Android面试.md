@@ -42,7 +42,11 @@ abbrlink: 7e8ea226
 
 [代码随想录](https://programmercarl.com/)
 
+[哨兵方式实现快排](https://icode.best/i/91879844165104)
 
+[归并排序（Merge Sort）怎么做？](https://zhuanlan.zhihu.com/p/127843825)
+
+[堆排序](https://www.cnblogs.com/chengxiao/p/6129630.html)
 
 
 
@@ -70,7 +74,7 @@ abbrlink: 7e8ea226
 
 [java和kotlin的可见性修饰符对比](https://blog.csdn.net/weixin_45850939/article/details/117837389)
 
-[线程池原理分析](https://www.51cto.com/article/672580.html)
+[线程池原理分析](https://www.51cto.com/article/672580.html)  -- [线程池处理任务的流程了解吗](https://javaguide.cn/java/concurrent/java-concurrent-questions-03.html#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%84%E7%90%86%E4%BB%BB%E5%8A%A1%E7%9A%84%E6%B5%81%E7%A8%8B%E4%BA%86%E8%A7%A3%E5%90%97)
 
 [死磕 java线程系列之线程池深入解析——定时任务执行流程](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484396&idx=1&sn=9c2ad1cbbe66ee19a3bf74291187981e&chksm=c1726be2f605e2f44e441c609e52eef4d2db9ab1b73a3b5109b7f22ecb1b903b3635990deb4e&scene=178&cur_album_id=1538024362992254978#rd)
 
@@ -186,6 +190,8 @@ abbrlink: 7e8ea226
 [面试 LockSupport.park()会释放锁资源吗？](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484399&idx=1&sn=596171b05e0f374e8a601d83f4d13a76&chksm=c1726be1f605e2f71a39f1738bf8d999ac6d6017851ef5369386d1c4416ab24768508879a49e&scene=178&cur_album_id=1538024362992254978#rd)
 
 [为什么ConcurrentHashMap的读操作不需要加锁](https://www.cnblogs.com/keeya/p/9632958.html)
+
+[一文搞懂 ThreadLocal 原理 ](https://www.cnblogs.com/wupeixuan/p/12638203.html)
 
 [为何每次用完 ThreadLocal 都要调用 remove()](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Java%20%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%2078%20%e8%ae%b2-%e5%ae%8c/47%20%e5%86%85%e5%ad%98%e6%b3%84%e6%bc%8f%e2%80%94%e2%80%94%e4%b8%ba%e4%bd%95%e6%af%8f%e6%ac%a1%e7%94%a8%e5%ae%8c%20ThreadLocal%20%e9%83%bd%e8%a6%81%e8%b0%83%e7%94%a8%20remove%28%29%ef%bc%9f.md)
 
@@ -304,6 +310,8 @@ abbrlink: 7e8ea226
 [Zygote中Socket通信能否替换成Binder通信](https://www.jianshu.com/p/7e711b0b6ab1)  ----   [为什么不能在多线程程序中使用fork函数](http://faq.0xffffff.org/question/2014/07/30/why-do-not-use-fork-in-mul-thread-program/)
 
 [可以重复setContentView，但可能触发一些问题](https://juejin.cn/post/7091260989504815112)
+
+[getApplication()和getApplicationContext()区别](https://blog.csdn.net/mynameishuangshuai/article/details/52734804)
 
 
 
@@ -445,6 +453,8 @@ abbrlink: 7e8ea226
 
 [为什么调用View的`setTranslationX/Y/Z`一系列方法，在硬件加速下，不会导致View的`draw`方法回调呢](https://wanandroid.com/wenda/show/15582)
 
+[实现丝滑滑动](https://github.com/xieyuliang/Note-Android/blob/master/Docs/Android%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB.md#scroller)
+
 
 
 ## 框架层常用知识
@@ -458,6 +468,10 @@ abbrlink: 7e8ea226
 [SharedPreferences apply方法引发ANR](https://juejin.cn/post/7110618131000721416)
 
 [ SP的缺点和MMKV的优势](https://www.jianshu.com/p/8f346d1984a2)    [MMKV的不足](https://juejin.cn/post/6887800985272451086)
+
+[Android中asset文件夹和raw文件夹区别](https://blog.51cto.com/u_5454003/6174173)
+
+[浅析onRestoreInstanceState调用时机](https://www.jianshu.com/p/f50b1ee509e6)
 
 
 
