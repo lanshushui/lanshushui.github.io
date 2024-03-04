@@ -131,6 +131,12 @@ const b = {
 
 
 
+###### 实现LinearLayout的横向布局   
+
+​	使用 [`flexDirection`](https://reactnative.cn/docs/layout-props#flexdirection)属性
+
+
+
 ###### 控制子View的对其方式
 
 [justifyContent](https://reactnative.cn/docs/layout-props#justifycontent)  控制子元素在主轴的对齐方式

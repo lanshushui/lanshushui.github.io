@@ -157,15 +157,13 @@ abbrlink: 7e8ea226
 
 [LiveData和StateFlow 优缺点](https://lanshushui.github.io/post/58bbdd0e.html)
 
-[深入理解Kotlin协程（一）——基本概念与原理](https://www.sukaidev.top/2021/02/01/595755ca/)
+[kotlin中将回调改写为协程](https://blog.csdn.net/cpcpcp123/article/details/111724458)
 
 [抽丝剥茧聊Kotlin协程之聊聊Job和SupervisorJob的区别](https://zhuanlan.zhihu.com/p/451902120)
 
 [delay函数原理](https://juejin.cn/post/7023806836696416293#heading-6)
 
 [协程(13) | 异常处理](https://juejin.cn/post/7093453154297544741#heading-5)
-
-[协程(15) | 挂起函数原理解析](https://juejin.cn/post/7094235540584661029#heading-6)
 
 
 
@@ -248,6 +246,8 @@ abbrlink: 7e8ea226
 [Java对象会不会分配到栈中？](https://mp.weixin.qq.com/s?__biz=Mzg3ODY2MzU2MQ==&mid=2247489634&idx=3&sn=8e20b79659ba9a0bbabd781f628fdab9&chksm=cf111a84f86693922d2b9b0c01dc935db0a409662a680f11a985de317c9c8e832c27cd5a7650&token=1436311520&lang=zh_CN#rd)
 
 [JVM内存结构和Java内存模型](https://zhuanlan.zhihu.com/p/38348646)
+
+[什么是守护线程](https://www.cnblogs.com/quanxiaoha/p/10731361.html)
 
 
 
