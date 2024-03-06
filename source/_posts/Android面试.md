@@ -137,6 +137,8 @@ abbrlink: 7e8ea226
 
 [android开发kotlin顶级函数和拓展函数的实现原理](https://www.cnblogs.com/yongfengnice/p/17113149.html)
 
+[java中的静态代码块在kotlin中的表现形式](https://blog.csdn.net/xiaowu_zhu/article/details/96330379)
+
 [Kotlin Sealed原理](https://juejin.cn/post/6859980718588575757)
 
 [Gson 和 Kotlin Data Class 的避坑指南](https://juejin.cn/post/6908391430977224718#heading-1)
@@ -211,11 +213,15 @@ abbrlink: 7e8ea226
 
 [Java常见的GC Root](https://www.jianshu.com/p/dcfe84c50811?from=timeline&isappinstalled=0)
 
+[JVM 采用的可达性分析法有个缺点，就是从 `GC Roots` 找引用链耗时](https://www.cnblogs.com/chenchuxin/p/15259439.html)
+
+[浅谈 JVM GC 的安全点与安全区域](https://www.cnblogs.com/chenchuxin/p/15259439.html)
+
+[Young GC、Old GC 、Full GC](https://cloud.tencent.com/developer/article/1582661)
+
 [万字长文！深入理解JVM垃圾收集机制](https://segmentfault.com/a/1190000040108000)
 
 [有了 CMS，为什么还要引入 G1](https://javabetter.cn/sidebar/sanfene/jvm.html#_28-%E6%9C%89%E4%BA%86-cms-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E5%BC%95%E5%85%A5-g1)
-
-[浅谈 JVM GC 的安全点与安全区域](https://www.cnblogs.com/chenchuxin/p/15259439.html)
 
 
 
@@ -460,6 +466,8 @@ abbrlink: 7e8ea226
 
 
 ## 框架层常用知识
+
+[谈谈AsyncTask原理](https://juejin.cn/post/7026699617668448286)
 
 [HandlerThread使用介绍以及源码解析](https://www.cnblogs.com/leipDao/p/8005520.html)
 

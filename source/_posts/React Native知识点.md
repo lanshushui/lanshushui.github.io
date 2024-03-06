@@ -71,6 +71,8 @@ const b = {
 
 > 因为JS中没有接口的概念，所以ts中判断一个对象是不是实现某个接口，只能通过断言` as `来实现，不能通过` instanceof `   [文档](https://ts.xcatliu.com/basics/type-assertion.html#%E5%B0%86%E4%B8%80%E4%B8%AA%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%E4%B8%BA%E5%85%B6%E4%B8%AD%E4%B8%80%E4%B8%AA%E7%B1%BB%E5%9E%8B)
 
+> 当一个组件参数是接口时，创造一个组件不能直接传接口实例，要使用{...interfaeA}将接口实例解耦后传入
+
 > 判断一个变量是不是函数     if (typeof (animal as Fish).swim === 'function')
 
 > obj对象被用作if语句的条件。如果obj对象存在（即非null和非undefined），则条件为真。否则，条件为假
@@ -104,6 +106,14 @@ const b = {
 > ```
 
 > 异步的箭头函数 const myfunc  = async () => {}
+
+> declare type AType = keyof typeof BClass 
+>
+> `typeof` 操作符用于获取一个对象的类型，`keyof` 操作符则用于获取该类型的所有属性名。  
+>
+> 这行代码的整体含义是：我们正在定义一个类型别名 `AType`，它的值是 `BClass` 对象的所有属性名。
+
+## 
 
 ## View属性
 
