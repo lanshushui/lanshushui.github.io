@@ -313,7 +313,7 @@ abbrlink: 7e8ea226
 
 [ViewModel 凭什么能保存重建数据](https://juejin.cn/post/6844903913045360648)
 
-[Android onSaveInstanceState/onRestoreInstanceState 原来要这么理解](https://juejin.cn/post/7040819115874844709)
+[Android onSaveInstanceState/onRestoreInstanceState(想要onSaveInstanceState 被调用，则需要给该控件设置id) ](https://juejin.cn/post/7040819115874844709)
 
 [Zygote中Socket通信能否替换成Binder通信](https://www.jianshu.com/p/7e711b0b6ab1)  ----   [为什么不能在多线程程序中使用fork函数](http://faq.0xffffff.org/question/2014/07/30/why-do-not-use-fork-in-mul-thread-program/)
 

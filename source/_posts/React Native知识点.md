@@ -201,6 +201,8 @@ const b = {
 
 
 
+## 功能点
+
 ###### 实现下拉提醒 已全部加载的Toast
 
 ```react
@@ -226,9 +228,7 @@ const panResponder = React.useRef(
 )
 ```
 
-
-
-手势事件  [PanResponder](https://blog.csdn.net/zramals/article/details/78403508) 
+###### 手势事件  [PanResponder](https://blog.csdn.net/zramals/article/details/78403508) 
 
 ```
 //这个视图是否在触摸开始时想成为响应器？ 
@@ -266,9 +266,7 @@ onPanResponderEnd
 
 
 
-###### 动画
-
-[基本用法](https://reactnative.cn/docs/animated#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB%E7%BB%84%E4%BB%B6)
+###### [动画基本用法](https://reactnative.cn/docs/animated#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB%E7%BB%84%E4%BB%B6)
 
 ```react
 
@@ -294,6 +292,18 @@ const MyView = (prop: any) => {
 2. 放大，缩小动画必须放在style的`transform`属性上，透明度动画必须放在style的`opacity`属性上
 
 
+
+###### [软键盘](https://reactnative.cn/docs/next/keyboard)
+
+[收起软键盘 ](https://reactnative.cn/docs/next/keyboard#dismiss)   [处理软键盘遮挡问题](https://reactnative.cn/docs/keyboardavoidingview)
+
+```react
+<KeyboardAvoidingView
+    behavior='position'
+    keyboardVerticalOffset=40 >
+
+</KeyboardAvoidingView>
+```
 
 
 
