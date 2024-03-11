@@ -386,7 +386,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-05 20:58:27" itemprop="dateModified" datetime="2024-03-05T20:58:27+08:00">2024-03-05</time>
+                <time title="修改时间：2024-03-12 00:07:57" itemprop="dateModified" datetime="2024-03-12T00:07:57+08:00">2024-03-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -602,7 +602,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/post/6b67b819.html">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/3098f3f8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -616,7 +616,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/post/6b67b819.html" class="post-title-link" itemprop="url">DialogFragment知识点</a>
+            <a href="/post/3098f3f8.html" class="post-title-link" itemprop="url">ASM知识点</a>
         </h2>
 
         <div class="post-meta">
@@ -628,13 +628,6 @@
 
               <time title="创建时间：2023-09-05 20:58:32" itemprop="dateCreated datePublished" datetime="2023-09-05T20:58:32+08:00">2023-09-05</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-07 21:12:41" itemprop="dateModified" datetime="2023-10-07T21:12:41+08:00">2023-10-07</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -656,10 +649,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">2019-03-10 14:19:10.971 22626-22626/org.lym.sourcecodeparse D/DialogFragment: onAttach</span><br><span class="line">2019-03-10 14:19:10.971 22626-22626/org.lym.sourcecodeparse D/DialogFragment: onCreate</span><br><span class="line">2019-03-10 14:19:10.972 22626-22626/org.lym.sourcecodeparse D/DialogFragment: onCreateDialog</span><br><span class="line">2019-03-10 14:19:10.972 22626-22626/org.lym.sourcecodeparse D/DialogFragment: onCreateView</span><br><span class="line">2019-03-10 14:19:10.994 22626-22626/org.lym.sourcecodeparse D/DialogFragment: onActivityCreated</span><br><span class="line">2019-03-10 14:19:11.186 22626-22626/org.lym.sourcecodeparse D/DialogFragment: onStart</span><br><span class="line">2019-03-10 14:19:11.186 22626-22626/org.lym.sourcecodeparse D/DialogFragment: onResume</span><br></pre></td></tr></table></figure>
+          <p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/16ed4d233fd1">【Android】函数插桩（Gradle + ASM）</a></p>
+<p>通过上面的大神教程，学习在自定义函数前后进行插桩，满足打点日志的需求。</p>
+<p>但如果想要知道APP中什么时候调用系统的方法，例如想要知道APP【哪些地方】【什么时候】调用了 context.getSystemService() 方法，以及当时的堆栈，</p>
+<p>Hook替换掉context.getSystemService()这一行代码为是最简单的操作</p>
+<p><em>利用ASM的  <strong>AdviceAdapter</strong> 类和  <strong>INVOKESTATIC</strong>  操作码很容易就实现函数的Hook替换功能</em></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/post/6b67b819.html" rel="contents">
+              <a class="btn" href="/post/3098f3f8.html" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -772,6 +769,155 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/1733ce00.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="懒鼠睡zzz">
+      <meta itemprop="description" content="选择有时候比努力更重要">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="懒鼠睡的Android">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/post/1733ce00.html" class="post-title-link" itemprop="url">Fragment知识点</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-05 20:58:32" itemprop="dateCreated datePublished" datetime="2023-09-05T20:58:32+08:00">2023-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="1-关键节点"><a href="#1-关键节点" class="headerlink" title="1.关键节点"></a>1.关键节点</h2><p>Fragment调用生命周期最近的方法</p>
+<p>androidx.fragment.app.FragmentStateManager#moveToExpectedState</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/post/1733ce00.html" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/503d328.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="懒鼠睡zzz">
+      <meta itemprop="description" content="选择有时候比努力更重要">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="懒鼠睡的Android">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/post/503d328.html" class="post-title-link" itemprop="url">ImageSpan扩展</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-05 20:58:32" itemprop="dateCreated datePublished" datetime="2023-09-05T20:58:32+08:00">2023-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%89%A9%E5%B1%95%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">扩展点</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="支持GIF播放的TextView"><a href="#支持GIF播放的TextView" class="headerlink" title="支持GIF播放的TextView"></a>支持GIF播放的TextView</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/post/503d328.html" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/post/58bbdd0e.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -833,159 +979,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/post/58bbdd0e.html" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/post/3098f3f8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="懒鼠睡zzz">
-      <meta itemprop="description" content="选择有时候比努力更重要">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="懒鼠睡的Android">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/post/3098f3f8.html" class="post-title-link" itemprop="url">ASM知识点</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-09-05 20:58:32" itemprop="dateCreated datePublished" datetime="2023-09-05T20:58:32+08:00">2023-09-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/16ed4d233fd1">【Android】函数插桩（Gradle + ASM）</a></p>
-<p>通过上面的大神教程，学习在自定义函数前后进行插桩，满足打点日志的需求。</p>
-<p>但如果想要知道APP中什么时候调用系统的方法，例如想要知道APP【哪些地方】【什么时候】调用了 context.getSystemService() 方法，以及当时的堆栈，</p>
-<p>Hook替换掉context.getSystemService()这一行代码为是最简单的操作</p>
-<p><em>利用ASM的  <strong>AdviceAdapter</strong> 类和  <strong>INVOKESTATIC</strong>  操作码很容易就实现函数的Hook替换功能</em></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/post/3098f3f8.html" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/post/1733ce00.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="懒鼠睡zzz">
-      <meta itemprop="description" content="选择有时候比努力更重要">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="懒鼠睡的Android">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/post/1733ce00.html" class="post-title-link" itemprop="url">Fragment知识点</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-09-05 20:58:32" itemprop="dateCreated datePublished" datetime="2023-09-05T20:58:32+08:00">2023-09-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="1-关键节点"><a href="#1-关键节点" class="headerlink" title="1.关键节点"></a>1.关键节点</h2><p>Fragment调用生命周期最近的方法</p>
-<p>androidx.fragment.app.FragmentStateManager#moveToExpectedState</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/post/1733ce00.html" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
