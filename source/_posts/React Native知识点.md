@@ -19,6 +19,8 @@ abbrlink: 1dcdc51b
 
 [理解 JavaScript 的 async/await](https://segmentfault.com/a/1190000007535316)
 
+[【TypeScript】keyof & in 关键字详解](https://juejin.cn/post/7105778922851139598)
+
 
 
 ## 第三方库

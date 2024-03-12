@@ -30,7 +30,7 @@ abbrlink: 7e8ea226
 
 [Android面试题-基础题(18题)](https://blog.csdn.net/feather_wch/article/details/81135996)
 
-
+[【建议收藏】106道Android核心面试题及答案汇总（总结最全面的面试题）](https://juejin.cn/post/7267737437953720359#heading-10)
 
 
 

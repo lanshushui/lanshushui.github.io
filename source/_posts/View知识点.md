@@ -41,7 +41,13 @@ override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
 
 
 
+## 布局问题
 
+1. RelativeLayout的wrap_content会导致layout_marginBottom属性失效
+
+   [RelativeLayout的layout_marginBottom属性失效问题](https://blog.csdn.net/w958796636/article/details/52921584)
+
+2. 外层LinearLayout的宽是wrap_content情况下，内层LinearLayout的宽是match_parent不能铺满屏幕，只能达到wrap_content的效果。为了达到铺满屏幕的效果，内层使用宽是match_parent的RelateLayout控件
 
 
 
