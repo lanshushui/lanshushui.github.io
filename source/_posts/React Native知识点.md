@@ -115,7 +115,7 @@ const b = {
 >
 > 这行代码的整体含义是：我们正在定义一个类型别名 `AType`，它的值是 `BClass` 对象的所有属性名。
 
-## 
+
 
 ## View属性
 
@@ -342,6 +342,8 @@ const View = (prop: any) => {
 ***解决方法**：给FlatList设置key属性，每一次高度变化，变化key属性，渲染一个全选的FlatList*
 
 
+
+> 注意 [Boolean('false') returns true](https://stackoverflow.com/questions/56977500/booleanfalse-returns-true)
 
 
 

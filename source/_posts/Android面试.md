@@ -555,6 +555,8 @@ abbrlink: 7e8ea226
 
 [Retrofit源码与设计 7 连问](https://blog.51cto.com/u_15375308/4872022)
 
+[“终于懂了” 系列：组件化框架 ARouter 完全解析（一） 原理详解](https://cloud.tencent.com/developer/article/2154575)
+
 
 
 ## 场景知识点
@@ -580,6 +582,8 @@ abbrlink: 7e8ea226
 [Android使用APT实现简单版ButterKnife](https://juejin.cn/post/7023945025977335839)
 
 [微信抢红包算法](https://juejin.cn/post/7080343105177665544)
+
+[Android屏幕适配的几种方案](https://juejin.cn/post/7220769136208756791) ------------- [dpi及density的关系](https://blog.csdn.net/liuqinhou/article/details/125673210)
 
 
 
