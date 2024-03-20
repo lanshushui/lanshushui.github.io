@@ -467,6 +467,10 @@ abbrlink: 7e8ea226
 
 ## 框架层常用知识
 
+[LiveData原理面试一问还不懂？](https://juejin.cn/post/7341617163353374754#heading-1)
+
+[Lifecycle的使用和源码解析](https://cloud.tencent.com/developer/article/1420459)
+
 [谈谈AsyncTask原理](https://juejin.cn/post/7026699617668448286)
 
 [HandlerThread使用介绍以及源码解析](https://www.cnblogs.com/leipDao/p/8005520.html)
