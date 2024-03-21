@@ -303,6 +303,8 @@ abbrlink: 7e8ea226
 
 [Android常见内存泄漏](https://blog.csdn.net/u013309870/article/details/81638113)
 
+[Android常见OOM](https://chenwenguan.com/android-oom-analysis/)
+
 
 
 ## Activity
