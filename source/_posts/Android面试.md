@@ -157,8 +157,6 @@ abbrlink: 7e8ea226
 
 [Kotlin 协程的优点](https://zhuanlan.zhihu.com/p/505394996)
 
-[LiveData和StateFlow 优缺点](https://lanshushui.github.io/post/58bbdd0e.html)
-
 [kotlin中将回调改写为协程](https://blog.csdn.net/cpcpcp123/article/details/111724458)
 
 [抽丝剥茧聊Kotlin协程之聊聊Job和SupervisorJob的区别](https://zhuanlan.zhihu.com/p/451902120)
@@ -473,7 +471,11 @@ abbrlink: 7e8ea226
 
 [Lifecycle的使用和源码解析](https://cloud.tencent.com/developer/article/1420459)
 
-[谈谈AsyncTask原理](https://juejin.cn/post/7026699617668448286)
+[【Flow】图文详解Kotlin中SharedFlow和StateFlow](https://juejin.cn/post/7272690326401204259#heading-1)
+
+[LiveData和StateFlow 优缺点](https://lanshushui.github.io/post/58bbdd0e.html)
+
+[谈谈AsyncTask原理](https://juejin.cn/post/7026699617668448286)ff
 
 [HandlerThread使用介绍以及源码解析](https://www.cnblogs.com/leipDao/p/8005520.html)
 
