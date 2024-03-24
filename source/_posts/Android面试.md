@@ -48,6 +48,8 @@ abbrlink: 7e8ea226
 
 [堆排序](https://www.cnblogs.com/chengxiao/p/6129630.html)
 
+[基数排序 ](https://www.cnblogs.com/bigsai/p/13977411.html)
+
 
 
 # Java/Kotlin
@@ -303,6 +305,8 @@ abbrlink: 7e8ea226
 
 [Android常见OOM](https://chenwenguan.com/android-oom-analysis/)
 
+[AndroidManifest.xml中的package和build.gradle中的applicationId的区别](https://juejin.cn/post/7114507079871627295)
+
 
 
 ## Activity
@@ -473,9 +477,9 @@ abbrlink: 7e8ea226
 
 [【Flow】图文详解Kotlin中SharedFlow和StateFlow](https://juejin.cn/post/7272690326401204259#heading-1)
 
-[LiveData和StateFlow 优缺点](https://lanshushui.github.io/post/58bbdd0e.html)
+[LiveData和StateFlow 优缺点](https://lanshushui.github.io/post/58bbdd0e.html)  ---  [flow支持生命周期-repeatOnLifecycle](https://juejin.cn/post/7001371050202103838)
 
-[谈谈AsyncTask原理](https://juejin.cn/post/7026699617668448286)ff
+[谈谈AsyncTask原理](https://juejin.cn/post/7026699617668448286)
 
 [HandlerThread使用介绍以及源码解析](https://www.cnblogs.com/leipDao/p/8005520.html)
 
