@@ -275,6 +275,8 @@ abbrlink: 7e8ea226
 
 [对HTTP缓存的全面理解](https://juejin.cn/post/7004820701257400333)
 
+[Http通过\r\n和Content-Length解决TCP的粘包问题](https://blog.csdn.net/cj_eryue/article/details/131046881)
+
 &nbsp;
 
 [TCP报文格式详解](https://www.cnblogs.com/feng9exe/p/8058891.html)
@@ -471,7 +473,7 @@ abbrlink: 7e8ea226
 
 ## 框架层常用知识
 
-[LiveData原理面试一问还不懂？](https://juejin.cn/post/7341617163353374754#heading-1)
+[LiveData原理面试一问还不懂？](https://juejin.cn/post/7341617163353374754#heading-1) *【start,resume,pause】周期内才会同步数据变化*
 
 [Lifecycle的使用和源码解析](https://cloud.tencent.com/developer/article/1420459)
 
@@ -596,6 +598,14 @@ abbrlink: 7e8ea226
 [微信抢红包算法](https://juejin.cn/post/7080343105177665544)
 
 [Android屏幕适配的几种方案](https://juejin.cn/post/7220769136208756791) ------------- [dpi及density的关系](https://blog.csdn.net/liuqinhou/article/details/125673210)
+
+
+
+## 智力题
+
+[面试常问智力题40道（逻辑题）+ 参考答案](https://www.nowcoder.com/discuss/353157075649896448)
+
+[字节面试常考的智力题你会几道？](https://zhuanlan.zhihu.com/p/395132338)
 
 
 
