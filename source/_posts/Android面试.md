@@ -42,6 +42,8 @@ abbrlink: 7e8ea226
 
 [代码随想录](https://programmercarl.com/)
 
+[八大排序算法总结与java实现](https://itimetraveler.github.io/2017/07/18/%E5%85%AB%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93%E4%B8%8Ejava%E5%AE%9E%E7%8E%B0/)
+
 [哨兵方式实现快排](https://icode.best/i/91879844165104)
 
 [归并排序（Merge Sort）怎么做？](https://zhuanlan.zhihu.com/p/127843825)
@@ -254,6 +256,8 @@ abbrlink: 7e8ea226
 [JVM内存结构和Java内存模型](https://zhuanlan.zhihu.com/p/38348646)
 
 [什么是守护线程](https://www.cnblogs.com/quanxiaoha/p/10731361.html)
+
+[Shallow Size和Retained Size是啥](https://juejin.cn/post/7020706981652463629#heading-1)
 
 
 
@@ -473,9 +477,11 @@ abbrlink: 7e8ea226
 
 ## 框架层常用知识
 
+[Lifecycle的使用和源码解析](https://cloud.tencent.com/developer/article/1420459)
+
 [LiveData原理面试一问还不懂？](https://juejin.cn/post/7341617163353374754#heading-1) *【start,resume,pause】周期内才会同步数据变化*
 
-[Lifecycle的使用和源码解析](https://cloud.tencent.com/developer/article/1420459)
+[LvieData因为状态同步和version字段导致粘性事件](https://mp.weixin.qq.com/s/zW6X1CTnjdb3NX-d7nr6cw)
 
 [【Flow】图文详解Kotlin中SharedFlow和StateFlow](https://juejin.cn/post/7272690326401204259#heading-1)
 
