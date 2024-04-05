@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="网上找到所有教程，包括官方教程都是 生成一个大项目，里面包括RN，android，IOS项目，在一个仓库中既有原生代码又有js代码。 但实际大型项目开发，肯定是分成RN项目，Android项目，IOS项目三个项目。 所以这第一篇文档是记录如何实现【分开RN项目和Android项目】，并在【Android项目上展示RN界面，支持修改RN代码后马上刷新界面】">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Native项目开发-步骤1">
+<meta property="og:url" content="http://example.com/post/a96712a.html">
+<meta property="og:site_name" content="懒鼠睡的Android">
+<meta property="og:description" content="网上找到所有教程，包括官方教程都是 生成一个大项目，里面包括RN，android，IOS项目，在一个仓库中既有原生代码又有js代码。 但实际大型项目开发，肯定是分成RN项目，Android项目，IOS项目三个项目。 所以这第一篇文档是记录如何实现【分开RN项目和Android项目】，并在【Android项目上展示RN界面，支持修改RN代码后马上刷新界面】">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2024/04/05/8d31cb809851face.png">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2024/04/05/d5183cdc992acd11.png">
+<meta property="article:published_time" content="2024-04-05T12:44:44.312Z">
+<meta property="article:modified_time" content="2024-04-05T14:21:17.908Z">
+<meta property="article:author" content="懒鼠睡zzz">
+<meta property="article:tag" content="React Native">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s3.bmp.ovh/imgs/2024/04/05/8d31cb809851face.png">
+
+<link rel="canonical" href="http://example.com/post/a96712a.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>React Native项目开发-步骤1 | 懒鼠睡的Android</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">懒鼠睡的Android</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-疑难杂症">
+
+    <a href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" rel="section"><i class="fa fa-th fa-fw"></i>疑难杂症</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/post/a96712a.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="懒鼠睡zzz">
+      <meta itemprop="description" content="选择有时候比努力更重要">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="懒鼠睡的Android">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React Native项目开发-步骤1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-04-05 20:44:44 / 修改时间：22:21:17" itemprop="dateCreated datePublished" datetime="2024-04-05T20:44:44+08:00">2024-04-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%B0%83%E8%AF%95%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">调试开发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>网上找到所有教程，包括官方教程都是 生成一个大项目，里面包括RN，android，IOS项目，在一个仓库中既有原生代码又有js代码。</p>
+<p><strong>但实际大型项目开发，肯定是分成RN项目，Android项目，IOS项目三个项目。</strong></p>
+<p>所以这第一篇文档是记录如何实现【分开RN项目和Android项目】，并在【Android项目上展示RN界面，支持修改RN代码后马上刷新界面】</p>
+<span id="more"></span>
+
+
+
+<h2 id="制作纯RN项目"><a href="#制作纯RN项目" class="headerlink" title="制作纯RN项目"></a>制作纯RN项目</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">react-native init ReactNativeTs</span><br></pre></td></tr></table></figure>
+
+<p>使用官方命令，生成个RN项目，把 【android】【ios】【test】文件夹删除，就剩下个纯TS项目，简简单单</p>
+<blockquote>
+<p>1.查看package.json文件，记录下RN版本</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;dependencies&quot;: &#123;</span><br><span class="line">    &quot;react&quot;: &quot;18.2.0&quot;,</span><br><span class="line">    &quot;react-native&quot;: &quot;0.73.6&quot;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>2.记录 node_modules&#x2F;jsc-android&#x2F;dist&#x2F;org 这个路径，这里有android-jsc库，android项目需要依赖这个库</p>
+</blockquote>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/05/8d31cb809851face.png"></p>
+<h2 id="制作纯Android项目"><a href="#制作纯Android项目" class="headerlink" title="制作纯Android项目"></a>制作纯Android项目</h2><blockquote>
+<p>1.AndroidStudio制作空的Android项目</p>
+</blockquote>
+<blockquote>
+<p>2.在根目录创建个repo目录，充当本地仓库。把RN项目第二步提及的文件夹复制到该目录下</p>
+</blockquote>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/05/d5183cdc992acd11.png"></p>
+<blockquote>
+<p>3.修改settings.gradle，增加配置 本地仓库repo目录</p>
+</blockquote>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dependencyResolutionManagement &#123;</span><br><span class="line">    repositoriesMode.<span class="keyword">set</span>(RepositoriesMode.FAIL_ON_PROJECT_REPOS)</span><br><span class="line">    repositories &#123;</span><br><span class="line">        maven &#123;</span><br><span class="line">            <span class="comment">// 从node_modules/jsc-android/dist/org 复制来的依赖库</span></span><br><span class="line">            setUrl( <span class="string">&quot;<span class="variable">$rootDir</span>/repo&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        google()</span><br><span class="line">        mavenCentral()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>4.修改app模块的build.gradle，增加 react-android和 jsc 两项依赖</p>
+</blockquote>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//要和RN项目的react-native版本一致</span></span><br><span class="line">implementation(<span class="string">&quot;com.facebook.react:react-android:0.73.6&quot;</span>)</span><br><span class="line"><span class="comment">//  从 /repo/org/webkit/android-jsc 目录查看具体版本号</span></span><br><span class="line">implementation(<span class="string">&quot;org.webkit:android-jsc:r250231&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><font color="red">为什么android-jsc 要本地仓库配置，不能像其他依赖库一样从 mavenCentral 中央库拉取呢 ？</font></p>
+<p><strong>因为 facebook 并没有在 mavenCentral 中央库上发布最新版本号，看了一下mavenCentral上 最新是 【Sep 07, 2015】发布的 r174650版本，无语了</strong> </p>
+<p>—————————————————-项目依赖以上步骤已完成，正式开始编码————————————————————</p>
+<blockquote>
+<p>5.自定义Application，实现ReactApplication接口</p>
+</blockquote>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MainApplication</span> : <span class="type">Application</span>(), ReactApplication &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">val</span> reactNativeHost: ReactNativeHost =</span><br><span class="line">    <span class="keyword">object</span> : DefaultReactNativeHost(<span class="keyword">this</span>) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getPackages</span><span class="params">()</span></span>: List&lt;ReactPackage&gt; =</span><br><span class="line">        ArrayList&lt;ReactPackage&gt;(</span><br><span class="line">            Arrays.asList&lt;ReactPackage&gt;(</span><br><span class="line">                MainReactPackage(<span class="literal">null</span>)</span><br><span class="line">            )</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getJSMainModuleName</span><span class="params">()</span></span>: String = <span class="string">&quot;index&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getUseDeveloperSupport</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="keyword">val</span> isNewArchEnabled: <span class="built_in">Boolean</span> = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">override</span> <span class="keyword">val</span> isHermesEnabled: <span class="built_in">Boolean</span> = <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">val</span> reactHost: ReactHost</span><br><span class="line">    <span class="keyword">get</span>() = getDefaultReactHost(<span class="keyword">this</span>.applicationContext, reactNativeHost)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate()</span><br><span class="line">        SoLoader.<span class="keyword">init</span>(<span class="keyword">this</span>, <span class="literal">false</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>6.自定义ReactActivity子类，连接Metro服务器</p>
+</blockquote>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MainActivity</span> : <span class="type">ReactActivity</span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> mPreferences: SharedPreferences? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//需要和RN项目的 AppRegistry.registerComponent注册的名称一致</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getMainComponentName</span><span class="params">()</span></span>: String = <span class="string">&quot;ReactNativeTs&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">createReactActivityDelegate</span><span class="params">()</span></span>: ReactActivityDelegate =</span><br><span class="line">        DefaultReactActivityDelegate(<span class="keyword">this</span>, mainComponentName, fabricEnabled)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="comment">//连接Metro服务器关键，只需要sp简单保存debug_http_host字段，为当前需要连接的Metro服务器</span></span><br><span class="line">        mPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)</span><br><span class="line">        mPreferences?.edit()?.putString(<span class="string">&quot;debug_http_host&quot;</span>,<span class="string">&quot;192.168.0.141:8081&quot;</span>)?.apply()</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="开始实时编程"><a href="#开始实时编程" class="headerlink" title="开始实时编程"></a>开始实时编程</h2><p>1.打开RN项目，使用 【yarn start】 命令，启动Metro服务器，记录下端口并查看当前电脑的ip</p>
+<p>2.打开Android项目 修改sp的【debug_http_host】字段 ，编译运行APP</p>
+<p>3.完成，MainActivity打开时会自动连接Metro服务器，拉取JS代码，解析展示</p>
+<h2 id="关键总结"><a href="#关键总结" class="headerlink" title="关键总结"></a>关键总结</h2><p>1.RN项目使用 【yarn start】 命令，启动Metro服务器</p>
+<p>2.Android项目依赖 react-android 和 android-jsc 库，并sp保存debug_http_host字段为Metro服务器地址</p>
+<p>该文章只是为了最快实现功能，所以大部分为硬编码</p>
+<p>实际项目开发步骤应该为  app扫描RN项目生成的二维码，二维码内包含Metro地址和mainComponentName字段，新建立的Activity解析这些数据并设置在对应地方</p>
+<p>Keep Moving Forward</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React-Native/" rel="tag"># React Native</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/post/59f16662.html" rel="prev" title="gradle的aar场景知识">
+      <i class="fa fa-chevron-left"></i> gradle的aar场景知识
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%B6%E4%BD%9C%E7%BA%AFRN%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">制作纯RN项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%B6%E4%BD%9C%E7%BA%AFAndroid%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.</span> <span class="nav-text">制作纯Android项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%AE%9E%E6%97%B6%E7%BC%96%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">开始实时编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">关键总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">懒鼠睡zzz</p>
+  <div class="site-description" itemprop="description">选择有时候比努力更重要</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">懒鼠睡zzz</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
