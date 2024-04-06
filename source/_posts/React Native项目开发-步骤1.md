@@ -85,7 +85,11 @@ implementation("org.webkit:android-jsc:r250231")
 
 **因为 facebook 并没有在 mavenCentral 中央库上发布最新版本号，看了一下mavenCentral上 最新是 【Sep 07, 2015】发布的 r174650版本，无语了** 
 
-----------------------------------------------------项目依赖以上步骤已完成，正式开始编码------------------------------------------------------------
+<font color="white">  </font>
+
+**-----项目依赖以上步骤已完成，正式开始编码------**
+
+<font color="white">  </font>
 
 > 5.自定义Application，实现ReactApplication接口
 
