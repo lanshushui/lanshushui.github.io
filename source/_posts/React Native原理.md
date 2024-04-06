@@ -9,7 +9,7 @@ abbrlink: 75edac57
 
 
 
-
+[React Native 启动速度优化——JS 篇（全网最全，值得收藏）](https://cloud.tencent.com/developer/article/1818101)
 
 <!-- more -->
 
@@ -23,9 +23,7 @@ val mPreferences = PreferenceManager.getDefaultSharedPreferences(applicationCont
 mPreferences?.edit()?.putString("debug_http_host","192.168.0.141:8081")?.apply()
 ```
 
-
-
-![image-20240406124030020](C:\Users\lanshushui\AppData\Roaming\Typora\typora-user-images\image-20240406124030020.png)
+![](https://s3.bmp.ovh/imgs/2024/04/06/1dde267ccdb59b07.png)
 
 ```java
 //ReactInstanceManager类
