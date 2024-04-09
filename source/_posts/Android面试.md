@@ -261,6 +261,8 @@ abbrlink: 7e8ea226
 
 [Shallow Size和Retained Size是啥](https://juejin.cn/post/7020706981652463629#heading-1)
 
+[serialVersionUID 有什么作用？该如何使用？](https://github.com/giantray/stackoverflow-java-top-qa/blob/master/contents/what-is-a-serialversionuid-and-why-should-i-use-it.md)
+
 
 
 # 网络
@@ -608,6 +610,10 @@ abbrlink: 7e8ea226
 [微信抢红包算法](https://juejin.cn/post/7080343105177665544)
 
 [Android屏幕适配的几种方案](https://juejin.cn/post/7220769136208756791) ------------- [dpi及density的关系](https://blog.csdn.net/liuqinhou/article/details/125673210)
+
+[一文带你了解Android系统的启动流程](https://www.jb51.net/program/296940e4p.htm)
+
+[手机屏幕密度相同的资源文件夹下不存在此文件，优先在大于手机屏幕密度的文件夹下查找资源](https://blog.csdn.net/zhujiangtaotaise/article/details/112907477)
 
 
 

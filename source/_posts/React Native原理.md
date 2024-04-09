@@ -13,6 +13,10 @@ abbrlink: 75edac57
 
 <!-- more -->
 
+## React启动流程图
+
+![systrace](/images/reactNativeHost.getReactInstanceManager.png)
+
 
 
 ## APP如何找到Metor服务器
