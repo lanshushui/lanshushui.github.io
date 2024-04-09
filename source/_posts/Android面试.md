@@ -117,6 +117,8 @@ abbrlink: 7e8ea226
 
 [死磕 java集合之CopyOnWriteArrayList源码分析](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484475&idx=1&sn=389ba5a50048607b2432480e128b349c&chksm=c1726c35f605e5235375944fa5fb7e712f1861bce5edb27334b3b678194f659fab9ea23aa64e&scene=178&cur_album_id=1538024362992254978#rd)
 
+[Collections.sort 的多线程安全问题](https://www.bmabk.com/index.php/post/135023.html)
+
 
 
 ## 语法原理
@@ -310,6 +312,8 @@ abbrlink: 7e8ea226
 [Android常见内存泄漏](https://blog.csdn.net/u013309870/article/details/81638113)
 
 [Android常见OOM](https://chenwenguan.com/android-oom-analysis/)
+
+[干货：ANR日志分析全面解析](https://cloud.tencent.com/developer/article/1832244)
 
 [AndroidManifest.xml中的package和build.gradle中的applicationId的区别](https://juejin.cn/post/7114507079871627295)
 
