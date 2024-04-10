@@ -4,6 +4,7 @@ categories:
   - React Native
 tags:
   - 知识点
+top: 100
 abbrlink: 1dcdc51b
 ---
 
@@ -114,6 +115,20 @@ const b = {
 > `typeof` 操作符用于获取一个对象的类型，`keyof` 操作符则用于获取该类型的所有属性名。  
 >
 > 这行代码的整体含义是：我们正在定义一个类型别名 `AType`，它的值是 `BClass` 对象的所有属性名。
+
+> ```javascript
+> const a={
+>   add:function(){
+>   	console.log('sss')
+>   }
+> }
+> //一般简写成
+> const a={
+>   add(){
+>   	console.log('sss')
+>   }
+> }
+> ```
 
 
 

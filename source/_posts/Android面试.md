@@ -203,9 +203,13 @@ abbrlink: 7e8ea226
 
 [AtomicInteger 在高并发下性能不好，如何解决？为什么？](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Java%20%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%2078%20%e8%ae%b2-%e5%ae%8c/40%20AtomicInteger%20%e5%9c%a8%e9%ab%98%e5%b9%b6%e5%8f%91%e4%b8%8b%e6%80%a7%e8%83%bd%e4%b8%8d%e5%a5%bd%ef%bc%8c%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3%ef%bc%9f%e4%b8%ba%e4%bb%80%e4%b9%88%ef%bc%9f.md)
 
+[AtomicInteger 为什么是线程安全，原理](https://cloud.tencent.com/developer/article/1627897)
+
 
 
 ## 泛型
+
+[一文搞懂 java 泛型](https://juejin.cn/post/7249913673215836218#heading-21)
 
 [retrofit / Gson 是怎么获得擦除后的类型的](https://blog.csdn.net/chuyouyinghe/article/details/119958474)
 
@@ -447,6 +451,8 @@ abbrlink: 7e8ea226
 
 [修改系统时间对Handler延迟消息有无影响？](https://www.jianshu.com/p/9d4ab4318310)
 
+[Handler的无参构造方法已经被`@Deprecated`标记](https://www.jb51.net/article/264847.htm)
+
 
 
 ## IPC
@@ -582,6 +588,10 @@ abbrlink: 7e8ea226
 [Retrofit源码与设计 7 连问](https://blog.51cto.com/u_15375308/4872022)
 
 [“终于懂了” 系列：组件化框架 ARouter 完全解析（一） 原理详解](https://cloud.tencent.com/developer/article/2154575)
+
+[一张图看懂Rxjava的原理](https://www.cnblogs.com/jymblog/p/11731546.html)
+
+[Glide流程图](https://www.51cto.com/article/680323.html)   ---  [Glide流程解析](https://juejin.cn/post/7083367492810686472#heading-1)
 
 
 
