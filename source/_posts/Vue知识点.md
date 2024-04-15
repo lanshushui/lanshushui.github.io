@@ -29,7 +29,7 @@ abbrlink: 7abbf13b
 <input type="text" v-model:value="name"/>   //简写等同于  <input type="text" v-model="name"/>  
 ```
 
-
+> [Vue .sync修饰符与this.$emit(update:xxx) ](https://www.cnblogs.com/wangyingblock/p/15398456.html)
 
 
 

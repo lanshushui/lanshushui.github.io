@@ -137,7 +137,7 @@ abbrlink: 7e8ea226
 
 [Kotlin空安全原理](https://juejin.cn/post/6844904048987127822#heading-7)
 
-[Kotlin 扩展函数原理](https://www.jianshu.com/p/bab988f5605a)
+[Kotlin 扩展函数原理](https://www.jianshu.com/p/bab988f5605a)    ---[let方法是通过给泛型添加扩展函数实现的](https://www.jianshu.com/p/7582bba888dc)
 
 [Kotlin扩展属性原理](https://www.jianshu.com/p/55692cf4b602)
 
@@ -214,6 +214,8 @@ abbrlink: 7e8ea226
 [retrofit / Gson 是怎么获得擦除后的类型的](https://blog.csdn.net/chuyouyinghe/article/details/119958474)
 
 [Kotlin 泛型擦除不要慌，reified 来帮忙](https://mp.weixin.qq.com/s/xL75xFFRQhpz1-qSPLsF5w)
+
+[泛型利用“桥方法”解决多态的问题](https://pdai.tech/md/java/basic/java-basic-x-generic.html#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E6%B3%9B%E5%9E%8B%E7%9A%84%E5%A4%9A%E6%80%81-%E6%B3%9B%E5%9E%8B%E7%9A%84%E6%A1%A5%E6%8E%A5%E6%96%B9%E6%B3%95)
 
 
 
@@ -325,6 +327,8 @@ abbrlink: 7e8ea226
 
 
 
+
+
 ## Activity
 
 [Android 绘制流程](https://juejin.cn/post/6900457708638437390)
@@ -334,8 +338,6 @@ abbrlink: 7e8ea226
 [ViewModel 凭什么能保存重建数据](https://juejin.cn/post/6844903913045360648)
 
 [Android onSaveInstanceState/onRestoreInstanceState(想要onSaveInstanceState 被调用，则需要给该控件设置id) ](https://juejin.cn/post/7040819115874844709)
-
-[Zygote中Socket通信能否替换成Binder通信](https://www.jianshu.com/p/7e711b0b6ab1)  ----   [为什么不能在多线程程序中使用fork函数](http://faq.0xffffff.org/question/2014/07/30/why-do-not-use-fork-in-mul-thread-program/)
 
 [可以重复setContentView，但可能触发一些问题](https://juejin.cn/post/7091260989504815112)
 
@@ -459,6 +461,8 @@ abbrlink: 7e8ea226
 
 [IPC和RPC的区别](https://blog.csdn.net/u013894427/article/details/82789837)
 
+[再也不怕被问 Binder 机制了](https://cloud.tencent.com/developer/article/2350716)
+
 [Android跨进程通信：图文详解 Binder机制 原理](https://cloud.tencent.com/developer/article/1394290)
 
 [听说你Binder机制学的不错，来面试下这几个问题](https://developer.aliyun.com/article/951459)
@@ -466,6 +470,8 @@ abbrlink: 7e8ea226
 [多个IPC通讯方式以及场景](https://juejin.cn/post/6876046258406948878)
 
 [Android 跨进程双向通信（Messenger与AIDL）详解](https://cloud.tencent.com/developer/article/1385676)
+
+[Zygote中Socket通信能否替换成Binder通信](https://www.jianshu.com/p/7e711b0b6ab1)  ----   [为什么不能在多线程程序中使用fork函数](http://faq.0xffffff.org/question/2014/07/30/why-do-not-use-fork-in-mul-thread-program/)
 
 
 
@@ -514,6 +520,8 @@ abbrlink: 7e8ea226
 [Android中asset文件夹和raw文件夹区别](https://blog.51cto.com/u_5454003/6174173)
 
 [浅析onRestoreInstanceState调用时机](https://www.jianshu.com/p/f50b1ee509e6)
+
+[CountDownTimer通过handler实现倒计时](https://juejin.cn/post/6847902223909781518)
 
 
 
@@ -621,9 +629,13 @@ abbrlink: 7e8ea226
 
 [Android屏幕适配的几种方案](https://juejin.cn/post/7220769136208756791) ------------- [dpi及density的关系](https://blog.csdn.net/liuqinhou/article/details/125673210)
 
-[一文带你了解Android系统的启动流程](https://www.jb51.net/program/296940e4p.htm)
+[一文带你了解Android系统的启动流程 ](https://www.jb51.net/program/296940e4p.htm)  [system_server 为什么要在 Zygote 中启动，而不是由 init 直接启动呢？](https://blog.csdn.net/songzi1228/article/details/119709857)
 
 [手机屏幕密度相同的资源文件夹下不存在此文件，优先在大于手机屏幕密度的文件夹下查找资源](https://blog.csdn.net/zhujiangtaotaise/article/details/112907477)
+
+[Android实现倒计时的几种方案汇总](https://juejin.cn/post/7128947531471388709#heading-6)
+
+[Android 各版本兼容性适配](https://juejin.cn/post/7178669690628079671#heading-3)
 
 
 
