@@ -51,4 +51,87 @@ override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
 
 
 
+
+
+## View事件传递
+
+[Android中onTouch，onTouchEvent，onClick优先级](https://blog.csdn.net/libinbin147256369/article/details/79911276)
+
+> 当ViewGroup设置了 setOnClickListener，setOnTouchListener返回false （View也是一样的逻辑）
+>
+> ```
+> MyViewGroup-- dispatchTouchEvent
+> MyViewGroup-- setOnTouchListener
+> MyViewGroup-- onTouchEvent--ACTION_DOWN--true
+> 
+> MyViewGroup-- dispatchTouchEvent
+> MyViewGroup-- setOnTouchListener
+> MyViewGroup-- onTouchEvent--ACTION_UP--true
+> 
+> MyViewGroup-- setOnClickListener
+> ```
+>
+> 当ViewGroup不设置 setOnClickListener，setOnTouchListener返回false
+>
+> ```
+> MyViewGroup-- dispatchTouchEvent
+> MyViewGroup-- setOnTouchListener
+> MyViewGroup-- onTouchEvent--ACTION_DOWN--false
+> ```
+>
+> **可以看出setOnClickListener会影响 onTouchEvent的返回值，导致消费事件**
+
+
+
+> 当ViewGroup设置了 setOnClickListener，setOnTouchListener返回false
+>
+> 当View设置了 setOnClickListener，setOnTouchListener返回false
+>
+> ```
+> MyViewGroup-- dispatchTouchEvent
+> MyView-- dispatchTouchEvent
+> MyView-- setOnTouchListener
+> MyView-- onTouchEvent--ACTION_DOWN--true
+> 
+> MyViewGroup-- dispatchTouchEvent
+> MyView-- dispatchTouchEvent
+> MyView-- setOnTouchListener
+> MyView-- onTouchEvent--ACTION_UP--true
+> 
+> MyView-- setOnClickListener
+> ```
+>
+> **可以看出 优先触发子View的 dispatchTouchEvent，不触发父ViewGroup的setOnTouchListener** **反正就是优先子类**
+
+> **触发的子View的setOnClickListener，父ViewGroup的setOnClickListener不会触发**，
+>
+> **不可能触发两个View的click事件，因为一个Click事件是在UP事件触发的，只能由一个View接受事件序列，即使UP事件场景onTouchEvent方法返回false，给上层触发，生层也没有PRESS标识，无法触发点击事件**
+
+
+
+
+
+当ViewGroup setOnTouchListener返回false
+
+当View  setOnTouchListener返回false
+
+```
+MyViewGroup-- dispatchTouchEvent
+MyView-- dispatchTouchEvent
+MyView-- setOnTouchListener
+MyView-- onTouchEvent--ACTION_DOWN--false
+MyViewGroup-- setOnTouchListener
+ MyViewGroup-- onTouchEvent--ACTION_DOWN--false
+```
+
+
+
+
+
+
+
+
+
+
+
 Keep Moving Forward

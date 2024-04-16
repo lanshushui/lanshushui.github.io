@@ -537,6 +537,12 @@ abbrlink: 7e8ea226
 
 [Android系统中长按事件的实现机制解析 ](https://blog.csdn.net/asce1885/article/details/7855308)  -- *没有设置长按监听，长按松手仍可触发点击*
 
+[Android中onTouch，onTouchEvent，onClick优先级](https://lanshushui.github.io/post/4c65a511.html) ----- 一切都是子View优先
+
+> 优先触发子View的点击事件，不可能触发两个View的点击事件，setOnClickListener会影响 onTouchEvent的返回值，导致消费事件
+>
+> 子View的setOnTouchListener优先于父View的setOnTouchListener
+
 
 
 ## 屏幕刷新
