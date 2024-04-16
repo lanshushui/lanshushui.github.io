@@ -629,6 +629,10 @@ abbrlink: 7e8ea226
 
 [Android apk安装过程分析](https://www.jianshu.com/p/e02b1f95ea58)
 
+[聊聊 APK —— aapt 编译资源](https://geminiwen.com/archives/82.html)  ------ [Android构建工具--AAPT2源码解析（一）](https://cloud.tencent.com/developer/article/1893650)
+
+[aapt对图片的压缩](http://zhengxiaoyong.com/2017/04/23/%E4%B9%9F%E8%B0%88%E5%9B%BE%E7%89%87%E5%8E%8B%E7%BC%A9/)
+
 [Android使用APT实现简单版ButterKnife](https://juejin.cn/post/7023945025977335839)
 
 [微信抢红包算法](https://juejin.cn/post/7080343105177665544)
