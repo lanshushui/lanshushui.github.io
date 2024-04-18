@@ -173,6 +173,10 @@ abbrlink: 7e8ea226
 
 
 
+> java可以调用kotlin的扩展函数，第一个参数为扩展对象的实例
+>
+> java可以调用kotlin的挂起函数，最后一个参数为Continuation，正如Retrofit支持协程
+
 ## 同步：
 
 [Monitor对象](https://zhuanlan.zhihu.com/p/356010805)
