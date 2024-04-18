@@ -76,8 +76,6 @@ abbrlink: 7e8ea226
 
 [直面底层之字节码看try-catch-finally](https://juejin.cn/post/6949365555329679390)
 
-[java和kotlin的可见性修饰符对比](https://blog.csdn.net/weixin_45850939/article/details/117837389)
-
 [线程池原理分析](https://www.51cto.com/article/672580.html)  -- [线程池处理任务的流程了解吗](https://javaguide.cn/java/concurrent/java-concurrent-questions-03.html#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%84%E7%90%86%E4%BB%BB%E5%8A%A1%E7%9A%84%E6%B5%81%E7%A8%8B%E4%BA%86%E8%A7%A3%E5%90%97)
 
 [死磕 java线程系列之线程池深入解析——定时任务执行流程](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484396&idx=1&sn=9c2ad1cbbe66ee19a3bf74291187981e&chksm=c1726be2f605e2f44e441c609e52eef4d2db9ab1b73a3b5109b7f22ecb1b903b3635990deb4e&scene=178&cur_album_id=1538024362992254978#rd)
@@ -135,13 +133,15 @@ abbrlink: 7e8ea226
 
 [匿名类转换为Lambda表达式有一些条件和限制](https://xmlx.live/2023/03/19/%E6%B5%85%E8%BF%B0java%E4%B8%AD%E7%9A%84%E5%8C%BF%E5%90%8D%E7%B1%BBAnonymousClass%E8%BD%AC%E6%8D%A2%E4%B8%BALambda/)
 
+[Kotlin的internal 修饰符原理 ](https://juejin.cn/post/7165443481337331749)  ---- [打包后jar后 internal就变成了public，如何解决java调用](https://cloud.tencent.com/developer/article/1587241)
+
+[Kotlin中`protected`修饰符与Java中不同](https://blog.csdn.net/bingjianIT/article/details/79244281)
+
 [Kotlin空安全原理](https://juejin.cn/post/6844904048987127822#heading-7)
 
-[Kotlin 扩展函数原理](https://www.jianshu.com/p/bab988f5605a)    ---[let方法是通过给泛型添加扩展函数实现的](https://www.jianshu.com/p/7582bba888dc)
+[Kotlin 扩展函数定义在不同的地方原理是不一样的](https://juejin.cn/post/7089247109563547684)    ---[let方法是通过给泛型添加扩展函数实现的](https://www.jianshu.com/p/7582bba888dc)
 
-[Kotlin扩展属性原理](https://www.jianshu.com/p/55692cf4b602)
 
-[android开发kotlin顶级函数和拓展函数的实现原理](https://www.cnblogs.com/yongfengnice/p/17113149.html)
 
 [java中的静态代码块在kotlin中的表现形式](https://blog.csdn.net/xiaowu_zhu/article/details/96330379)
 
@@ -330,6 +330,8 @@ abbrlink: 7e8ea226
 
 
 ## Activity
+
+[重新认识Android的启动模式](https://weiwangqiang.github.io/2021/04/18/android-launchmode/)
 
 [Android 绘制流程](https://juejin.cn/post/6900457708638437390)
 
@@ -523,6 +525,8 @@ abbrlink: 7e8ea226
 
 [CountDownTimer通过handler实现倒计时](https://juejin.cn/post/6847902223909781518)
 
+[深入理解Data Binding原理](https://yuweiguocn.github.io/android-support-data-binding-3/)
+
 
 
 ## 事件分发
@@ -593,13 +597,13 @@ abbrlink: 7e8ea226
 
 [面试突击：OkHttp 原理八连问](https://www.51cto.com/article/689330.html)
 
-[LeakCanary原理从0到1](https://juejin.cn/post/6936452012058312740)
+[由浅入深，聊聊 LeakCanary 的那些事](https://blog.51cto.com/petterp/6029381)
 
 [Runtime.getRuntime().gc()只是建议虚拟机进行垃圾回收，并不会强制垃圾回收。那LeakCanary在这个方法后延迟100ms然后检测内存泄漏，会不会导致误检测？](https://github.com/Tencent/matrix/wiki/Matrix-Android-ResourceCanary)
 
 [EventBus源码解析](https://www.hurryyu.com/2020/01/12/EventBus%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/)
 
-[Retrofit源码与设计 7 连问](https://blog.51cto.com/u_15375308/4872022)
+[Retrofit是如何支持协程的](https://github.com/jhbxyz/ArticleRecord/blob/master/articles/%E4%BC%98%E7%A7%80%E5%BC%80%E6%BA%90%E5%BA%93/1Retrofit%E7%9A%84%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.md)
 
 [“终于懂了” 系列：组件化框架 ARouter 完全解析（一） 原理详解](https://cloud.tencent.com/developer/article/2154575)
 
@@ -646,6 +650,8 @@ abbrlink: 7e8ea226
 [Android实现倒计时的几种方案汇总](https://juejin.cn/post/7128947531471388709#heading-6)
 
 [Android 各版本兼容性适配](https://juejin.cn/post/7178669690628079671#heading-3)
+
+[如何实现无缝切换的主播pk方案](https://cloud.tencent.com/developer/article/1139584)
 
 
 
