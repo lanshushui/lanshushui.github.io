@@ -145,7 +145,11 @@ abbrlink: 7e8ea226
 
 [java中的静态代码块在kotlin中的表现形式](https://blog.csdn.net/xiaowu_zhu/article/details/96330379)
 
+[Kotlin p普通方法参数指定默认值的原理](https://segmentfault.com/a/1190000020934420) ---[Kotlin的构造方法默认参数指定默认值的原理](https://cloud.tencent.com/developer/article/1354365)
+
 [Kotlin Sealed原理](https://juejin.cn/post/6859980718588575757)
+
+[kotlin Data Class原理以及它的浅复制copy函数](https://juejin.cn/post/7233589699214540861)
 
 [Gson 和 Kotlin Data Class 的避坑指南](https://juejin.cn/post/6908391430977224718#heading-1)
 
