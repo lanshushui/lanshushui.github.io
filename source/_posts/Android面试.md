@@ -175,6 +175,8 @@ abbrlink: 7e8ea226
 
 [协程(13) | 异常处理](https://juejin.cn/post/7093453154297544741#heading-5)
 
+[Handler.postDelay(1L)和MainScope.launch { delay(1L) } 有什么不同](https://juejin.cn/post/7336870259582664723#heading-3)
+
 
 
 > java可以调用kotlin的扩展函数，第一个参数为扩展对象的实例
@@ -281,6 +283,10 @@ abbrlink: 7e8ea226
 
 # 网络
 
+> 网络拥塞是指在计算机网络中由于网络资源（如带宽、内存等）的有限性，当网络负载超过其容量时，数据包可能会在网络中延迟或丢失，从而导致网络性能下降的现象。网络拥塞通常会导致网络延迟增加、数据包丢失率上升，甚至可能导致网络连接中断。
+
+[网络拥塞的原因、分类、检测方法及解决方案](https://www.ebyte.com/new-view-info.html?id=2990)
+
 [HTTPS防止抓包的方法](https://blog.csdn.net/cpcpcp123/article/details/122107538)
 
 [为什么选择使用 UDP 协议发起 DNS 查询](https://github.com/sisterAn/blog/issues/108)
@@ -314,6 +320,18 @@ abbrlink: 7e8ea226
 [一个TCP报文段的最大长度为多少字节？](https://blog.csdn.net/skyattractive/article/details/106608778)
 
 [udp报文大小](https://github.com/steveLauwh/TCP-IP/blob/master/UDP/UDP%20%E6%8A%A5%E6%96%87%E7%9A%84%E5%A4%A7%E5%B0%8F.md)
+
+
+
+[Session、Cookie、JWT三者关系理清了吊打面试官](https://cloud.tencent.com/developer/article/1611254)
+
+[史上最详细的CSRF攻击与防御](https://juejin.cn/post/7031060650801496101#heading-0)
+
+[JWT （JSON Web Token） 是目前最流行的跨域认证解决方案,也能避免CSRF 攻击](https://javaguide.cn/system-design/security/advantages-and-disadvantages-of-jwt.html#jwt-%E7%9A%84%E4%BC%98%E5%8A%BF)
+
+[6种解决跨域方案，今天全告诉你了](https://cloud.tencent.com/developer/article/1698759)
+
+[禁用cookie之后，如何使用session](https://www.cnblogs.com/Renyi-Fan/p/11012086.html)
 
 
 
@@ -483,6 +501,8 @@ abbrlink: 7e8ea226
 
 [Zygote中Socket通信能否替换成Binder通信](https://www.jianshu.com/p/7e711b0b6ab1)  ----   [为什么不能在多线程程序中使用fork函数](http://faq.0xffffff.org/question/2014/07/30/why-do-not-use-fork-in-mul-thread-program/)
 
+[VSYNC信号通过`Socket`方式进行通信](https://juejin.cn/post/7356596872569716755)
+
 
 
 ## 动画
@@ -515,6 +535,8 @@ abbrlink: 7e8ea226
 
 [LiveData和StateFlow 优缺点](https://lanshushui.github.io/post/58bbdd0e.html)  ---  [flow支持生命周期-repeatOnLifecycle](https://juejin.cn/post/7001371050202103838)
 
+[Fragment的viewmodel通过**FragmentManagerViewModel**实现，本质也是通过componentActivity存储](https://juejin.cn/post/7344571269555126335#heading-5)
+
 [谈谈AsyncTask原理](https://juejin.cn/post/7026699617668448286)
 
 [HandlerThread使用介绍以及源码解析](https://www.cnblogs.com/leipDao/p/8005520.html)
@@ -534,6 +556,8 @@ abbrlink: 7e8ea226
 [CountDownTimer通过handler实现倒计时](https://juejin.cn/post/6847902223909781518)
 
 [深入理解Data Binding原理](https://yuweiguocn.github.io/android-support-data-binding-3/)
+
+[Dialog 对应的 Context 必须是 Activity吗？](https://cloud.tencent.com/developer/article/1839903)
 
 
 
@@ -629,9 +653,15 @@ abbrlink: 7e8ea226
 
 [Android换肤原理](https://cloud.tencent.com/developer/article/1634772)
 
+[常见的Android应用卡顿监控方案原理和对比](https://juejin.cn/post/7239625431056662585#heading-4)
+
 [Android性能优化杂谈-如何监控和解决ANR问题](https://blog.csdn.net/ljcITworld/article/details/104420422)
 
-[Android 平台 Native Crash 捕获原理详解](https://juejin.cn/post/7124688655796404254)
+[写给android开发的Linux 信号](https://juejin.cn/post/7196131493448613945)
+
+[Android 平台 Native 代码的崩溃捕获机制及实现](https://mp.weixin.qq.com/s/g-WzYF3wWAljok1XjPoo7w?poc_token=HCn1KGajwtXtERAnhf9e9RXZKXqB4tkYCBJIfjOL)
+
+[监听 Android ANR 信号--SIGQUIT](https://juejin.cn/post/7347910130711642121)
 
 [android如何多渠道打包?](https://cloud.tencent.com/developer/article/1906336)
 
