@@ -189,6 +189,8 @@ abbrlink: 7e8ea226
 
 [原子性、可见性、有序性 ](https://www.cnblogs.com/yeyang/p/13576636.html)
 
+[偏向锁、轻量级锁、重量级锁、自旋锁、自适应自旋锁](https://cloud.tencent.com/developer/article/1633059)
+
 [指令重排序场景](https://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%2078%20%E8%AE%B2-%E5%AE%8C/57%20%E4%BB%80%E4%B9%88%E6%98%AF%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9F.md)
 
 [Kotlin协程-并发安全的几种解决方案](https://juejin.cn/post/7124855163956772872)
@@ -279,6 +281,8 @@ abbrlink: 7e8ea226
 
 [serialVersionUID 有什么作用？该如何使用？](https://github.com/giantray/stackoverflow-java-top-qa/blob/master/contents/what-is-a-serialversionuid-and-why-should-i-use-it.md)
 
+[操作系统需要两种CPU状态，内核态（Kernel Mode）和用户态（User Mode）](https://juejin.cn/post/7259682893648887869)
+
 
 
 # 网络
@@ -307,7 +311,7 @@ abbrlink: 7e8ea226
 
 &nbsp;
 
-[TCP报文格式详解](https://www.cnblogs.com/feng9exe/p/8058891.html)
+[TCP报文格式详解,最大头部为60字节](https://www.cnblogs.com/feng9exe/p/8058891.html)
 
 [UDP报文格式详解](http://c.biancheng.net/view/6440.html)
 
@@ -320,6 +324,10 @@ abbrlink: 7e8ea226
 [一个TCP报文段的最大长度为多少字节？](https://blog.csdn.net/skyattractive/article/details/106608778)
 
 [udp报文大小](https://github.com/steveLauwh/TCP-IP/blob/master/UDP/UDP%20%E6%8A%A5%E6%96%87%E7%9A%84%E5%A4%A7%E5%B0%8F.md)
+
+
+
+[断点续传原理](https://zhuanlan.zhihu.com/p/639474503)
 
 
 
@@ -410,8 +418,6 @@ abbrlink: 7e8ea226
 
 
 ## Fragment
-
-[Android commit和commitAllowingStateLoss区别及应用场景](https://huxian99.github.io/2016/08/28/cj3qymo360000owxk9zp17alo/)
 
 [FragmentTransaction的detach和remove区别](https://www.jianshu.com/p/1c0c280c122b)
 

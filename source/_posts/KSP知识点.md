@@ -4,7 +4,7 @@ categories:
   - 知识点
 tags:
   - KSP
-top: 100
+top: 99
 abbrlink: 8ff11c1
 ---
 
@@ -30,7 +30,7 @@ plugins {
 }
 ```
 
-但如果要把ksp配置抽离成一个单独的gradle文件，就只能用 **apply plugin: "com.google.devtools.ksp"**的方式，但这之前必须添加插件脚本依赖
+但如果要把ksp配置抽离成一个单独的gradle文件，就只能用 `apply plugin: "com.google.devtools.ksp"` 的方式，但这之前必须添加插件脚本依赖
 
 ```groovy
 //根目录的build.gradle   添加依赖的插件-旧的写法
