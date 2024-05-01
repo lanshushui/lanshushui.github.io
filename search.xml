@@ -1,44 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>KSP知识点</title>
-    <url>/post/8ff11c1.html</url>
-    <content><![CDATA[<p><a href="https://juejin.cn/post/7157881407057559589">使用KSP处理注解和生成Kotlin代码</a></p>
-<p><a href="https://github.com/JailedBird/ArouterKspCompiler">KSP化的ARoute库</a></p>
-<span id="more"></span>
-
-<blockquote>
-<p>KSP打印日志需要使用warn才能看见</p>
-</blockquote>
-<h2 id="1-添加插件依赖"><a href="#1-添加插件依赖" class="headerlink" title="1.添加插件依赖"></a>1.添加插件依赖</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="comment">//网上的参考模块都是通过plugins闭包引入 </span></span><br><span class="line">plugins &#123;</span><br><span class="line">    ...</span><br><span class="line">    id(<span class="string">&quot;com.google.devtools.ksp&quot;</span>) version <span class="string">&quot;1.7.10-1.0.6&quot;</span><span class="comment">//引入ksp插件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但如果要把ksp配置抽离成一个单独的gradle文件，就只能用 **apply plugin: “com.google.devtools.ksp”**的方式，但这之前必须添加插件脚本依赖</p>
-<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="comment">//根目录的build.gradle   添加依赖的插件-旧的写法</span></span><br><span class="line">buildscript &#123;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        <span class="comment">//需要和kotlin版本对应</span></span><br><span class="line">        classpath  “com.google.devtools.<span class="attr">ksp:</span>com.google.devtools.ksp.gradle.<span class="attr">plugin:</span>$versions.ksp”</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-module目录的build-gradle-添加kotlin插件"><a href="#2-module目录的build-gradle-添加kotlin插件" class="headerlink" title="2.module目录的build.gradle 添加kotlin插件"></a>2.module目录的build.gradle 添加kotlin插件</h2><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">apply <span class="attr">plugin:</span> <span class="string">&#x27;kotlin-android&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="3-因为ksp需要配置的对象有点重复，所以抽象成一个gradle脚本"><a href="#3-因为ksp需要配置的对象有点重复，所以抽象成一个gradle脚本" class="headerlink" title="3.因为ksp需要配置的对象有点重复，所以抽象成一个gradle脚本"></a>3.因为ksp需要配置的对象有点重复，所以抽象成一个gradle脚本</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">apply plugin: <span class="string">&quot;com.google.devtools.ksp&quot;</span> <span class="comment">//这一行的代码在第一步操作下才能这么编写</span></span><br><span class="line">android &#123;</span><br><span class="line">    ksp &#123;</span><br><span class="line">        arg(<span class="string">&quot;moduleName&quot;</span>, project.getName())</span><br><span class="line">    &#125;</span><br><span class="line">    buildTypes.all &#123; type -&gt;</span><br><span class="line">        sourceSets &#123;</span><br><span class="line">            main.java.srcDirs += <span class="string">&quot;build/generated/ksp/$&#123;type.name&#125;/kotlin&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">dependencies &#123;</span><br><span class="line">    ksp <span class="title function_">project</span><span class="params">(<span class="string">&quot;:xxx-compiler-ksp&quot;</span>)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="4-module目录的build-gradle-添加自定义的gradle脚本"><a href="#4-module目录的build-gradle-添加自定义的gradle脚本" class="headerlink" title="4.module目录的build.gradle 添加自定义的gradle脚本"></a>4.module目录的build.gradle 添加自定义的gradle脚本</h2><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">apply <span class="attr">from:</span> <span class="string">&quot;$rootDir/xxxx.gradle&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>知识点</category>
-      </categories>
-      <tags>
-        <tag>KSP</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>React Native项目开发-步骤3</title>
     <url>/post/e4981006.html</url>
     <content><![CDATA[<p><a href="https://cloud.tencent.com/developer/article/1818101">React Native 启动速度优化——JS 篇（全网最全，值得收藏）</a></p>
@@ -880,6 +842,175 @@
       </tags>
   </entry>
   <entry>
+    <title>JS，TS 知识点</title>
+    <url>/post/dc4ac76f.html</url>
+    <content><![CDATA[<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects">JS官方文档</a></p>
+<p><a href="">TS官方文档</a></p>
+<p><a href="https://segmentfault.com/a/1190000007535316">理解 JavaScript 的 async&#x2F;await</a></p>
+<p><a href="https://juejin.cn/post/7105778922851139598">【TypeScript】keyof &amp; in 关键字详解</a></p>
+<span id="more"></span>
+
+<h2 id="踩坑问题"><a href="#踩坑问题" class="headerlink" title="踩坑问题"></a>踩坑问题</h2><blockquote>
+<p>注意 <a href="https://stackoverflow.com/questions/56977500/booleanfalse-returns-true">Boolean(‘false’) returns true</a></p>
+</blockquote>
+<blockquote>
+<p>使用encodeURIComponent代替encodeURI 。encodeURIComponent函数则更为严格，它会对URL中的所有特殊字符进行编码 </p>
+</blockquote>
+<blockquote>
+<p>proto3碰上 <code>JSON.stringify</code> ，默认将enums转为String <a href="https://protobuf.dev/programming-guides/proto3/#json">官方文档</a>    对象obj中定义了一个toJSON方法 可以影响<code>JSON.stringify</code>输出</p>
+</blockquote>
+<blockquote>
+<p>JSON.stringify方法在处理Map对象时会将其转换为空对象。处理方案:  转一层数组</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> data = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(<span class="title class_">Array</span>.<span class="title function_">from</span>(map))</span><br><span class="line"><span class="keyword">const</span> map = <span class="keyword">new</span> <span class="title class_">Map</span>&lt;string, boolean&gt;(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(res))</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>…操作符对基础变量是深复制，但对于object变量是浅复制</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a=&#123;</span><br><span class="line">    <span class="attr">a</span>:<span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="attr">b</span>:&#123;</span><br><span class="line">        <span class="attr">b</span>:<span class="string">&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> b=&#123;...a&#125;</span><br><span class="line">b.<span class="property">a</span>=<span class="string">&quot;abc&quot;</span></span><br><span class="line">b.<span class="property">b</span>.<span class="property">b</span>=<span class="string">&quot;bbb&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(a))  <span class="comment">//&#123;&quot;a&quot;:&quot;&quot;,&quot;b&quot;:&#123;&quot;b&quot;:&quot;bbb&quot;&#125;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(b))  <span class="comment">//&#123;&quot;a&quot;:&quot;abc&quot;,&quot;b&quot;:&#123;&quot;b&quot;:&quot;bbb&quot;&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>JSON.stringify 会打印 null ，不会打印 undefined</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a=&#123;</span><br><span class="line">    <span class="attr">a</span>:<span class="literal">null</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> b=&#123;</span><br><span class="line">    <span class="attr">a</span>:<span class="literal">undefined</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(a))  <span class="comment">//&#123;&quot;a&quot;:null&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(b)) <span class="comment">//&#123;&#125;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>null &#x3D;&#x3D;  undefined 返回 true             null &#x3D;&#x3D;&#x3D; undefined 返回 false</p>
+</blockquote>
+<h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><blockquote>
+<p><a href="https://cloud.tencent.com/developer/article/1940775">JS中的块级作用域，var、let、const三者的区别</a></p>
+</blockquote>
+<blockquote>
+<p><em>定义接口时</em>，属性间不用写<code>,</code>分隔符   ； 但实现接口时需要加上分隔符</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//定义</span><br><span class="line">interface FlexStyle &#123;</span><br><span class="line">    borderLeftWidth?: number | undefined;</span><br><span class="line">    borderRightWidth?: number | undefined;</span><br><span class="line">&#125;</span><br><span class="line">//实现</span><br><span class="line">const a: FlexStyle = &#123;&#125;</span><br><span class="line"></span><br><span class="line">const b = &#123;</span><br><span class="line">    borderLeftWidth: 5,</span><br><span class="line">    borderRightWidth: 6</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>因为JS中没有接口的概念，所以ts中判断一个对象是不是实现某个接口，只能通过断言<code>as</code>来实现，不能通过<code>instanceof</code>   <a href="https://ts.xcatliu.com/basics/type-assertion.html#%E5%B0%86%E4%B8%80%E4%B8%AA%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%E4%B8%BA%E5%85%B6%E4%B8%AD%E4%B8%80%E4%B8%AA%E7%B1%BB%E5%9E%8B">文档</a></p>
+</blockquote>
+<blockquote>
+<p>当一个组件参数是接口时，创造一个组件不能直接传接口实例，要使用{…interfaeA}将接口实例解耦后传入</p>
+</blockquote>
+<blockquote>
+<p>判断一个变量是不是函数     if (typeof (animal as Fish).swim &#x3D;&#x3D;&#x3D; ‘function’)</p>
+</blockquote>
+<blockquote>
+<p>obj对象被用作if语句的条件。如果obj对象存在（即非null和非undefined），则条件为真。否则，条件为假</p>
+</blockquote>
+<blockquote>
+<p> ?? 是空值合并操作符。它用于检查一个值是否为 null 或 undefined，如果是的话就返回另一个指定的默认值 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const result = someValue ?? defaultValue;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p> ??&#x3D; 类似于 ??，但是如果左侧的值为 null 或 undefined，则会将右侧的值赋给左侧的变量。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">let myVar: string | undefined = undefined;</span><br><span class="line">myVar ??= &quot;default&quot;;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>代替kotlin <code>?: </code>操作符的方法   表达式对象 || 0，如果对象被视为真（truthy），则整个表达式的结果将是该对象。如果对象被视为假（falsy），则整个表达式的结果将是0</p>
+</blockquote>
+<blockquote>
+<p>虽然没有kotlin <code>?: </code>操作符，但有 <code>boolean ? A : B </code>操作符</p>
+</blockquote>
+<blockquote>
+<p>异步的箭头函数 const myfunc  &#x3D; async () &#x3D;&gt; {}</p>
+</blockquote>
+<blockquote>
+<p>declare type AType &#x3D; keyof typeof BClass </p>
+<p><code>typeof</code> 操作符用于获取一个对象的类型，<code>keyof</code> 操作符则用于获取该类型的所有属性名。  </p>
+<p>这行代码的整体含义是：我们正在定义一个类型别名 <code>AType</code>，它的值是 <code>BClass</code> 对象的所有属性名。</p>
+</blockquote>
+<blockquote>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a=&#123;</span><br><span class="line">  <span class="attr">add</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">  	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;sss&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//一般简写成</span></span><br><span class="line"><span class="keyword">const</span> a=&#123;</span><br><span class="line">  <span class="title function_">add</span>(<span class="params"></span>)&#123;</span><br><span class="line">  	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;sss&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>JS</category>
+      </categories>
+      <tags>
+        <tag>知识点</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>浮点数踩坑</title>
+    <url>/post/d533c7c1.html</url>
+    <content><![CDATA[<p><a href="https://www.cnblogs.com/summerday152/p/14202267.html">利用BigDecimal类巧妙处理Double类型精度丢失</a></p>
+<span id="more"></span>
+
+<h2 id="问题案例"><a href="#问题案例" class="headerlink" title="问题案例"></a>问题案例</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> d = <span class="number">103.765</span></span><br><span class="line"><span class="keyword">val</span> formatter = NumberFormat.getNumberInstance() <span class="comment">//返回的是DecimalFormat类</span></span><br><span class="line">formatter.roundingMode = RoundingMode.HALF_UP</span><br><span class="line">formatter.maximumFractionDigits = <span class="number">2</span></span><br><span class="line">formatter.minimumFractionDigits = <span class="number">2</span></span><br><span class="line">formatter.isGroupingUsed = <span class="literal">false</span></span><br><span class="line"><span class="keyword">val</span> result = formatter.format(d)   <span class="comment">//结果是 103.76 并不是103.77</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码想实现 【四舍五入，保留两位小数】的功能，结果却和预期不一样</p>
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>查看DecimalFormat类format方法原理</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> StringBuffer <span class="title function_">format</span><span class="params">(Object number,</span></span><br><span class="line"><span class="params">                                 StringBuffer toAppendTo,</span></span><br><span class="line"><span class="params">                                 FieldPosition pos)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (number <span class="keyword">instanceof</span> Long || number <span class="keyword">instanceof</span> Integer ||</span><br><span class="line">        number <span class="keyword">instanceof</span> Short || number <span class="keyword">instanceof</span> Byte ||</span><br><span class="line">        number <span class="keyword">instanceof</span> AtomicInteger ||</span><br><span class="line">        number <span class="keyword">instanceof</span> AtomicLong ||</span><br><span class="line">        (number <span class="keyword">instanceof</span> BigInteger &amp;&amp;</span><br><span class="line">         ((BigInteger)number).bitLength () &lt; <span class="number">64</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> format(((Number)number).longValue(), toAppendTo, pos);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (number <span class="keyword">instanceof</span> BigDecimal) &#123;</span><br><span class="line">        <span class="keyword">return</span> format((BigDecimal)number, toAppendTo, pos);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (number <span class="keyword">instanceof</span> BigInteger) &#123;</span><br><span class="line">        <span class="keyword">return</span> format((BigInteger)number, toAppendTo, pos);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (number <span class="keyword">instanceof</span> Number) &#123;  <span class="comment">//传入的是float，走到了这里 </span></span><br><span class="line">        <span class="keyword">return</span> format(((Number)number).doubleValue(), toAppendTo, pos);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Cannot format given Object as a Number&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看见 ，传入float时，会强转为Number类调用doubleValue方法获得值进行后续操作；就是float转double出现精度丢失</p>
+<blockquote>
+<p>103.765变成了 103.76499938964844，再四舍五入 就变成了 103.76</p>
+</blockquote>
+<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><blockquote>
+<p>使用 BigDecimal类</p>
+</blockquote>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> d = <span class="number">103.765</span></span><br><span class="line"><span class="keyword">val</span> formatter = NumberFormat.getNumberInstance()</span><br><span class="line">formatter.roundingMode = RoundingMode.HALF_UP</span><br><span class="line">formatter.maximumFractionDigits = <span class="number">2</span></span><br><span class="line">formatter.minimumFractionDigits = <span class="number">2</span></span><br><span class="line">formatter.isGroupingUsed = <span class="literal">false</span></span><br><span class="line"><span class="keyword">val</span> result = formatter.format(BigDecimal(<span class="string">&quot;<span class="variable">$d</span>&quot;</span>)) <span class="comment">//正常返回 103.77</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>疑难杂症</category>
+      </categories>
+      <tags>
+        <tag>浮点数</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>KSP知识点</title>
+    <url>/post/8ff11c1.html</url>
+    <content><![CDATA[<p><a href="https://juejin.cn/post/7157881407057559589">使用KSP处理注解和生成Kotlin代码</a></p>
+<p><a href="https://github.com/JailedBird/ArouterKspCompiler">KSP化的ARoute库</a></p>
+<span id="more"></span>
+
+<blockquote>
+<p>KSP打印日志需要使用warn才能看见</p>
+</blockquote>
+<h2 id="1-添加插件依赖"><a href="#1-添加插件依赖" class="headerlink" title="1.添加插件依赖"></a>1.添加插件依赖</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="comment">//网上的参考模块都是通过plugins闭包引入 </span></span><br><span class="line">plugins &#123;</span><br><span class="line">    ...</span><br><span class="line">    id(<span class="string">&quot;com.google.devtools.ksp&quot;</span>) version <span class="string">&quot;1.7.10-1.0.6&quot;</span><span class="comment">//引入ksp插件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但如果要把ksp配置抽离成一个单独的gradle文件，就只能用 <code>apply plugin: &quot;com.google.devtools.ksp&quot;</code> 的方式，但这之前必须添加插件脚本依赖</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="comment">//根目录的build.gradle   添加依赖的插件-旧的写法</span></span><br><span class="line">buildscript &#123;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        <span class="comment">//需要和kotlin版本对应</span></span><br><span class="line">        classpath  “com.google.devtools.<span class="attr">ksp:</span>com.google.devtools.ksp.gradle.<span class="attr">plugin:</span>$versions.ksp”</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-module目录的build-gradle-添加kotlin插件"><a href="#2-module目录的build-gradle-添加kotlin插件" class="headerlink" title="2.module目录的build.gradle 添加kotlin插件"></a>2.module目录的build.gradle 添加kotlin插件</h2><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">apply <span class="attr">plugin:</span> <span class="string">&#x27;kotlin-android&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-因为ksp需要配置的对象有点重复，所以抽象成一个gradle脚本"><a href="#3-因为ksp需要配置的对象有点重复，所以抽象成一个gradle脚本" class="headerlink" title="3.因为ksp需要配置的对象有点重复，所以抽象成一个gradle脚本"></a>3.因为ksp需要配置的对象有点重复，所以抽象成一个gradle脚本</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">apply plugin: <span class="string">&quot;com.google.devtools.ksp&quot;</span> <span class="comment">//这一行的代码在第一步操作下才能这么编写</span></span><br><span class="line">android &#123;</span><br><span class="line">    ksp &#123;</span><br><span class="line">        arg(<span class="string">&quot;moduleName&quot;</span>, project.getName())</span><br><span class="line">    &#125;</span><br><span class="line">    buildTypes.all &#123; type -&gt;</span><br><span class="line">        sourceSets &#123;</span><br><span class="line">            main.java.srcDirs += <span class="string">&quot;build/generated/ksp/$&#123;type.name&#125;/kotlin&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">dependencies &#123;</span><br><span class="line">    ksp <span class="title function_">project</span><span class="params">(<span class="string">&quot;:xxx-compiler-ksp&quot;</span>)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-module目录的build-gradle-添加自定义的gradle脚本"><a href="#4-module目录的build-gradle-添加自定义的gradle脚本" class="headerlink" title="4.module目录的build.gradle 添加自定义的gradle脚本"></a>4.module目录的build.gradle 添加自定义的gradle脚本</h2><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">apply <span class="attr">from:</span> <span class="string">&quot;$rootDir/xxxx.gradle&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>知识点</category>
+      </categories>
+      <tags>
+        <tag>KSP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Vue知识点</title>
     <url>/post/7abbf13b.html</url>
     <content><![CDATA[<p>小知识点</p>
@@ -1118,77 +1249,25 @@
       </tags>
   </entry>
   <entry>
-    <title>Glide知识点</title>
-    <url>/post/692dc279.html</url>
-    <content><![CDATA[<h1 id="Glide-OKHTTP3"><a href="#Glide-OKHTTP3" class="headerlink" title="Glide+OKHTTP3"></a>Glide+OKHTTP3</h1><h2 id="1-Glide-接入OKHttp3"><a href="#1-Glide-接入OKHttp3" class="headerlink" title="1.Glide 接入OKHttp3"></a>1.Glide 接入OKHttp3</h2><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">api(<span class="string">&quot;com.github.bumptech.glide:glide:$&#123;glide_version&#125;&quot;</span>) &#123;</span><br><span class="line">    exclude(<span class="attr">group:</span> <span class="string">&#x27;androidx.annotation&#x27;</span>, <span class="attr">module:</span> <span class="string">&#x27;annotation&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line">implementation(<span class="string">&quot;com.github.bumptech.glide:okhttp3-integration:$&#123;glide_version&#125;&quot;</span>)&#123;</span><br><span class="line">    exclude <span class="attr">group:</span> <span class="string">&quot;com.squareup.okhttp3&quot;</span>, <span class="attr">module:</span> <span class="string">&quot;okhttp&quot;</span></span><br><span class="line">    exclude <span class="attr">group:</span> <span class="string">&quot;com.android.support&quot;</span></span><br><span class="line">    exclude <span class="attr">group:</span> <span class="string">&quot;com.squareup.okio&quot;</span>, <span class="attr">module:</span> <span class="string">&quot;okio&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">api <span class="string">&quot;com.squareup.okhttp3:okhttp:$&#123;okhttp_version&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+    <title>ImageSpan扩展</title>
+    <url>/post/503d328.html</url>
+    <content><![CDATA[<h2 id="支持GIF播放的TextView"><a href="#支持GIF播放的TextView" class="headerlink" title="支持GIF播放的TextView"></a>支持GIF播放的TextView</h2><span id="more"></span>
+
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SpanTextView</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span>(</span><br><span class="line">    context: Context,</span><br><span class="line">    attrs: AttributeSet? = <span class="literal">null</span>,</span><br><span class="line">    defStyle: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line">) : TextView(context, attrs, defStyle) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> hasSpanCallback = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> isSpanAttached = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> spanCallbacks: Array&lt;SpanCallback&gt;? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttachedToWindow</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttachedToWindow()</span><br><span class="line">        onAttach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetachedFromWindow</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onDetachedFromWindow()</span><br><span class="line">        onDetach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onStartTemporaryDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onStartTemporaryDetach()</span><br><span class="line">        onDetach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onFinishTemporaryDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onFinishTemporaryDetach()</span><br><span class="line">        onAttach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setText</span><span class="params">(text: <span class="type">CharSequence</span>, type: <span class="type">BufferType</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (getText() === text) &#123;</span><br><span class="line">            <span class="comment">//防止重复设置text导致span中反复调用生命周期方法</span></span><br><span class="line">            <span class="keyword">super</span>.setText(text, type)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">val</span> wasSpanAttached = isSpanAttached</span><br><span class="line">        <span class="keyword">if</span> (hasSpanCallback &amp;&amp; wasSpanAttached) &#123;</span><br><span class="line">            onDetach()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (text <span class="keyword">is</span> Spanned) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                spanCallbacks = text.getSpans(<span class="number">0</span>, text.length, SpanCallback::<span class="keyword">class</span>.java)</span><br><span class="line">                hasSpanCallback = spanCallbacks?.isNotEmpty() == <span class="literal">true</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (e: ArrayIndexOutOfBoundsException) &#123;</span><br><span class="line">                <span class="comment">//</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            spanCallbacks = <span class="literal">null</span></span><br><span class="line">            hasSpanCallback = <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">super</span>.setText(text, type)</span><br><span class="line">        <span class="keyword">if</span> (hasSpanCallback &amp;&amp; wasSpanAttached) &#123;</span><br><span class="line">            onAttach()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        spanCallbacks?.forEach &#123;</span><br><span class="line">            it.onAttach(<span class="keyword">this</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        isSpanAttached = <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        spanCallbacks?.forEach &#123;</span><br><span class="line">            it.onDetach()</span><br><span class="line">        &#125;</span><br><span class="line">        isSpanAttached = <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">interface</span> <span class="title class_">SpanCallback</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(textView: <span class="type">TextView</span>)</span></span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<span id="more"></span>
+<h2 id="支持GIF的ImageSpan"><a href="#支持GIF的ImageSpan" class="headerlink" title="支持GIF的ImageSpan"></a>支持GIF的ImageSpan</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GIFImageSpan</span>(d: Drawable) : CustomImageSpan(d) , SpanTextView.SpanCallback &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> curDrawableCallback: Drawable.Callback? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(textView: <span class="type">TextView</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> textViewRef = WeakReference(textView)</span><br><span class="line">        (drawable <span class="keyword">as</span>? GifDrawable)?.apply &#123;</span><br><span class="line">            curDrawableCallback = <span class="keyword">object</span> : Drawable.Callback &#123;</span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">invalidateDrawable</span><span class="params">(who: <span class="type">Drawable</span>)</span></span> &#123;</span><br><span class="line">                    textViewRef.<span class="keyword">get</span>()?.invalidate()</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">scheduleDrawable</span><span class="params">(who: <span class="type">Drawable</span>, what: <span class="type">Runnable</span>, `<span class="keyword">when</span>`: <span class="type">Long</span>)</span></span> &#123;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">unscheduleDrawable</span><span class="params">(who: <span class="type">Drawable</span>, what: <span class="type">Runnable</span>)</span></span> &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            drawable.callback = curDrawableCallback</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!isRunning) &#123;</span><br><span class="line">                start()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        (drawable <span class="keyword">as</span>? GifDrawable)?.apply &#123;</span><br><span class="line">            <span class="keyword">if</span> (isRunning) &#123;</span><br><span class="line">                stop()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        curDrawableCallback = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="2-okhttp3-integration核心代码"><a href="#2-okhttp3-integration核心代码" class="headerlink" title="2.okhttp3-integration核心代码"></a>2.okhttp3-integration核心代码</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@GlideModule</span><br><span class="line">public final class OkHttpLibraryGlideModule extends LibraryGlideModule &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public void registerComponents(</span><br><span class="line">      @NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) &#123;</span><br><span class="line">    registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="3-替换自定义的OKHttpClient"><a href="#3-替换自定义的OKHttpClient" class="headerlink" title="3.替换自定义的OKHttpClient"></a>3.替换自定义的OKHttpClient</h2><p>第二步可以看出，arr中使用的是LibraryGlideModule，项目中使用自定义的AppGlideModule，就可以比LibraryGlideModule更晚执行，从而替代自定义的OKHttpClient</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GlideModule</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">MyGlideModule</span> <span class="keyword">extends</span> <span class="title class_">AppGlideModule</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registerComponents</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@NonNull</span> Context context, <span class="meta">@NonNull</span> Glide glide, <span class="meta">@NonNull</span> Registry registry)</span> &#123;</span><br><span class="line">        OkHttpClient.<span class="type">Builder</span> <span class="variable">builder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OkHttpClient</span>.Builder();</span><br><span class="line">        Call.<span class="type">Factory</span> <span class="variable">factory</span> <span class="operator">=</span> builder.build();</span><br><span class="line">        registry.replace(GlideUrl.class,InputStream.class, <span class="keyword">new</span> <span class="title class_">OkHttpUrlLoader</span>.Factory(factory));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="4-GlideModule的registerComponents方法是什么时候被调用的？"><a href="#4-GlideModule的registerComponents方法是什么时候被调用的？" class="headerlink" title="4.GlideModule的registerComponents方法是什么时候被调用的？"></a>4.GlideModule的registerComponents方法是什么时候被调用的？</h2><p><img src="https://s3.bmp.ovh/imgs/2023/07/31/c035ed8ed3cd009e.jpg"></p>
-<p>可以看出是图片下载被解析时，调用getRegistry方法时，如果还未初始化，就会走初始化逻辑，调用registerComponents</p>
-<h1 id="Glide-OKHttp3-线程池分析"><a href="#Glide-OKHttp3-线程池分析" class="headerlink" title="Glide+OKHttp3 线程池分析"></a>Glide+OKHttp3 线程池分析</h1><h2 id="1-Glide线程池"><a href="#1-Glide线程池" class="headerlink" title="1.Glide线程池"></a>1.Glide线程池</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//com.bumptech.glide.GlideBuilder</span></span><br><span class="line">Glide <span class="title function_">build</span><span class="params">(<span class="meta">@NonNull</span> Context context,List&lt;GlideModule&gt; manifestModules, AppGlideModule annotationGeneratedGlideModule)</span> &#123;</span><br><span class="line">    <span class="comment">//图片下载线程池</span></span><br><span class="line">    <span class="keyword">if</span> (sourceExecutor == <span class="literal">null</span>) &#123;</span><br><span class="line">        sourceExecutor = GlideExecutor.newSourceExecutor();</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//硬盘解析线程池</span></span><br><span class="line">    <span class="keyword">if</span> (diskCacheExecutor == <span class="literal">null</span>) &#123;</span><br><span class="line">        diskCacheExecutor = GlideExecutor.newDiskCacheExecutor();</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//动画解析线程池</span></span><br><span class="line">    <span class="keyword">if</span> (animationExecutor == <span class="literal">null</span>) &#123;</span><br><span class="line">        animationExecutor = GlideExecutor.newAnimationExecutor();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="https://s3.bmp.ovh/imgs/2023/08/16/f29dedbeb0a190b2.jpg"></p>
-<p> 图片下载线程池是个【核心4线程，最多4线程】的线程池</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/08/16/c4fcc46afe34fc6e.jpg"></p>
-<p>  硬盘解析线程池是个【核心1线程，最多1线程】的线程池</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/08/16/9d4c9903a1a4901e.jpg"></p>
-<p>动画解析线程池是个【核心2线程，最多2线程】的线程池</p>
-<ol>
-<li><em><strong>在未接入OKHttp3时，Source线程池用于下载图片，可以看出最多支持4个图片同时下载</strong></em></li>
-<li><em><strong>在接入OKHttp3时，Source线程池用于向OKHttp3线程池提交下载任务获得InputStream 基本是瞬间完成提交任务，等Okhttp3下载回调，所以下载图片取决于OKHttp3配置</strong></em></li>
-</ol>
-<h2 id="2-OkHttp3线程池"><a href="#2-OkHttp3线程池" class="headerlink" title="2.OkHttp3线程池"></a>2.OkHttp3线程池</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> executorService: ExecutorService</span><br><span class="line"><span class="keyword">get</span>() &#123;</span><br><span class="line">    <span class="keyword">if</span> (executorServiceOrNull == <span class="literal">null</span>) &#123;</span><br><span class="line">        executorServiceOrNull = ThreadPoolExecutor(<span class="number">0</span>, <span class="built_in">Int</span>.MAX_VALUE, <span class="number">60</span>, TimeUnit.SECONDS,</span><br><span class="line">                                                   SynchronousQueue(), threadFactory(<span class="string">&quot;<span class="variable">$okHttpName</span> Dispatcher&quot;</span>, <span class="literal">false</span>))</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> executorServiceOrNull!!</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="comment">//okhttp3.Dispatcher</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">promoteAndExecute</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.assertThreadDoesntHoldLock()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> executableCalls = mutableListOf&lt;AsyncCall&gt;()</span><br><span class="line">    <span class="keyword">val</span> isRunning: <span class="built_in">Boolean</span></span><br><span class="line">    synchronized(<span class="keyword">this</span>) &#123;</span><br><span class="line">        <span class="keyword">val</span> i = readyAsyncCalls.iterator()</span><br><span class="line">        <span class="keyword">while</span> (i.hasNext()) &#123;</span><br><span class="line">            <span class="keyword">val</span> asyncCall = i.next()</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (runningAsyncCalls.size &gt;= <span class="keyword">this</span>.maxRequests) <span class="keyword">break</span> <span class="comment">// 最多支持64个请求</span></span><br><span class="line">            <span class="keyword">if</span> (asyncCall.callsPerHost.<span class="keyword">get</span>() &gt;= <span class="keyword">this</span>.maxRequestsPerHost) <span class="keyword">continue</span> <span class="comment">// 每个Host最多支持5个请求</span></span><br><span class="line"></span><br><span class="line">            i.remove()</span><br><span class="line">            asyncCall.callsPerHost.incrementAndGet()</span><br><span class="line">            executableCalls.add(asyncCall)</span><br><span class="line">            runningAsyncCalls.add(asyncCall)</span><br><span class="line">        &#125;</span><br><span class="line">        isRunning = runningCallsCount() &gt; <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0</span> until executableCalls.size) &#123;</span><br><span class="line">        <span class="keyword">val</span> asyncCall = executableCalls[i]</span><br><span class="line">        asyncCall.executeOn(executorService)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> isRunning</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> OKhttp3线程池是无限制的，但最多同时支持64个请求，每个Host同时最多支持5个请求</p>
-<h1 id="Glide-into-后图片加载时间"><a href="#Glide-into-后图片加载时间" class="headerlink" title="Glide into()后图片加载时间"></a>Glide into()后图片加载时间</h1><h2 id="需要有具体的宽高，-glide才会加载图片"><a href="#需要有具体的宽高，-glide才会加载图片" class="headerlink" title="需要有具体的宽高， glide才会加载图片"></a><em><strong>需要有具体的宽高， glide才会加载图片</strong></em></h2><p>如果设置了RequestOptions的override方法，则直接调用onSizeReady，否则设置target的回调监听</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//com.bumptech.glide.request.SingleRequest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">begin</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (Util.isValidDimensions(overrideWidth, overrideHeight)) &#123;</span><br><span class="line">        onSizeReady(overrideWidth, overrideHeight);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//设置回调</span></span><br><span class="line">        target.getSize(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onSizeReady</span><span class="params">(<span class="type">int</span> width, <span class="type">int</span> height)</span> &#123;</span><br><span class="line">    loadStatus =engine.load();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="ViewTarget啥时候会返回合适的宽高？"><a href="#ViewTarget啥时候会返回合适的宽高？" class="headerlink" title="ViewTarget啥时候会返回合适的宽高？"></a>ViewTarget啥时候会返回合适的宽高？</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">getSize</span><span class="params">(<span class="meta">@NonNull</span> SizeReadyCallback cb)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">currentWidth</span> <span class="operator">=</span> getTargetWidth();</span><br><span class="line">    <span class="type">int</span> <span class="variable">currentHeight</span> <span class="operator">=</span> getTargetHeight();</span><br><span class="line">    <span class="comment">//判断目前是否有合适的宽高，是则直接返回</span></span><br><span class="line">    <span class="keyword">if</span> (isViewStateAndSizeValid(currentWidth, currentHeight)) &#123;</span><br><span class="line">        cb.onSizeReady(currentWidth, currentHeight);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!cbs.contains(cb)) &#123;</span><br><span class="line">        cbs.add(cb);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//设置addOnPreDrawListener，View绘制前回调</span></span><br><span class="line">    <span class="keyword">if</span> (layoutListener == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">ViewTreeObserver</span> <span class="variable">observer</span> <span class="operator">=</span> view.getViewTreeObserver();</span><br><span class="line">        layoutListener = <span class="keyword">new</span> <span class="title class_">SizeDeterminerLayoutListener</span>(<span class="built_in">this</span>);</span><br><span class="line">        observer.addOnPreDrawListener(layoutListener);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">getTargetHeight</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">verticalPadding</span> <span class="operator">=</span> view.getPaddingTop() + view.getPaddingBottom();</span><br><span class="line">    <span class="type">LayoutParams</span> <span class="variable">layoutParams</span> <span class="operator">=</span> view.getLayoutParams();</span><br><span class="line">    <span class="type">int</span> <span class="variable">layoutParamSize</span> <span class="operator">=</span> layoutParams != <span class="literal">null</span> ? layoutParams.height : PENDING_SIZE;</span><br><span class="line">    <span class="keyword">return</span> getTargetDimen(view.getHeight(), layoutParamSize, verticalPadding);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">getTargetDimen</span><span class="params">(<span class="type">int</span> viewSize, <span class="type">int</span> paramSize, <span class="type">int</span> paddingSize)</span> &#123;</span><br><span class="line">    <span class="comment">//params的宽高是固定值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">adjustedParamSize</span> <span class="operator">=</span> paramSize - paddingSize;</span><br><span class="line">    <span class="keyword">if</span> (adjustedParamSize &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> adjustedParamSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//View正打算layout布局，返回PENDING_SIZE 表示目前的宽高不合适，等待PreDrawListener回调</span></span><br><span class="line">    <span class="keyword">if</span> (waitForLayout &amp;&amp; view.isLayoutRequested()) &#123;</span><br><span class="line">        <span class="keyword">return</span> PENDING_SIZE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//View存在宽高数据，因为这个宽高数据可能是脏数据，所以放这么后面</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">adjustedViewSize</span> <span class="operator">=</span> viewSize - paddingSize;</span><br><span class="line">    <span class="keyword">if</span> (adjustedViewSize &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> adjustedViewSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//view目前没有请求layout布局，且宽高是WRAP_CONTENT，返回屏幕宽高的最大值</span></span><br><span class="line">    <span class="keyword">if</span> (!view.isLayoutRequested() &amp;&amp; paramSize == LayoutParams.WRAP_CONTENT) &#123;</span><br><span class="line">        <span class="keyword">return</span> getMaxDisplayLength(view.getContext());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回PENDING_SIZE 表示目前的宽高不合适，等待PreDrawListener回调</span></span><br><span class="line">    <span class="keyword">return</span> PENDING_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>​    <strong>into后宽高数据的获取逻辑</strong>：</p>
-<ol>
-<li>RequestOptions存在overrideWidth, overrideHeight</li>
-<li>params的宽高是固定值</li>
-<li>viewTarget的waitForLayout是true，且正打算layout布局，则等待PreDrawListener回调（waitForLayout无设置默认值，boolean默认值是false）</li>
-<li>view存在真实的宽高数据</li>
-<li>view目前没有请求layout布局，且宽高是WRAP_CONTENT，返回屏幕宽高的最大值</li>
-<li>等待PreDrawListener回调</li>
-</ol>
 <p>Keep Moving Forward</p>
 ]]></content>
       <categories>
-        <category>知识点</category>
+        <category>扩展点</category>
       </categories>
       <tags>
-        <tag>Glide</tag>
+        <tag>ImageSpan</tag>
       </tags>
   </entry>
   <entry>
@@ -1271,6 +1350,80 @@
       </tags>
   </entry>
   <entry>
+    <title>Glide知识点</title>
+    <url>/post/692dc279.html</url>
+    <content><![CDATA[<h1 id="Glide-OKHTTP3"><a href="#Glide-OKHTTP3" class="headerlink" title="Glide+OKHTTP3"></a>Glide+OKHTTP3</h1><h2 id="1-Glide-接入OKHttp3"><a href="#1-Glide-接入OKHttp3" class="headerlink" title="1.Glide 接入OKHttp3"></a>1.Glide 接入OKHttp3</h2><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">api(<span class="string">&quot;com.github.bumptech.glide:glide:$&#123;glide_version&#125;&quot;</span>) &#123;</span><br><span class="line">    exclude(<span class="attr">group:</span> <span class="string">&#x27;androidx.annotation&#x27;</span>, <span class="attr">module:</span> <span class="string">&#x27;annotation&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line">implementation(<span class="string">&quot;com.github.bumptech.glide:okhttp3-integration:$&#123;glide_version&#125;&quot;</span>)&#123;</span><br><span class="line">    exclude <span class="attr">group:</span> <span class="string">&quot;com.squareup.okhttp3&quot;</span>, <span class="attr">module:</span> <span class="string">&quot;okhttp&quot;</span></span><br><span class="line">    exclude <span class="attr">group:</span> <span class="string">&quot;com.android.support&quot;</span></span><br><span class="line">    exclude <span class="attr">group:</span> <span class="string">&quot;com.squareup.okio&quot;</span>, <span class="attr">module:</span> <span class="string">&quot;okio&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">api <span class="string">&quot;com.squareup.okhttp3:okhttp:$&#123;okhttp_version&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<span id="more"></span>
+
+
+
+<h2 id="2-okhttp3-integration核心代码"><a href="#2-okhttp3-integration核心代码" class="headerlink" title="2.okhttp3-integration核心代码"></a>2.okhttp3-integration核心代码</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@GlideModule</span><br><span class="line">public final class OkHttpLibraryGlideModule extends LibraryGlideModule &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public void registerComponents(</span><br><span class="line">      @NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) &#123;</span><br><span class="line">    registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-替换自定义的OKHttpClient"><a href="#3-替换自定义的OKHttpClient" class="headerlink" title="3.替换自定义的OKHttpClient"></a>3.替换自定义的OKHttpClient</h2><p>第二步可以看出，arr中使用的是LibraryGlideModule，项目中使用自定义的AppGlideModule，就可以比LibraryGlideModule更晚执行，从而替代自定义的OKHttpClient</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GlideModule</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">MyGlideModule</span> <span class="keyword">extends</span> <span class="title class_">AppGlideModule</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registerComponents</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@NonNull</span> Context context, <span class="meta">@NonNull</span> Glide glide, <span class="meta">@NonNull</span> Registry registry)</span> &#123;</span><br><span class="line">        OkHttpClient.<span class="type">Builder</span> <span class="variable">builder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OkHttpClient</span>.Builder();</span><br><span class="line">        Call.<span class="type">Factory</span> <span class="variable">factory</span> <span class="operator">=</span> builder.build();</span><br><span class="line">        registry.replace(GlideUrl.class,InputStream.class, <span class="keyword">new</span> <span class="title class_">OkHttpUrlLoader</span>.Factory(factory));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-GlideModule的registerComponents方法是什么时候被调用的？"><a href="#4-GlideModule的registerComponents方法是什么时候被调用的？" class="headerlink" title="4.GlideModule的registerComponents方法是什么时候被调用的？"></a>4.GlideModule的registerComponents方法是什么时候被调用的？</h2><p><img src="https://s3.bmp.ovh/imgs/2023/07/31/c035ed8ed3cd009e.jpg"></p>
+<p>可以看出是图片下载被解析时，调用getRegistry方法时，如果还未初始化，就会走初始化逻辑，调用registerComponents</p>
+<h1 id="Glide-OKHttp3-线程池分析"><a href="#Glide-OKHttp3-线程池分析" class="headerlink" title="Glide+OKHttp3 线程池分析"></a>Glide+OKHttp3 线程池分析</h1><h2 id="1-Glide线程池"><a href="#1-Glide线程池" class="headerlink" title="1.Glide线程池"></a>1.Glide线程池</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//com.bumptech.glide.GlideBuilder</span></span><br><span class="line">Glide <span class="title function_">build</span><span class="params">(<span class="meta">@NonNull</span> Context context,List&lt;GlideModule&gt; manifestModules, AppGlideModule annotationGeneratedGlideModule)</span> &#123;</span><br><span class="line">    <span class="comment">//图片下载线程池</span></span><br><span class="line">    <span class="keyword">if</span> (sourceExecutor == <span class="literal">null</span>) &#123;</span><br><span class="line">        sourceExecutor = GlideExecutor.newSourceExecutor();</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//硬盘解析线程池</span></span><br><span class="line">    <span class="keyword">if</span> (diskCacheExecutor == <span class="literal">null</span>) &#123;</span><br><span class="line">        diskCacheExecutor = GlideExecutor.newDiskCacheExecutor();</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//动画解析线程池</span></span><br><span class="line">    <span class="keyword">if</span> (animationExecutor == <span class="literal">null</span>) &#123;</span><br><span class="line">        animationExecutor = GlideExecutor.newAnimationExecutor();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://s3.bmp.ovh/imgs/2023/08/16/f29dedbeb0a190b2.jpg"></p>
+<p> 图片下载线程池是个【核心4线程，最多4线程】的线程池</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/08/16/c4fcc46afe34fc6e.jpg"></p>
+<p>  硬盘解析线程池是个【核心1线程，最多1线程】的线程池</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/08/16/9d4c9903a1a4901e.jpg"></p>
+<p>动画解析线程池是个【核心2线程，最多2线程】的线程池</p>
+<ol>
+<li><em><strong>在未接入OKHttp3时，Source线程池用于下载图片，可以看出最多支持4个图片同时下载</strong></em></li>
+<li><em><strong>在接入OKHttp3时，Source线程池用于向OKHttp3线程池提交下载任务获得InputStream 基本是瞬间完成提交任务，等Okhttp3下载回调，所以下载图片取决于OKHttp3配置</strong></em></li>
+</ol>
+<h2 id="2-OkHttp3线程池"><a href="#2-OkHttp3线程池" class="headerlink" title="2.OkHttp3线程池"></a>2.OkHttp3线程池</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> executorService: ExecutorService</span><br><span class="line"><span class="keyword">get</span>() &#123;</span><br><span class="line">    <span class="keyword">if</span> (executorServiceOrNull == <span class="literal">null</span>) &#123;</span><br><span class="line">        executorServiceOrNull = ThreadPoolExecutor(<span class="number">0</span>, <span class="built_in">Int</span>.MAX_VALUE, <span class="number">60</span>, TimeUnit.SECONDS,</span><br><span class="line">                                                   SynchronousQueue(), threadFactory(<span class="string">&quot;<span class="variable">$okHttpName</span> Dispatcher&quot;</span>, <span class="literal">false</span>))</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> executorServiceOrNull!!</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="comment">//okhttp3.Dispatcher</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">promoteAndExecute</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.assertThreadDoesntHoldLock()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> executableCalls = mutableListOf&lt;AsyncCall&gt;()</span><br><span class="line">    <span class="keyword">val</span> isRunning: <span class="built_in">Boolean</span></span><br><span class="line">    synchronized(<span class="keyword">this</span>) &#123;</span><br><span class="line">        <span class="keyword">val</span> i = readyAsyncCalls.iterator()</span><br><span class="line">        <span class="keyword">while</span> (i.hasNext()) &#123;</span><br><span class="line">            <span class="keyword">val</span> asyncCall = i.next()</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (runningAsyncCalls.size &gt;= <span class="keyword">this</span>.maxRequests) <span class="keyword">break</span> <span class="comment">// 最多支持64个请求</span></span><br><span class="line">            <span class="keyword">if</span> (asyncCall.callsPerHost.<span class="keyword">get</span>() &gt;= <span class="keyword">this</span>.maxRequestsPerHost) <span class="keyword">continue</span> <span class="comment">// 每个Host最多支持5个请求</span></span><br><span class="line"></span><br><span class="line">            i.remove()</span><br><span class="line">            asyncCall.callsPerHost.incrementAndGet()</span><br><span class="line">            executableCalls.add(asyncCall)</span><br><span class="line">            runningAsyncCalls.add(asyncCall)</span><br><span class="line">        &#125;</span><br><span class="line">        isRunning = runningCallsCount() &gt; <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0</span> until executableCalls.size) &#123;</span><br><span class="line">        <span class="keyword">val</span> asyncCall = executableCalls[i]</span><br><span class="line">        asyncCall.executeOn(executorService)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> isRunning</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> OKhttp3线程池是无限制的，但最多同时支持64个请求，每个Host同时最多支持5个请求</p>
+<h1 id="Glide-into-后图片加载时间"><a href="#Glide-into-后图片加载时间" class="headerlink" title="Glide into()后图片加载时间"></a>Glide into()后图片加载时间</h1><h2 id="需要有具体的宽高，-glide才会加载图片"><a href="#需要有具体的宽高，-glide才会加载图片" class="headerlink" title="需要有具体的宽高， glide才会加载图片"></a><em><strong>需要有具体的宽高， glide才会加载图片</strong></em></h2><p>如果设置了RequestOptions的override方法，则直接调用onSizeReady，否则设置target的回调监听</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//com.bumptech.glide.request.SingleRequest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">begin</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (Util.isValidDimensions(overrideWidth, overrideHeight)) &#123;</span><br><span class="line">        onSizeReady(overrideWidth, overrideHeight);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//设置回调</span></span><br><span class="line">        target.getSize(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onSizeReady</span><span class="params">(<span class="type">int</span> width, <span class="type">int</span> height)</span> &#123;</span><br><span class="line">    loadStatus =engine.load();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="ViewTarget啥时候会返回合适的宽高？"><a href="#ViewTarget啥时候会返回合适的宽高？" class="headerlink" title="ViewTarget啥时候会返回合适的宽高？"></a>ViewTarget啥时候会返回合适的宽高？</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">getSize</span><span class="params">(<span class="meta">@NonNull</span> SizeReadyCallback cb)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">currentWidth</span> <span class="operator">=</span> getTargetWidth();</span><br><span class="line">    <span class="type">int</span> <span class="variable">currentHeight</span> <span class="operator">=</span> getTargetHeight();</span><br><span class="line">    <span class="comment">//判断目前是否有合适的宽高，是则直接返回</span></span><br><span class="line">    <span class="keyword">if</span> (isViewStateAndSizeValid(currentWidth, currentHeight)) &#123;</span><br><span class="line">        cb.onSizeReady(currentWidth, currentHeight);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!cbs.contains(cb)) &#123;</span><br><span class="line">        cbs.add(cb);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//设置addOnPreDrawListener，View绘制前回调</span></span><br><span class="line">    <span class="keyword">if</span> (layoutListener == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">ViewTreeObserver</span> <span class="variable">observer</span> <span class="operator">=</span> view.getViewTreeObserver();</span><br><span class="line">        layoutListener = <span class="keyword">new</span> <span class="title class_">SizeDeterminerLayoutListener</span>(<span class="built_in">this</span>);</span><br><span class="line">        observer.addOnPreDrawListener(layoutListener);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">getTargetHeight</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">verticalPadding</span> <span class="operator">=</span> view.getPaddingTop() + view.getPaddingBottom();</span><br><span class="line">    <span class="type">LayoutParams</span> <span class="variable">layoutParams</span> <span class="operator">=</span> view.getLayoutParams();</span><br><span class="line">    <span class="type">int</span> <span class="variable">layoutParamSize</span> <span class="operator">=</span> layoutParams != <span class="literal">null</span> ? layoutParams.height : PENDING_SIZE;</span><br><span class="line">    <span class="keyword">return</span> getTargetDimen(view.getHeight(), layoutParamSize, verticalPadding);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">getTargetDimen</span><span class="params">(<span class="type">int</span> viewSize, <span class="type">int</span> paramSize, <span class="type">int</span> paddingSize)</span> &#123;</span><br><span class="line">    <span class="comment">//params的宽高是固定值</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">adjustedParamSize</span> <span class="operator">=</span> paramSize - paddingSize;</span><br><span class="line">    <span class="keyword">if</span> (adjustedParamSize &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> adjustedParamSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//View正打算layout布局，返回PENDING_SIZE 表示目前的宽高不合适，等待PreDrawListener回调</span></span><br><span class="line">    <span class="keyword">if</span> (waitForLayout &amp;&amp; view.isLayoutRequested()) &#123;</span><br><span class="line">        <span class="keyword">return</span> PENDING_SIZE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//View存在宽高数据，因为这个宽高数据可能是脏数据，所以放这么后面</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">adjustedViewSize</span> <span class="operator">=</span> viewSize - paddingSize;</span><br><span class="line">    <span class="keyword">if</span> (adjustedViewSize &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> adjustedViewSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//view目前没有请求layout布局，且宽高是WRAP_CONTENT，返回屏幕宽高的最大值</span></span><br><span class="line">    <span class="keyword">if</span> (!view.isLayoutRequested() &amp;&amp; paramSize == LayoutParams.WRAP_CONTENT) &#123;</span><br><span class="line">        <span class="keyword">return</span> getMaxDisplayLength(view.getContext());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回PENDING_SIZE 表示目前的宽高不合适，等待PreDrawListener回调</span></span><br><span class="line">    <span class="keyword">return</span> PENDING_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>​    <strong>into后宽高数据的获取逻辑</strong>：</p>
+<ol>
+<li>RequestOptions存在overrideWidth, overrideHeight</li>
+<li>params的宽高是固定值</li>
+<li>viewTarget的waitForLayout是true，且正打算layout布局，则等待PreDrawListener回调（waitForLayout无设置默认值，boolean默认值是false）</li>
+<li>view存在真实的宽高数据</li>
+<li>view目前没有请求layout布局，且宽高是WRAP_CONTENT，返回屏幕宽高的最大值</li>
+<li>等待PreDrawListener回调</li>
+</ol>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>知识点</category>
+      </categories>
+      <tags>
+        <tag>Glide</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MAT使用技巧</title>
     <url>/post/4f06ab99.html</url>
     <content><![CDATA[<h2 id="1-MAT打开报错-MemoryAnalyzer指定JDK版本"><a href="#1-MAT打开报错-MemoryAnalyzer指定JDK版本" class="headerlink" title="1.MAT打开报错    MemoryAnalyzer指定JDK版本"></a>1.MAT打开报错    <a href="https://blog.csdn.net/epitomizelu/article/details/118294432">MemoryAnalyzer指定JDK版本</a></h2><h2 id="2-Hprof-转为MAT能读取的格式-Android-studio导出hprof到MAT工具流程"><a href="#2-Hprof-转为MAT能读取的格式-Android-studio导出hprof到MAT工具流程" class="headerlink" title="2.Hprof 转为MAT能读取的格式 Android studio导出hprof到MAT工具流程"></a>2.Hprof 转为MAT能读取的格式 <a href="https://blog.csdn.net/tangedegushi/article/details/83015612">Android studio导出hprof到MAT工具流程</a></h2><h2 id="3-对比多个Hprof文件-使用MAT比较多个hprof文件"><a href="#3-对比多个Hprof文件-使用MAT比较多个hprof文件" class="headerlink" title="3.对比多个Hprof文件 使用MAT比较多个hprof文件"></a>3.对比多个Hprof文件 <a href="https://blog.csdn.net/mldxs/article/details/89349044">使用MAT比较多个hprof文件</a></h2><span id="more"></span>
@@ -1284,54 +1437,6 @@
       </categories>
       <tags>
         <tag>MAT</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ImageSpan扩展</title>
-    <url>/post/503d328.html</url>
-    <content><![CDATA[<h2 id="支持GIF播放的TextView"><a href="#支持GIF播放的TextView" class="headerlink" title="支持GIF播放的TextView"></a>支持GIF播放的TextView</h2><span id="more"></span>
-
-<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SpanTextView</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span>(</span><br><span class="line">    context: Context,</span><br><span class="line">    attrs: AttributeSet? = <span class="literal">null</span>,</span><br><span class="line">    defStyle: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line">) : TextView(context, attrs, defStyle) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> hasSpanCallback = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> isSpanAttached = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> spanCallbacks: Array&lt;SpanCallback&gt;? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttachedToWindow</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttachedToWindow()</span><br><span class="line">        onAttach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetachedFromWindow</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onDetachedFromWindow()</span><br><span class="line">        onDetach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onStartTemporaryDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onStartTemporaryDetach()</span><br><span class="line">        onDetach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onFinishTemporaryDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onFinishTemporaryDetach()</span><br><span class="line">        onAttach()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setText</span><span class="params">(text: <span class="type">CharSequence</span>, type: <span class="type">BufferType</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (getText() === text) &#123;</span><br><span class="line">            <span class="comment">//防止重复设置text导致span中反复调用生命周期方法</span></span><br><span class="line">            <span class="keyword">super</span>.setText(text, type)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">val</span> wasSpanAttached = isSpanAttached</span><br><span class="line">        <span class="keyword">if</span> (hasSpanCallback &amp;&amp; wasSpanAttached) &#123;</span><br><span class="line">            onDetach()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (text <span class="keyword">is</span> Spanned) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                spanCallbacks = text.getSpans(<span class="number">0</span>, text.length, SpanCallback::<span class="keyword">class</span>.java)</span><br><span class="line">                hasSpanCallback = spanCallbacks?.isNotEmpty() == <span class="literal">true</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (e: ArrayIndexOutOfBoundsException) &#123;</span><br><span class="line">                <span class="comment">//</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            spanCallbacks = <span class="literal">null</span></span><br><span class="line">            hasSpanCallback = <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">super</span>.setText(text, type)</span><br><span class="line">        <span class="keyword">if</span> (hasSpanCallback &amp;&amp; wasSpanAttached) &#123;</span><br><span class="line">            onAttach()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        spanCallbacks?.forEach &#123;</span><br><span class="line">            it.onAttach(<span class="keyword">this</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        isSpanAttached = <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        spanCallbacks?.forEach &#123;</span><br><span class="line">            it.onDetach()</span><br><span class="line">        &#125;</span><br><span class="line">        isSpanAttached = <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">interface</span> <span class="title class_">SpanCallback</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(textView: <span class="type">TextView</span>)</span></span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="支持GIF的ImageSpan"><a href="#支持GIF的ImageSpan" class="headerlink" title="支持GIF的ImageSpan"></a>支持GIF的ImageSpan</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GIFImageSpan</span>(d: Drawable) : CustomImageSpan(d) , SpanTextView.SpanCallback &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> curDrawableCallback: Drawable.Callback? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(textView: <span class="type">TextView</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> textViewRef = WeakReference(textView)</span><br><span class="line">        (drawable <span class="keyword">as</span>? GifDrawable)?.apply &#123;</span><br><span class="line">            curDrawableCallback = <span class="keyword">object</span> : Drawable.Callback &#123;</span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">invalidateDrawable</span><span class="params">(who: <span class="type">Drawable</span>)</span></span> &#123;</span><br><span class="line">                    textViewRef.<span class="keyword">get</span>()?.invalidate()</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">scheduleDrawable</span><span class="params">(who: <span class="type">Drawable</span>, what: <span class="type">Runnable</span>, `<span class="keyword">when</span>`: <span class="type">Long</span>)</span></span> &#123;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">unscheduleDrawable</span><span class="params">(who: <span class="type">Drawable</span>, what: <span class="type">Runnable</span>)</span></span> &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            drawable.callback = curDrawableCallback</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!isRunning) &#123;</span><br><span class="line">                start()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDetach</span><span class="params">()</span></span> &#123;</span><br><span class="line">        (drawable <span class="keyword">as</span>? GifDrawable)?.apply &#123;</span><br><span class="line">            <span class="keyword">if</span> (isRunning) &#123;</span><br><span class="line">                stop()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        curDrawableCallback = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>扩展点</category>
-      </categories>
-      <tags>
-        <tag>ImageSpan</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RecyclerView首次加载图片展示完成时机</title>
-    <url>/post/94cfd8e0.html</url>
-    <content><![CDATA[<p>突然接到一个需求，要知道一个RecyclerView刚打开时，第一次加载时屏幕上所有子item的封面图片下载完成的时机</p>
-<span id="more"></span>
-
-<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><h3 id="1-目前屏幕上RecyclerView所有可见viewHolder"><a href="#1-目前屏幕上RecyclerView所有可见viewHolder" class="headerlink" title="1.目前屏幕上RecyclerView所有可见viewHolder"></a>1.目前屏幕上RecyclerView所有可见viewHolder</h3><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> manager =recyclerview.layoutManager()</span><br><span class="line"><span class="keyword">val</span> first = findFirstVisibleItemPosition()</span><br><span class="line"><span class="keyword">val</span> last = findLastVisibleItemPosition()</span><br><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> first..last) &#123;</span><br><span class="line">    <span class="keyword">val</span> viewHolder = recyclerView?.findViewHolderForAdapterPosition(i) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-图片下载完成时机（Glide）"><a href="#2-图片下载完成时机（Glide）" class="headerlink" title="2.图片下载完成时机（Glide）"></a>2.图片下载完成时机（Glide）</h3><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">Glide.with(coverView).load(item.cover).into(<span class="keyword">object</span> : DrawableImageViewTarget(coverView) &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setResource</span><span class="params">(resource: <span class="type">Drawable</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.setResource(resource)</span><br><span class="line">        <span class="keyword">if</span> (resource != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">//此时已完成图片展示</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3-最重要的是知道什么时候调用第一步，获得Recyclerview第一次加载完成后屏幕上所有可见viewHolder"><a href="#3-最重要的是知道什么时候调用第一步，获得Recyclerview第一次加载完成后屏幕上所有可见viewHolder" class="headerlink" title="3.最重要的是知道什么时候调用第一步，获得Recyclerview第一次加载完成后屏幕上所有可见viewHolder"></a>3.最重要的是知道什么时候调用第一步，获得Recyclerview第一次加载完成后屏幕上所有可见viewHolder</h3><h6 id="答案是-自定义GridLayoutManager-，重写onLayoutCompleted方法"><a href="#答案是-自定义GridLayoutManager-，重写onLayoutCompleted方法" class="headerlink" title="答案是 自定义GridLayoutManager ，重写onLayoutCompleted方法"></a>答案是 自定义GridLayoutManager ，重写onLayoutCompleted方法</h6><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyGridLayoutManager</span>(context: Context?, spanSize: <span class="built_in">Int</span>) : GridLayoutManager(context, spanSize) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="comment">//是否已经是首次加载</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">var</span> isAlreadyRecordCover = <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> recyclerView: RecyclerView? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> coverUrls = mutableListOf&lt;String&gt;()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttachedToWindow</span><span class="params">(view: <span class="type">RecyclerView</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttachedToWindow(view)</span><br><span class="line">        recyclerView = view</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//该方法被调用时，已完成布局，结合自定义变量isAlreadyRecordCover，实现获得第一次加载的数据</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onLayoutCompleted</span><span class="params">(state: <span class="type">RecyclerView</span>.<span class="type">State</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onLayoutCompleted(state)</span><br><span class="line">        <span class="keyword">if</span> (isAlreadyRecordCover) <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">val</span> first = findFirstVisibleItemPosition()</span><br><span class="line">        <span class="keyword">val</span> last = findLastVisibleItemPosition()</span><br><span class="line">        <span class="keyword">if</span> (first != -<span class="number">1</span> &amp;&amp; last != -<span class="number">1</span>) &#123; <span class="comment">//不等于-1才说明Recyclerview真的有数据</span></span><br><span class="line">            isAlreadyRecordCover = <span class="literal">true</span></span><br><span class="line">            <span class="keyword">for</span> (i <span class="keyword">in</span> first..last) &#123;</span><br><span class="line">                <span class="keyword">val</span> viewHolder = recyclerView?.findViewHolderForAdapterPosition(i)</span><br><span class="line">                <span class="comment">//通过viewHolder 获得并记录封面url</span></span><br><span class="line">                coverUrls.add(url)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 步骤2的需要通知的方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">reportCoverShow</span><span class="params">(cover: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (coverUrls.contains(cover)) &#123;</span><br><span class="line">            coverUrls.remove(cover)</span><br><span class="line">            <span class="keyword">if</span> (coverUrls.isEmpty()) &#123;</span><br><span class="line">                <span class="comment">//此时封面数据已全部展示</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>知道怎么实现后感觉挺简单的，较难的是想到解决思路</p>
-]]></content>
-      <categories>
-        <category>疑难杂症</category>
-      </categories>
-      <tags>
-        <tag>RecyclerView</tag>
-        <tag>RecyclerView首次加载</tag>
       </tags>
   </entry>
   <entry>
@@ -1381,6 +1486,32 @@
       </tags>
   </entry>
   <entry>
+    <title>RecyclerView首次加载图片展示完成时机</title>
+    <url>/post/94cfd8e0.html</url>
+    <content><![CDATA[<p>突然接到一个需求，要知道一个RecyclerView刚打开时，第一次加载时屏幕上所有子item的封面图片下载完成的时机</p>
+<span id="more"></span>
+
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><h3 id="1-目前屏幕上RecyclerView所有可见viewHolder"><a href="#1-目前屏幕上RecyclerView所有可见viewHolder" class="headerlink" title="1.目前屏幕上RecyclerView所有可见viewHolder"></a>1.目前屏幕上RecyclerView所有可见viewHolder</h3><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> manager =recyclerview.layoutManager()</span><br><span class="line"><span class="keyword">val</span> first = findFirstVisibleItemPosition()</span><br><span class="line"><span class="keyword">val</span> last = findLastVisibleItemPosition()</span><br><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> first..last) &#123;</span><br><span class="line">    <span class="keyword">val</span> viewHolder = recyclerView?.findViewHolderForAdapterPosition(i) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-图片下载完成时机（Glide）"><a href="#2-图片下载完成时机（Glide）" class="headerlink" title="2.图片下载完成时机（Glide）"></a>2.图片下载完成时机（Glide）</h3><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">Glide.with(coverView).load(item.cover).into(<span class="keyword">object</span> : DrawableImageViewTarget(coverView) &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setResource</span><span class="params">(resource: <span class="type">Drawable</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.setResource(resource)</span><br><span class="line">        <span class="keyword">if</span> (resource != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">//此时已完成图片展示</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-最重要的是知道什么时候调用第一步，获得Recyclerview第一次加载完成后屏幕上所有可见viewHolder"><a href="#3-最重要的是知道什么时候调用第一步，获得Recyclerview第一次加载完成后屏幕上所有可见viewHolder" class="headerlink" title="3.最重要的是知道什么时候调用第一步，获得Recyclerview第一次加载完成后屏幕上所有可见viewHolder"></a>3.最重要的是知道什么时候调用第一步，获得Recyclerview第一次加载完成后屏幕上所有可见viewHolder</h3><h6 id="答案是-自定义GridLayoutManager-，重写onLayoutCompleted方法"><a href="#答案是-自定义GridLayoutManager-，重写onLayoutCompleted方法" class="headerlink" title="答案是 自定义GridLayoutManager ，重写onLayoutCompleted方法"></a>答案是 自定义GridLayoutManager ，重写onLayoutCompleted方法</h6><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyGridLayoutManager</span>(context: Context?, spanSize: <span class="built_in">Int</span>) : GridLayoutManager(context, spanSize) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="comment">//是否已经是首次加载</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">var</span> isAlreadyRecordCover = <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> recyclerView: RecyclerView? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> coverUrls = mutableListOf&lt;String&gt;()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttachedToWindow</span><span class="params">(view: <span class="type">RecyclerView</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttachedToWindow(view)</span><br><span class="line">        recyclerView = view</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//该方法被调用时，已完成布局，结合自定义变量isAlreadyRecordCover，实现获得第一次加载的数据</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onLayoutCompleted</span><span class="params">(state: <span class="type">RecyclerView</span>.<span class="type">State</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onLayoutCompleted(state)</span><br><span class="line">        <span class="keyword">if</span> (isAlreadyRecordCover) <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">val</span> first = findFirstVisibleItemPosition()</span><br><span class="line">        <span class="keyword">val</span> last = findLastVisibleItemPosition()</span><br><span class="line">        <span class="keyword">if</span> (first != -<span class="number">1</span> &amp;&amp; last != -<span class="number">1</span>) &#123; <span class="comment">//不等于-1才说明Recyclerview真的有数据</span></span><br><span class="line">            isAlreadyRecordCover = <span class="literal">true</span></span><br><span class="line">            <span class="keyword">for</span> (i <span class="keyword">in</span> first..last) &#123;</span><br><span class="line">                <span class="keyword">val</span> viewHolder = recyclerView?.findViewHolderForAdapterPosition(i)</span><br><span class="line">                <span class="comment">//通过viewHolder 获得并记录封面url</span></span><br><span class="line">                coverUrls.add(url)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 步骤2的需要通知的方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">reportCoverShow</span><span class="params">(cover: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (coverUrls.contains(cover)) &#123;</span><br><span class="line">            coverUrls.remove(cover)</span><br><span class="line">            <span class="keyword">if</span> (coverUrls.isEmpty()) &#123;</span><br><span class="line">                <span class="comment">//此时封面数据已全部展示</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>知道怎么实现后感觉挺简单的，较难的是想到解决思路</p>
+]]></content>
+      <categories>
+        <category>疑难杂症</category>
+      </categories>
+      <tags>
+        <tag>RecyclerView</tag>
+        <tag>RecyclerView首次加载</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SnapHelper知识点</title>
     <url>/post/f6744f64.html</url>
     <content><![CDATA[<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//快速滑动时触发</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findTargetSnapPosition</span><span class="params">(RecyclerView.LayoutManager layoutManager, <span class="type">int</span> velocityX,<span class="type">int</span> velocityY)</span></span><br><span class="line"><span class="comment">//缓慢滑动时触发  </span></span><br><span class="line"><span class="keyword">public</span> View <span class="title function_">findSnapView</span><span class="params">(RecyclerView.LayoutManager layoutManager)</span>    </span><br></pre></td></tr></table></figure>
@@ -1405,34 +1536,6 @@
       </categories>
       <tags>
         <tag>SnapHelper</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ViewModel知识点</title>
-    <url>/post/4500f14b.html</url>
-    <content><![CDATA[<p>ViewModel出现了调用onCleared方法 又马上被创建的情况</p>
-<h2 id="1-ViewModel的onCleared方法被调用时机"><a href="#1-ViewModel的onCleared方法被调用时机" class="headerlink" title="1.ViewModel的onCleared方法被调用时机"></a>1.ViewModel的onCleared方法被调用时机</h2><span id="more"></span>
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//FragmentStateManager</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">//清除ViewModel</span></span><br><span class="line">    <span class="keyword">if</span> ((beingRemoved &amp;&amp; !mFragment.mBeingSaved) || shouldClear) &#123;</span><br><span class="line">        mFragmentStore.getNonConfig().clearNonConfigState(mFragment);</span><br><span class="line">    &#125;</span><br><span class="line">    mFragment.performDestroy();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//Fragment   </span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">performDestroy</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    mChildFragmentManager.dispatchDestroy();</span><br><span class="line">    mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);</span><br><span class="line">    mState = ATTACHED;</span><br><span class="line">    mCalled = <span class="literal">false</span>;</span><br><span class="line">    mIsCreated = <span class="literal">false</span>;</span><br><span class="line">    onDestroy();</span><br><span class="line">    <span class="keyword">if</span> (!mCalled) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SuperNotCalledException</span>(<span class="string">&quot;Fragment &quot;</span> + <span class="built_in">this</span></span><br><span class="line">                                          + <span class="string">&quot; did not call through to super.onDestroy()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以看到调用顺序：</p>
-<blockquote>
-<p>1.先清除Fragment自身的ViewModel</p>
-<p>2.调用Fragment的performDestroy</p>
-<p>​    2.1. 调用mChildFragmentManager的dispatchDestroy，递归走上面的逻辑</p>
-<p>​    2.2 生命周期LifecycleRegistry的回调</p>
-<p>​    2.3 调用Frament自身的onDestroy方法</p>
-</blockquote>
-<p><em>可以看出【ViewModel的onClear方法】调用是快于【Fragment的onDestroy方法】，所以不可以在Fragment的onDestroy中调用viewmodel变量，此时获得的viewmodel实例是新创建的，并不是之前持有的viewmodel变量。</em></p>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>知识点</category>
-      </categories>
-      <tags>
-        <tag>ViewModel</tag>
       </tags>
   </entry>
   <entry>
@@ -1477,6 +1580,34 @@
       </categories>
       <tags>
         <tag>ViewPager2</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ViewModel知识点</title>
+    <url>/post/4500f14b.html</url>
+    <content><![CDATA[<p>ViewModel出现了调用onCleared方法 又马上被创建的情况</p>
+<h2 id="1-ViewModel的onCleared方法被调用时机"><a href="#1-ViewModel的onCleared方法被调用时机" class="headerlink" title="1.ViewModel的onCleared方法被调用时机"></a>1.ViewModel的onCleared方法被调用时机</h2><span id="more"></span>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//FragmentStateManager</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">//清除ViewModel</span></span><br><span class="line">    <span class="keyword">if</span> ((beingRemoved &amp;&amp; !mFragment.mBeingSaved) || shouldClear) &#123;</span><br><span class="line">        mFragmentStore.getNonConfig().clearNonConfigState(mFragment);</span><br><span class="line">    &#125;</span><br><span class="line">    mFragment.performDestroy();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//Fragment   </span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">performDestroy</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    mChildFragmentManager.dispatchDestroy();</span><br><span class="line">    mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);</span><br><span class="line">    mState = ATTACHED;</span><br><span class="line">    mCalled = <span class="literal">false</span>;</span><br><span class="line">    mIsCreated = <span class="literal">false</span>;</span><br><span class="line">    onDestroy();</span><br><span class="line">    <span class="keyword">if</span> (!mCalled) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SuperNotCalledException</span>(<span class="string">&quot;Fragment &quot;</span> + <span class="built_in">this</span></span><br><span class="line">                                          + <span class="string">&quot; did not call through to super.onDestroy()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以看到调用顺序：</p>
+<blockquote>
+<p>1.先清除Fragment自身的ViewModel</p>
+<p>2.调用Fragment的performDestroy</p>
+<p>​    2.1. 调用mChildFragmentManager的dispatchDestroy，递归走上面的逻辑</p>
+<p>​    2.2 生命周期LifecycleRegistry的回调</p>
+<p>​    2.3 调用Frament自身的onDestroy方法</p>
+</blockquote>
+<p><em>可以看出【ViewModel的onClear方法】调用是快于【Fragment的onDestroy方法】，所以不可以在Fragment的onDestroy中调用viewmodel变量，此时获得的viewmodel实例是新创建的，并不是之前持有的viewmodel变量。</em></p>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>知识点</category>
+      </categories>
+      <tags>
+        <tag>ViewModel</tag>
       </tags>
   </entry>
   <entry>
@@ -1535,6 +1666,31 @@
       </categories>
       <tags>
         <tag>启动优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>崩溃知识点</title>
+    <url>/post/30488343.html</url>
+    <content><![CDATA[<p>一个java层捕捉崩溃的写法</p>
+<span id="more"></span>
+
+
+
+<h2 id="手动进行消息的loop，并捕捉异常"><a href="#手动进行消息的loop，并捕捉异常" class="headerlink" title="手动进行消息的loop，并捕捉异常"></a>手动进行消息的loop，并捕捉异常</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> static void startCatchLooper() &#123;</span><br><span class="line">    new Handler(Looper.getMainLooper()).post(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            loopInner();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> static void loopInner() &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Looper.loop();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e.getMessage() != <span class="literal">null</span>) &#123;</span><br><span class="line">            Message message = getMessage();</span><br><span class="line">            <span class="comment">//如果忽略该异常，则直接return，否则继续抛出Throwable</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">catch</span>(message,e))&#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">throw</span> e;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="获得当前执行的Message"><a href="#获得当前执行的Message" class="headerlink" title="获得当前执行的Message"></a>获得当前执行的Message</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> static Message getMessage() &#123;</span><br><span class="line">    MessageQueue messageQueue;</span><br><span class="line">    Looper mainLooper = Looper.getMainLooper();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">23</span>) &#123;</span><br><span class="line">            messageQueue = mainLooper.getQueue();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Field fieldQueue = Looper.<span class="keyword">class</span>.getDeclaredField(<span class="string">&quot;mQueue&quot;</span>);</span><br><span class="line">            fieldQueue.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            messageQueue = (MessageQueue) fieldQueue.<span class="keyword">get</span>(mainLooper);</span><br><span class="line">        &#125;</span><br><span class="line">        Field fieldMessages = MessageQueue.<span class="keyword">class</span>.getDeclaredField(<span class="string">&quot;mMessages&quot;</span>);</span><br><span class="line">        fieldMessages.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> (Message) fieldMessages.<span class="keyword">get</span>(messageQueue);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable ignored) &#123;</span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>知识点</category>
+      </categories>
+      <tags>
+        <tag>崩溃</tag>
       </tags>
   </entry>
   <entry>
@@ -1605,31 +1761,6 @@
       </categories>
       <tags>
         <tag>泛型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>崩溃知识点</title>
-    <url>/post/30488343.html</url>
-    <content><![CDATA[<p>一个java层捕捉崩溃的写法</p>
-<span id="more"></span>
-
-
-
-<h2 id="手动进行消息的loop，并捕捉异常"><a href="#手动进行消息的loop，并捕捉异常" class="headerlink" title="手动进行消息的loop，并捕捉异常"></a>手动进行消息的loop，并捕捉异常</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> static void startCatchLooper() &#123;</span><br><span class="line">    new Handler(Looper.getMainLooper()).post(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            loopInner();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> static void loopInner() &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Looper.loop();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e.getMessage() != <span class="literal">null</span>) &#123;</span><br><span class="line">            Message message = getMessage();</span><br><span class="line">            <span class="comment">//如果忽略该异常，则直接return，否则继续抛出Throwable</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">catch</span>(message,e))&#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">throw</span> e;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="获得当前执行的Message"><a href="#获得当前执行的Message" class="headerlink" title="获得当前执行的Message"></a>获得当前执行的Message</h2><figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> static Message getMessage() &#123;</span><br><span class="line">    MessageQueue messageQueue;</span><br><span class="line">    Looper mainLooper = Looper.getMainLooper();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">23</span>) &#123;</span><br><span class="line">            messageQueue = mainLooper.getQueue();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Field fieldQueue = Looper.<span class="keyword">class</span>.getDeclaredField(<span class="string">&quot;mQueue&quot;</span>);</span><br><span class="line">            fieldQueue.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            messageQueue = (MessageQueue) fieldQueue.<span class="keyword">get</span>(mainLooper);</span><br><span class="line">        &#125;</span><br><span class="line">        Field fieldMessages = MessageQueue.<span class="keyword">class</span>.getDeclaredField(<span class="string">&quot;mMessages&quot;</span>);</span><br><span class="line">        fieldMessages.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> (Message) fieldMessages.<span class="keyword">get</span>(messageQueue);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable ignored) &#123;</span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>知识点</category>
-      </categories>
-      <tags>
-        <tag>崩溃</tag>
       </tags>
   </entry>
 </search>

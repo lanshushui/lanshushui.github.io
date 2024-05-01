@@ -28,7 +28,7 @@
 <meta property="og:description" content="使用KSP处理注解和生成Kotlin代码 KSP化的ARoute库">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-22T15:17:46.013Z">
-<meta property="article:modified_time" content="2024-04-22T16:06:16.854Z">
+<meta property="article:modified_time" content="2024-04-30T15:44:31.722Z">
 <meta property="article:author" content="懒鼠睡zzz">
 <meta property="article:tag" content="KSP">
 <meta name="twitter:card" content="summary">
@@ -214,7 +214,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-04-23 00:06:16" itemprop="dateModified" datetime="2024-04-23T00:06:16+08:00">2024-04-23</time>
+                <time title="修改时间：2024-04-30 23:44:31" itemprop="dateModified" datetime="2024-04-30T23:44:31+08:00">2024-04-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,7 +246,7 @@
 </blockquote>
 <h2 id="1-添加插件依赖"><a href="#1-添加插件依赖" class="headerlink" title="1.添加插件依赖"></a>1.添加插件依赖</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//网上的参考模块都是通过plugins闭包引入 </span></span><br><span class="line">plugins &#123;</span><br><span class="line">    ...</span><br><span class="line">    id(<span class="string">&quot;com.google.devtools.ksp&quot;</span>) version <span class="string">&quot;1.7.10-1.0.6&quot;</span><span class="comment">//引入ksp插件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>但如果要把ksp配置抽离成一个单独的gradle文件，就只能用 **apply plugin: “com.google.devtools.ksp”**的方式，但这之前必须添加插件脚本依赖</p>
+<p>但如果要把ksp配置抽离成一个单独的gradle文件，就只能用 <code>apply plugin: &quot;com.google.devtools.ksp&quot;</code> 的方式，但这之前必须添加插件脚本依赖</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//根目录的build.gradle   添加依赖的插件-旧的写法</span></span><br><span class="line">buildscript &#123;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        <span class="comment">//需要和kotlin版本对应</span></span><br><span class="line">        classpath  “com.google.devtools.<span class="attr">ksp:</span>com.google.devtools.ksp.gradle.<span class="attr">plugin:</span>$versions.ksp”</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
@@ -285,7 +285,10 @@
     <a href="/post/7abbf13b.html" rel="prev" title="Vue知识点">
       <i class="fa fa-chevron-left"></i> Vue知识点
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/post/d533c7c1.html" rel="next" title="浮点数踩坑">
+      浮点数踩坑 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -358,18 +361,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
