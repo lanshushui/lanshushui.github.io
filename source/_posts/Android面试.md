@@ -263,6 +263,8 @@ abbrlink: 7e8ea226
 
 [ClassNotFoundException和NoClassDefFoundError的区别](https://segmentfault.com/a/1190000021292121)
 
+[cpu密集型和io密集型区别以及线程池个数配置](https://juejin.cn/post/7136062556904357895)
+
 
 
 ## 虚拟机方向
@@ -326,6 +328,8 @@ abbrlink: 7e8ea226
 [udp报文大小](https://github.com/steveLauwh/TCP-IP/blob/master/UDP/UDP%20%E6%8A%A5%E6%96%87%E7%9A%84%E5%A4%A7%E5%B0%8F.md)
 
 
+
+[通过ALPN协商HTTP2协议](https://imququ.com/post/protocol-negotiation-in-http2.html)
 
 [断点续传原理](https://zhuanlan.zhihu.com/p/639474503)
 
@@ -423,7 +427,9 @@ abbrlink: 7e8ea226
 
 [Fragment三问—B站真题](https://cloud.tencent.com/developer/article/1735492)
 
-[FragmentPagerAdapter与FragmentStatePagerAdapter区别](https://developer.aliyun.com/article/23710)
+[ Fragment 的切换有两种实现方式](https://mrfzh.github.io/2019/10/20/FragmentTransaction%20%E7%9A%84%20replace,%20add,%20hide,%20show%20%E7%9A%84%E4%BD%BF%E7%94%A8%E5%92%8C%E5%8C%BA%E5%88%AB/)
+
+[解决Activity意外销毁重建后切换Fragment显示重叠问题](https://blog.csdn.net/tlaqcxb/article/details/108606021)
 
 
 
@@ -534,6 +540,8 @@ abbrlink: 7e8ea226
 [Lifecycle的使用和源码解析](https://cloud.tencent.com/developer/article/1420459)
 
 [LiveData原理面试一问还不懂？](https://juejin.cn/post/7341617163353374754#heading-1) *【start,resume,pause】周期内才会同步数据变化*
+
+[为什么Fragment中要使用viewLifecycleOwner代替this](https://juejin.cn/post/6915222252506054663)
 
 [LvieData因为状态同步和version字段导致粘性事件](https://mp.weixin.qq.com/s/zW6X1CTnjdb3NX-d7nr6cw)
 
