@@ -4,7 +4,6 @@ categories:
   - 知识点
 tags:
   - KSP
-top: 99
 abbrlink: 8ff11c1
 ---
 

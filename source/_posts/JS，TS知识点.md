@@ -4,7 +4,6 @@ categories:
   - JS
 tags:
   - 知识点
-top: 99
 abbrlink: dc4ac76f
 ---
 
