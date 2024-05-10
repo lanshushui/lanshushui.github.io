@@ -1,0 +1,108 @@
+alternate: Yume Shoka
+
+# Assets
+statics: / #//cdn.jsdelivr.net/gh/amehime/shoka@latest/
+
+open_graph:
+  #twitter_id:
+  #google_plus:
+  #fb_admins:
+  #fb_app_id:
+
+menu:
+  home: / || home
+  posts:
+    default: / || feather
+    archives: /archives/ || list-alt
+    categories: /categories/ || th
+    tags: /tags/ || tags
+
+# Social Links
+# Usage: `Key: permalink || icon || color`
+# Key is the link label showing to end users.
+# Value before `||` delimiter is the target permalink,
+# secend value is the name of Font icon.
+social:
+  github: https://github.com/lanshushui || github || "#191717"
+  #google: https://plus.google.com/yourname || google
+  #email: mailto:yourname@mail.com || envelope || "#55acd5"
+  #facebook: https://www.facebook.com/yourname || facebook
+  #stackoverflow: https://stackoverflow.com/yourname || stack-overflow
+  #youtube: https://youtube.com/yourname || youtube
+  #instagram: https://instagram.com/yourname || instagram
+  #skype: skype:yourname?call|chat || skype
+  #douban: https://www.douban.com/people/yourname/ || douban
+
+footer:
+  # Specify the date when the site was setup. If not defined, current year will be used.
+  since: 2010
+  count: true
+
+post:
+  count: true
+
+
+# ---------------------------------------------------------------
+# Third Party Plugins & Services Settings
+# ---------------------------------------------------------------
+
+# Comments
+# Valine
+# For more information: https://valine.js.org, https://github.com/xCss/Valine
+# valine:
+#   appId: #这里不要忘了改
+#   appKey: #这里不要忘了改
+#   placeholder: ヽ(○´∀`)ﾉ♪ # Comment box placeholder
+#   pageSize: 10 # Pagination size
+#   lang: zh-CN
+#   tagMember:
+#     master:
+#       # - deea5a8d259d17182a53be1772e4c182
+#     friend:
+#       - deea5a8d259d17182a53be1772e4c182
+
+# bgm
+# audio:
+#    - title: 列表1
+#       list:
+#         - https://music.163.com/#/playlist?id=2943811283
+#         - https://music.163.com/#/playlist?id=2297706586
+#    - title: 列表2
+#       list:
+#         - https://music.163.com/#/playlist?id=2031842656
+
+# Dependencies: https://github.com/amehime/hexo-renderer-multi-markdown-it
+pangu: true
+
+# ---------------------------------------------------------------
+# analytics & SEO Settings
+# ---------------------------------------------------------------
+
+
+# Disable Baidu transformation on mobile devices.
+disable_baidu_transformation: true
+
+# Automatically add external URL with Base64 encrypt & decrypt.
+# exturl: true
+
+
+
+# 是否显示页面加载动画 loading-cat
+loader:
+  start: false # 当初次打开页面时，显示加载动画
+  switch: false # tab 切换到其他页面时，显示加载动画
+
+
+fireworks:
+  enable: false # 是否启用
+  color: # 烟花颜色
+    - "rgba(255,182,185,.9)"
+    - "rgba(250,227,217,.9)"
+    - "rgba(187,222,214,.9)"
+    - "rgba(138,198,209,.9)"  
+
+
+
+widgets:
+  random_posts: true # 显示随机文章
+  recent_comments: false # 显示最近评论    

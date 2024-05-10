@@ -1,0 +1,137 @@
+---
+title: View知识点
+categories:
+  - Android
+tags:
+  - View
+abbrlink: 4c65a511
+---
+
+
+
+<!-- more -->
+
+
+
+## 快速找到是哪个View消费了点击事件
+
+```kotlin
+//Activity   
+override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+    val re = super.dispatchTouchEvent(ev)
+    val decView = (window.decorView as ViewGroup)
+    val mFirstTouchTargetF = ViewGroup::class.java.getDeclaredField("mFirstTouchTarget")
+    mFirstTouchTargetF.isAccessible = true
+    var first = mFirstTouchTargetF.get(decView)
+    var consumeView: View = decView
+    while (first != null) {
+        val viewF = first::class.java.getDeclaredField("child")
+        viewF.isAccessible = true
+        consumeView = viewF.get(first) as View
+        first = if (consumeView is ViewGroup) {
+            mFirstTouchTargetF.get(consumeView)
+        } else {
+            null
+        }
+    }
+    MLog.info(TAG, "consumeView is $consumeView")
+    return re
+}
+```
+
+
+
+## 布局问题
+
+1. RelativeLayout的wrap_content会导致layout_marginBottom属性失效
+
+   [RelativeLayout的layout_marginBottom属性失效问题](https://blog.csdn.net/w958796636/article/details/52921584)
+
+2. 外层LinearLayout的宽是wrap_content情况下，内层LinearLayout的宽是match_parent不能铺满屏幕，只能达到wrap_content的效果。为了达到铺满屏幕的效果，内层使用宽是match_parent的RelateLayout控件
+
+
+
+
+
+## View事件传递
+
+[Android中onTouch，onTouchEvent，onClick优先级](https://blog.csdn.net/libinbin147256369/article/details/79911276)
+
+> 当ViewGroup设置了 setOnClickListener，setOnTouchListener返回false （View也是一样的逻辑）
+>
+> ```
+> MyViewGroup-- dispatchTouchEvent
+> MyViewGroup-- setOnTouchListener
+> MyViewGroup-- onTouchEvent--ACTION_DOWN--true
+> 
+> MyViewGroup-- dispatchTouchEvent
+> MyViewGroup-- setOnTouchListener
+> MyViewGroup-- onTouchEvent--ACTION_UP--true
+> 
+> MyViewGroup-- setOnClickListener
+> ```
+>
+> 当ViewGroup不设置 setOnClickListener，setOnTouchListener返回false
+>
+> ```
+> MyViewGroup-- dispatchTouchEvent
+> MyViewGroup-- setOnTouchListener
+> MyViewGroup-- onTouchEvent--ACTION_DOWN--false
+> ```
+>
+> **可以看出setOnClickListener会影响 onTouchEvent的返回值，导致消费事件**
+
+
+
+> 当ViewGroup设置了 setOnClickListener，setOnTouchListener返回false
+>
+> 当View设置了 setOnClickListener，setOnTouchListener返回false
+>
+> ```
+> MyViewGroup-- dispatchTouchEvent
+> MyView-- dispatchTouchEvent
+> MyView-- setOnTouchListener
+> MyView-- onTouchEvent--ACTION_DOWN--true
+> 
+> MyViewGroup-- dispatchTouchEvent
+> MyView-- dispatchTouchEvent
+> MyView-- setOnTouchListener
+> MyView-- onTouchEvent--ACTION_UP--true
+> 
+> MyView-- setOnClickListener
+> ```
+>
+> **可以看出 优先触发子View的 dispatchTouchEvent，不触发父ViewGroup的setOnTouchListener** **反正就是优先子类**
+
+> **触发的子View的setOnClickListener，父ViewGroup的setOnClickListener不会触发**，
+>
+> **不可能触发两个View的click事件，因为一个Click事件是在UP事件触发的，只能由一个View接受事件序列，即使UP事件场景onTouchEvent方法返回false，给上层触发，生层也没有PRESS标识，无法触发点击事件**
+
+
+
+
+
+当ViewGroup setOnTouchListener返回false
+
+当View  setOnTouchListener返回false
+
+```
+MyViewGroup-- dispatchTouchEvent
+MyView-- dispatchTouchEvent
+MyView-- setOnTouchListener
+MyView-- onTouchEvent--ACTION_DOWN--false
+MyViewGroup-- setOnTouchListener
+ MyViewGroup-- onTouchEvent--ACTION_DOWN--false
+```
+
+
+
+
+
+
+
+
+
+
+
+Keep Moving Forward
