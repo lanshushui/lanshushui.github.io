@@ -106,3 +106,5 @@ fireworks:
 widgets:
   random_posts: true # 显示随机文章
   recent_comments: false # 显示最近评论    
+
+auto_scroll: false  
