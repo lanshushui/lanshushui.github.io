@@ -12,19 +12,7 @@ hexo.extend.generator.register('index', function(locals) {
   let covers = [];
   let catlist = [];
   let pages = [];
-  locals.posts.data = locals.posts.data.sort(function(a, b) {
-      if(a.top && b.top) { // 两篇文章top都有定义
-          if(a.top == b.top) return b.date - a.date; // 若top值一样则按照文章日期降序排
-          else return b.top - a.top; // 否则按照top值降序排
-      }
-      else if(a.top && !b.top) { // 以下是只有一篇文章top有定义，那么将有top的排在前面（这里用异或操作居然不行233）
-          return -1;
-      }
-      else if(!a.top && b.top) {
-          return 1;
-      }
-      else return b.date - a.date; // 都没定义按照文章日期降序排
-  });
+  locals.posts.data = sortByTop(locals.posts.data);
   const config = hexo.config;
   const theme = hexo.theme.config;
   const sticky = locals.posts.find({'sticky': true}).sort(config.index_generator.order_by);
@@ -74,7 +62,7 @@ hexo.extend.generator.register('index', function(locals) {
                                           }).limit(pl).toArray());
           }
         } else {
-          cat.subs = cat.posts.sort({title: 1}).limit(6).toArray();
+          cat.subs = sortByTop(cat.posts.sort({title: 1}).toArray()).slice(0, 6);
         }
 
         catlist.push(cat)
@@ -108,3 +96,27 @@ hexo.extend.generator.register('index', function(locals) {
   return [...covers, ...pages];
 
 });
+
+
+function sortByTop(data){
+  return data.sort(function(a, b) {
+    if(a.top && b.top) { // 两篇文章top都有定义
+        if(a.top == b.top) return b.date - a.date; // 若top值一样则按照文章日期降序排
+        else return b.top - a.top; // 否则按照top值降序排
+    }
+    else if(a.top && !b.top) { // 以下是只有一篇文章top有定义，那么将有top的排在前面（这里用异或操作居然不行233）
+        return -1;
+    }
+    else if(!a.top && b.top) {
+        return 1;
+    }
+    else return b.date - a.date; // 都没定义按照文章日期降序排
+});
+}
+
+function logPAndF(obj){
+  console.log('打印属性和方法')
+  Object.keys(obj).forEach(key => {
+    console.log(key);
+});
+}
