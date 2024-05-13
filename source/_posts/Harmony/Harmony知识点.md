@@ -50,6 +50,10 @@ Flex({justifyContent :FlexAlign.Center}) {
 >
 > 采用 [clip(true)方法](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ts-universal-attributes-sharp-clipping-0000001815927520)
 
+> [LazyForEach必须使用DataChangeListener对象来进行更新，第一个参数dataSource使用状态变量时，状态变量改变不会触发LazyForEach的UI刷新](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V2/arkts-rendering-control-lazyforeach-0000001524417213-V2)
+
+
+
 
 
 Keep Moving Forward

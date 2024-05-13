@@ -335,6 +335,12 @@ abbrlink: 7e8ea226
 
 
 
+[跨域问题总结](https://blog.csdn.net/cr7258/article/details/118443837)
+
+[解决跨域请求的JSONP原理](https://juejin.cn/post/6969526457009700877)
+
+[如何尽可能的保障 Cookie 的安全性，我这样做！](https://juejin.cn/post/7317859658285580314?from=search-suggest#heading-6)
+
 [Session、Cookie、JWT三者关系理清了吊打面试官](https://cloud.tencent.com/developer/article/1611254)
 
 [史上最详细的CSRF攻击与防御](https://juejin.cn/post/7031060650801496101#heading-0)
