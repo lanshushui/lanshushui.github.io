@@ -14,6 +14,8 @@ abbrlink: dc4ac76f
 
 [TS官方文档]()
 
+[Lodash 高性能的 JavaScript 实用工具库](https://www.lodashjs.com/)
+
 [理解 JavaScript 的 async/await](https://segmentfault.com/a/1190000007535316)
 
 [【TypeScript】keyof & in 关键字详解](https://juejin.cn/post/7105778922851139598)

@@ -49,6 +49,10 @@ import B from 'xxxx'
 
 [React中import动态加载](https://juejin.cn/post/7151638736948690951)
 
+> Rn设计稿以2x的px为准 ;  字体大小fontSize也是以设计稿以2x的px为准
+
+> RN+mobx 监听一个state 修改另外的state  ---- 使用autoRun函数
+
 
 
 ## View属性
@@ -245,7 +249,9 @@ const MyView = (prop: any) => {
 
 ## 问题场景
 
-> 不能在useEffect,useCallback中定义一个回调形式的闭包去读取useState的值，用useRef形式读取可能修改的变量
+
+
+###### 1.不能在useEffect,useCallback中定义一个回调形式的闭包去读取useState的值，用useRef形式读取可能修改的变量
 
 ```typescript
 //错误写法
@@ -267,19 +273,23 @@ const View = (prop: any) => {
 //因为listener对象只在页面加载完毕进行有且一次的初始化，无论后续followState怎么变化，listener闭包里拿到的followState都是第一次的值
 ```
 
+###### 2.FlatList全屏上下滑，定位到初始渲染位置的场景，需要设置initialScrollIndex和getItemLayout属性
 
-
-> FlatList全屏上下滑，定位到初始渲染位置的场景，需要设置initialScrollIndex和getItemLayout属性。
->
 > 但item的高度是通过一个全屏的view的onLayout方法确定下来的，在存在StatusBar场景下，onLayout方法多次回调，返回的高度也是变化的，导致FlatList出现渲染偏移的问题
 
 ***解决方法**：给FlatList设置key属性，每一次高度变化，变化key属性，渲染一个全选的FlatList*
 
+###### 3.注意 [Boolean('false') returns true](https://stackoverflow.com/questions/56977500/booleanfalse-returns-true)
 
+###### 4. Image的scource属性中不能使用state变量来动态切换图片
 
-> 注意 [Boolean('false') returns true](https://stackoverflow.com/questions/56977500/booleanfalse-returns-true)
-
-
+```react
+// 不合法写法
+<Image  source={xxx ?require('../imgs/a.svg') : require('../imgs/b.svg')  } />
+//合法写法
+{xxx?(<Image source={require('../imgs/a.svg')}/>):(<Image source={require('../imgs/b.svg')}/>)}
+//或者在return块之前定义个const变量，return块中使用该变量
+```
 
 
 

@@ -44,6 +44,8 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 
 
+
+
 ## 鸿蒙组件开发特点
 
 > borderRadius设置的圆角不会限制内部组件，内部组件的四个角会超出圆角范围！！
@@ -52,7 +54,15 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 > [LazyForEach必须使用DataChangeListener对象来进行更新，第一个参数dataSource使用状态变量时，状态变量改变不会触发LazyForEach的UI刷新](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V2/arkts-rendering-control-lazyforeach-0000001524417213-V2)
 
+> 鸿蒙 监听一个state 修改另外的state。使用watch装饰器
 
+
+
+## 问题场景
+
+###### 1. API12   Auto属性太坑了 ，强烈推荐不使用。问题：会导致父view的高度不会随着子view变化
+
+###### 2. API12   自定义构建函数的参数传递不能是state参数；因为[调用@Builder装饰的函数默认按值传递](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V2/arkts-builder-0000001524176981-V2#section1771518610353)。当传递的参数为状态变量时，状态变量的改变不会引起@Builder方法内的UI刷新。 有这种使用场景抽象成组件，不要用@Builder装饰的函数。
 
 
 
