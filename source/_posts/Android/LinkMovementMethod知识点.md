@@ -1,15 +1,15 @@
 ---
-title: LinkMovementMethod知识点
+title: Span知识点
 categories:
   - Android
 tags:
-  - LinkMovementMethod
+  - Span
 abbrlink: p8hxlm4c
 ---
 
 
 
-
+<!-- more -->
 
 ###### LinkMovementMethod问题点：
 
@@ -22,12 +22,6 @@ abbrlink: p8hxlm4c
 [ImageSpan点击事件位置偏移问题](https://www.jianshu.com/p/b87dddf02e04)
 
  上面的博客提供了BUG原因和解决方案
-
-
-
-<!-- more -->
-
-
 
 ## 自定义LinkMovementMethod
 
@@ -289,5 +283,158 @@ public class MyMovementMethod extends ScrollingMovementMethod {
 ```
 
 
+
+## 支持GIF播放的TextView和Span
+
+```kotlin
+class SpanTextView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : TextView(context, attrs, defStyle) {
+
+    private var hasSpanCallback = false
+
+    private var isSpanAttached = false
+
+    private var spanCallbacks: Array<SpanCallback>? = null
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        onAttach()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        onDetach()
+    }
+
+    override fun onStartTemporaryDetach() {
+        super.onStartTemporaryDetach()
+        onDetach()
+    }
+
+    override fun onFinishTemporaryDetach() {
+        super.onFinishTemporaryDetach()
+        onAttach()
+    }
+
+    override fun setText(text: CharSequence, type: BufferType) {
+        if (getText() === text) {
+            //防止重复设置text导致span中反复调用生命周期方法
+            super.setText(text, type)
+            return
+        }
+        val wasSpanAttached = isSpanAttached
+        if (hasSpanCallback && wasSpanAttached) {
+            onDetach()
+        }
+        if (text is Spanned) {
+            try {
+                spanCallbacks = text.getSpans(0, text.length, SpanCallback::class.java)
+                hasSpanCallback = spanCallbacks?.isNotEmpty() == true
+            } catch (e: ArrayIndexOutOfBoundsException) {
+                //
+            }
+        } else {
+            spanCallbacks = null
+            hasSpanCallback = false
+        }
+        super.setText(text, type)
+        if (hasSpanCallback && wasSpanAttached) {
+            onAttach()
+        }
+    }
+
+    private fun onAttach() {
+        spanCallbacks?.forEach {
+            it.onAttach(this)
+        }
+        isSpanAttached = true
+    }
+
+    private fun onDetach() {
+        spanCallbacks?.forEach {
+            it.onDetach()
+        }
+        isSpanAttached = false
+    }
+
+    interface SpanCallback {
+        fun onAttach(textView: TextView)
+        fun onDetach()
+    }
+}
+```
+
+```kotlin
+class GIFImageSpan(d: Drawable) : CustomImageSpan(d) , SpanTextView.SpanCallback {
+
+    var curDrawableCallback: Drawable.Callback? = null
+    override fun onAttach(textView: TextView) {
+        val textViewRef = WeakReference(textView)
+        (drawable as? GifDrawable)?.apply {
+            curDrawableCallback = object : Drawable.Callback {
+                override fun invalidateDrawable(who: Drawable) {
+                    textViewRef.get()?.invalidate()
+                }
+
+                override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
+                }
+
+                override fun unscheduleDrawable(who: Drawable, what: Runnable) {
+                }
+            }
+            drawable.callback = curDrawableCallback
+
+            if (!isRunning) {
+                start()
+            }
+        }
+    }
+
+    override fun onDetach() {
+        (drawable as? GifDrawable)?.apply {
+            if (isRunning) {
+                stop()
+            }
+        }
+        curDrawableCallback = null
+    }
+}
+```
+
+
+
+## 支持上下偏移的Span
+
+```java
+public static class VerticalOffsetSpan extends ReplacementSpan {
+    private final int offsetPx;
+    private final int textSize;
+
+
+    public VerticalOffsetSpan(int textSize, int offsetPx) {
+        this.offsetPx = offsetPx;
+        this.textSize = textSize;
+    }
+
+
+    @Override
+    public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
+        paint.setTextSize(textSize);
+        return Math.round(paint.measureText(text, start, end));
+    }
+
+
+    @Override
+    public void draw(Canvas canvas, CharSequence text, int start, int end,
+                     float x, int top, int y, int bottom, Paint paint) {
+        paint.setTextSize(textSize);
+        canvas.drawText(text, start, end, x, y + offsetPx, paint);
+    }
+}
+
+```
 
 Keep Moving Forward
