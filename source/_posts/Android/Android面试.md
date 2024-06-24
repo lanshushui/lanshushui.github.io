@@ -76,6 +76,8 @@ abbrlink: 7e8ea226
 
 [直面底层之字节码看try-catch-finally](https://juejin.cn/post/6949365555329679390)
 
+> 线程池最大线程数为Integer.MAX_VALUE时，使用SynchronousQueue或者DelayedWorkQueue
+
 [线程池原理分析](https://www.51cto.com/article/672580.html)  -- [线程池处理任务的流程了解吗](https://javaguide.cn/java/concurrent/java-concurrent-questions-03.html#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%84%E7%90%86%E4%BB%BB%E5%8A%A1%E7%9A%84%E6%B5%81%E7%A8%8B%E4%BA%86%E8%A7%A3%E5%90%97)
 
 [死磕 java线程系列之线程池深入解析——定时任务执行流程](https://mp.weixin.qq.com/s?__biz=MzkxNDEyOTI0OQ==&mid=2247484396&idx=1&sn=9c2ad1cbbe66ee19a3bf74291187981e&chksm=c1726be2f605e2f44e441c609e52eef4d2db9ab1b73a3b5109b7f22ecb1b903b3635990deb4e&scene=178&cur_album_id=1538024362992254978#rd)
@@ -96,6 +98,16 @@ abbrlink: 7e8ea226
 [CGLIB动态代理](https://mp.weixin.qq.com/s?__biz=Mzg3ODY2MzU2MQ==&mid=2247489820&idx=5&sn=200aef14ffb8b584e4e68b9003e3f472&chksm=cf111bfaf86692ec91ee39b192b2c1ed3f484486affe121a20a0411b57f51feed11ce5e3bba3&token=1436311520&lang=zh_CN#rd)
 
 ## 集合
+
+> 初始容量：默认为16，2n扩容
+>
+> 加载因子：默认为0.75
+>
+> 桶上的链表长度大于等于8且 数组容量大于64时时，链表转化成红黑树 
+>
+>  桶上的红黑树大小小于等于6时，红黑树转化成链表 
+
+[JDK1.7开始，在初始化ArrayList的时候，默认值初始化为空数组，初始化容量大小为10，1.5n扩容](https://cloud.tencent.com/developer/article/2061647)
 
 [HashMap何时会链表转红黑树](https://blog.csdn.net/weixin_38106322/article/details/104388209)
 
@@ -216,6 +228,8 @@ abbrlink: 7e8ea226
 [AtomicInteger 在高并发下性能不好，如何解决？为什么？](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Java%20%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%2078%20%e8%ae%b2-%e5%ae%8c/40%20AtomicInteger%20%e5%9c%a8%e9%ab%98%e5%b9%b6%e5%8f%91%e4%b8%8b%e6%80%a7%e8%83%bd%e4%b8%8d%e5%a5%bd%ef%bc%8c%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3%ef%bc%9f%e4%b8%ba%e4%bb%80%e4%b9%88%ef%bc%9f.md)
 
 [AtomicInteger 为什么是线程安全，原理](https://cloud.tencent.com/developer/article/1627897)
+
+[为啥局部变量是线程安全的？](https://zhuanlan.zhihu.com/p/268711560)
 
 
 
@@ -578,6 +592,8 @@ abbrlink: 7e8ea226
 [深入理解Data Binding原理](https://yuweiguocn.github.io/android-support-data-binding-3/)
 
 [Dialog 对应的 Context 必须是 Activity吗？](https://cloud.tencent.com/developer/article/1839903)
+
+[Android为什么把文本格式的XML文件编译成二进制格式的XML文件](https://juejin.cn/post/6950620732502704142)
 
 
 
