@@ -32,6 +32,8 @@ abbrlink: 7e8ea226
 
 [【建议收藏】106道Android核心面试题及答案汇总（总结最全面的面试题）](https://juejin.cn/post/7267737437953720359#heading-10)
 
+[大数据处理案例](https://pdai.tech/md/algorithm/alg-domain-bigdata-overview.html)
+
 
 
 # 算法
@@ -52,7 +54,13 @@ abbrlink: 7e8ea226
 
 [基数排序 ](https://www.cnblogs.com/bigsai/p/13977411.html)
 
+> 求二进制数中1的个数 必须使用 无符号右移 \>>>，普通右移会导致负数左边位都是1
 
+[数组中只出现一次的两个数字](https://github.com/CyC2018/CS-Notes/blob/master/notes/56.%20%E6%95%B0%E7%BB%84%E4%B8%AD%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E6%95%B0%E5%AD%97.md)
+
+> 求次数，最多，最少 == 贪心或者DP算法
+
+> 连续子数组 === 前缀和
 
 # Java/Kotlin
 
@@ -556,6 +564,8 @@ abbrlink: 7e8ea226
 
 
 ## 框架层常用知识
+
+[Only one Looper may be created per thread异常](https://blog.csdn.net/qq_34888036/article/details/119306784)
 
 [Lifecycle的使用和源码解析](https://cloud.tencent.com/developer/article/1420459)
 
