@@ -34,6 +34,8 @@ abbrlink: 7e8ea226
 
 [大数据处理案例](https://pdai.tech/md/algorithm/alg-domain-bigdata-overview.html)
 
+[计算机网络面试题](https://www.mianshibook.com/cat/network/)
+
 
 
 # 算法
@@ -61,6 +63,10 @@ abbrlink: 7e8ea226
 > 求次数，最多，最少 == 贪心或者DP算法
 
 > 连续子数组 === 前缀和
+
+[寻找发帖水王](https://www.cnblogs.com/techyc/archive/2012/09/21/2696521.html)
+
+
 
 # Java/Kotlin
 
@@ -473,6 +479,8 @@ abbrlink: 7e8ea226
 
 [RecyclerView实现吸顶效果](https://juejin.cn/post/6914668855688167437)
 
+[硬件加速可能导致子线程也能更新UI](https://blog.csdn.net/u011288271/article/details/113114371)
+
 
 
 ## bitmap
@@ -744,6 +752,14 @@ abbrlink: 7e8ea226
 [面试常问智力题40道（逻辑题）+ 参考答案](https://www.nowcoder.com/discuss/353157075649896448)
 
 [字节面试常考的智力题你会几道？](https://zhuanlan.zhihu.com/p/395132338)
+
+[桶中黑、白求各100个，求最后剩黑球的概率](https://www.cnblogs.com/mickole/articles/3657286.html)
+
+[腾讯智力题](https://blog.csdn.net/weixin_56638151/article/details/121183818)
+
+[程序员必备智力题集锦 (典藏版)](https://cloud.tencent.com/developer/article/1892600)
+
+[为什么购物中心一层都不设有卫生间？电影院为什么在顶层？超市为什么在负一层？有什么固定的规划模式吗？](https://daily.zhihu.com/story/9652972)
 
 
 
