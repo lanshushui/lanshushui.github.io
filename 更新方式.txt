@@ -1,0 +1,5 @@
+1. hexo clean
+2. hexo g
+3. hexo d
+
+本地测试 ： hexo s
