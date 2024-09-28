@@ -16,9 +16,9 @@ abbrlink: 3066680b
 
 
 
-[《ArkUI实战》](https://www.arkui.club/)
+[ArkTS语法规则下将TS代码适配成ArkTS代码的建议](https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/quick-start/arkts-more-cases.md)
 
-[**基于Navigation的路由管理**](https://developer.huawei.com/consumer/cn/forum/topic/0204150545294348010)
+[《ArkUI实战》](https://www.arkui.club/)
 
 [**声明式UI中实现组件动态创建**](https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-ui-dynamic-operations-V5)
 
@@ -97,11 +97,33 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 > NavDestination只能有一个子组件，如果有多个子组件，下面的组件不会展示 
 
+> @Prop装饰变量时会进行深拷贝，[PixelMap](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-image-V5#pixelmap7)由于有部分实现在Native侧，因此无法在ArkTS侧通过深拷贝获得完整的数据。所以子组件prop变量中如果有PixelMap变量，无法通过父组件传递图像数据，导致子组件无法展示图片。[限制条件](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-prop-V5)
+>
+> 解决方案：
+>
+> 1.不使用prop装饰器，使用link装饰器或者不使用装饰器
+>
+> 2.子组件prop变量中不定义PixelMap变量，而定义返回PixelMap变量的匿名函数
+
+>  [通过resourceManager访问字符串资源](https://www.arkui.club/chapter2/2_3_resource.html#_2-3-4-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8)
+
+> [ts中没有string.format方法，所以鸿蒙提供了util工具函数](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-util-V5#utilformat9)
+
+
+
+## 高级知识
+
+[基于C++能力的资源访问](https://developer.huawei.com/consumer/cn/forum/topic/0208153164602857814)
+
+[**基于Navigation的路由管理**](https://developer.huawei.com/consumer/cn/forum/topic/0204150545294348010)
+
 
 
 ## 问题场景
 
 ###### 1. API12   Auto属性太坑了 ，强烈推荐不使用。问题：会导致父view的高度不会随着子view变化
+
+###### 2. 父组件不允许传普通变量给子组件的link变量，正常来说编译器会报错，但在Builder装饰器方法内不会报错，要注意这一点
 
 
 
