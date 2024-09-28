@@ -1,10 +1,10 @@
 ---
 title: C++知识点
 categories:
-  - C++
+  - CPP
 tags:
   - 知识点
-  - C++
+  - CPP
 abbrlink: 44bbaae6
 ---
 

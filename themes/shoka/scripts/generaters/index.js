@@ -35,6 +35,7 @@ hexo.extend.generator.register('index', function(locals) {
       let cover = 'source/_posts/' + cat.slug + '/cover.jpg'
 
       if (fs.existsSync(cover)) {
+		console.log(cover+"  exit");
         covers.push({
           path: cat.slug + '/cover.jpg',
           data: function () {
@@ -66,7 +67,9 @@ hexo.extend.generator.register('index', function(locals) {
         }
 
         catlist.push(cat)
-      }
+      } else {
+		  console.log(cover+" don't exit");
+	  }
     });
   }
 
