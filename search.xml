@@ -548,50 +548,6 @@ A(B())
       </tags>
   </entry>
   <entry>
-    <title>RecyclerView曝光踩坑-2</title>
-    <url>/post/412d5155.html</url>
-    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9sYW5zaHVzaHVpLmdpdGh1Yi5pby9wb3N0LzIyMjU4YzdhLmh0bWw=">RecyclerView 曝光踩坑 - 1</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9sYW5zaHVzaHVpLmdpdGh1Yi5pby9wb3N0LzM2MmE2MWMzLmh0bWw=">RecyclerView 曝光踩坑 - 3</span></p>
-<p>基于 RecyclerView 1.2.1 版本分析</p>
-<p><em>问题场景是 发现屏幕内的一个豆腐块调用 notifyItemChanged 后，会导致屏幕外的 viewHolder 的 onViewAttachedToWindow 也会被调用</em></p>
-<p><span id="more"></span></p>
-<h2 id="1notifyitemchanged导致不在屏幕上的viewholder曝光"><a class="anchor" href="#1notifyitemchanged导致不在屏幕上的viewholder曝光">#</a> 1.notifyItemChanged 导致不在屏幕上的 viewHolder 曝光</h2>
-<p>RecyclerView 场景：</p>
-<pre><code>-----------
-| 1     2 |
-| 3     4 |
-| 5     6 |
-| 7     8 |
-----------
-  9    10
-</code></pre>
-<p>当 notifyItemChanged 位置 1 时，&lt;font color=&quot;red&quot;&gt; 位置 9 和位置 10 的 onViewAttachedToWindow 会被调用 &lt;/font&gt;，导致不断上报错误的曝光数据。</p>
-<p>特别是位置 1 需要持续刷新，调用 notifyItemChanged，上报的错误量不断增加。</p>
-<p><em>前提：要了解 RecyclerView 基本的 Layout 逻辑</em></p>
-<p><strong>基础调用链：</strong></p>
-<p><strong>RecyclerView                        --                  dispatchLayout()</strong></p>
-<p><strong>RecyclerView                        --                  dispatchLayoutStep1()</strong></p>
-<p><strong>LinearLayoutManager        --                  onLayoutChildren()</strong></p>
-<p><strong>LinearLayoutManager        --                  fill()</strong></p>
-<p>分析：</p>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//LinearLayoutManager 类   fill 函数</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">int</span> <span class="token function">fill</span><span class="token punctuation">(</span><span class="token class-name">RecyclerView<span class="token punctuation">.</span>Recycler</span> recycler<span class="token punctuation">,</span> <span class="token class-name">LayoutState</span> layoutState<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre>         <span class="token class-name">RecyclerView<span class="token punctuation">.</span>State</span> state<span class="token punctuation">,</span> <span class="token keyword">boolean</span> stopOnFocusable<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>  	<span class="token comment">// 可用空间</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">int</span> remainingSpace <span class="token operator">=</span> layoutState<span class="token punctuation">.</span>mAvailable <span class="token operator">+</span> layoutState<span class="token punctuation">.</span>mExtraFillSpace<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token comment">//layout 完子 item 后，子 item 的相关数据的封装类</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token class-name">LayoutChunkResult</span> layoutChunkResult <span class="token operator">=</span> mLayoutChunkResult<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token comment">// 不断地判断 可用空间，若大于零则不断加入 View</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>layoutState<span class="token punctuation">.</span>mInfinite <span class="token operator">||</span> remainingSpace <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> layoutState<span class="token punctuation">.</span><span class="token function">hasMore</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token comment">// 初始化 layoutChunkResult</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        layoutChunkResult<span class="token punctuation">.</span><span class="token function">resetInternal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        <span class="token comment">// 正在布局子 item, 并将 layout 完，将子 item 的相关数据封装在 layoutChunkResult 中</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token function">layoutChunk</span><span class="token punctuation">(</span>recycler<span class="token punctuation">,</span> state<span class="token punctuation">,</span> layoutState<span class="token punctuation">,</span> layoutChunkResult<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>        </pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>layoutChunkResult<span class="token punctuation">.</span>mFinished<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            <span class="token keyword">break</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        <span class="token comment">// 增加偏移量</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        layoutState<span class="token punctuation">.</span>mOffset <span class="token operator">+=</span> layoutChunkResult<span class="token punctuation">.</span>mConsumed <span class="token operator">*</span> layoutState<span class="token punctuation">.</span>mLayoutDirection<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        </pre></td></tr><tr><td data-num="21"></td><td><pre>        <span class="token comment">// 关键代码，提取 layout 的消耗空间，将可用空间不断减少</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token comment">// 是条件进入的，说明有些情况，即使我们 addView 了，也不会消耗可用空间，RecyclerView 会继续 while 循环 addView</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token comment">// 我们的 BUG 是因为第一个判断导致的，即 mIgnoreConsumed 为 ture。通常该变量都是 false 的</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>layoutChunkResult<span class="token punctuation">.</span>mIgnoreConsumed <span class="token operator">||</span> layoutState<span class="token punctuation">.</span>mScrapList <span class="token operator">!=</span> <span class="token keyword">null</span></pre></td></tr><tr><td data-num="25"></td><td><pre>            <span class="token operator">||</span> <span class="token operator">!</span>state<span class="token punctuation">.</span><span class="token function">isPreLayout</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>            layoutState<span class="token punctuation">.</span>mAvailable <span class="token operator">-=</span> layoutChunkResult<span class="token punctuation">.</span>mConsumed<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>           	<span class="token comment">// 可用空间不断减少</span></pre></td></tr><tr><td data-num="28"></td><td><pre>            remainingSpace <span class="token operator">-=</span> layoutChunkResult<span class="token punctuation">.</span>mConsumed<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="30"></td><td><pre></pre></td></tr><tr><td data-num="31"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>layoutState<span class="token punctuation">.</span>mScrollingOffset <span class="token operator">!=</span> <span class="token class-name">LayoutState<span class="token punctuation">.</span>SCROLLING_OFFSET_NaN</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="32"></td><td><pre>            layoutState<span class="token punctuation">.</span>mScrollingOffset <span class="token operator">+=</span> layoutChunkResult<span class="token punctuation">.</span>mConsumed<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="33"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>layoutState<span class="token punctuation">.</span>mAvailable <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="34"></td><td><pre>                layoutState<span class="token punctuation">.</span>mScrollingOffset <span class="token operator">+=</span> layoutState<span class="token punctuation">.</span>mAvailable<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="35"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="36"></td><td><pre>            <span class="token function">recycleByLayoutState</span><span class="token punctuation">(</span>recycler<span class="token punctuation">,</span> layoutState<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="37"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="38"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>stopOnFocusable <span class="token operator">&amp;&amp;</span> layoutChunkResult<span class="token punctuation">.</span>mFocusable<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="39"></td><td><pre>            <span class="token keyword">break</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="40"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="41"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="42"></td><td><pre>    <span class="token keyword">return</span> start <span class="token operator">-</span> layoutState<span class="token punctuation">.</span>mAvailable<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="43"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>什么情况下 mIgnoreConsumed 是 true 呢，继续跟进 layoutChunk 函数</p>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//LinearLayoutManager 类   fill 函数</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">void</span> <span class="token function">layoutChunk</span><span class="token punctuation">(</span><span class="token class-name">RecyclerView<span class="token punctuation">.</span>Recycler</span> recycler<span class="token punctuation">,</span> <span class="token class-name">RecyclerView<span class="token punctuation">.</span>State</span> state<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre>                 <span class="token class-name">LayoutState</span> layoutState<span class="token punctuation">,</span> <span class="token class-name">LayoutChunkResult</span> result<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token comment">///...</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token class-name">View</span> view <span class="token operator">=</span> layoutState<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span>recycler<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token class-name">LayoutParams</span> params <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">LayoutParams</span><span class="token punctuation">)</span> view<span class="token punctuation">.</span><span class="token function">getLayoutParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>     <span class="token comment">// 如果该 view 是 remove 状态或者是 change 状态，将 mIgnoreConsumed 设置 false，不消化可用空间</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>params<span class="token punctuation">.</span><span class="token function">isItemRemoved</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> params<span class="token punctuation">.</span><span class="token function">isItemChanged</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        result<span class="token punctuation">.</span>mIgnoreConsumed <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token comment">///...</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>由上面可以看出，当对应的 view 是 change 状态时，addView 也不会消耗 RecyclerView 的可用空间，让 RecyclerView 可以 add 进更多的 View</p>
-<h2 id="总结问题原因"><a class="anchor" href="#总结问题原因">#</a> 总结问题原因</h2>
-<p>因为我们 notifyItemChanged 位置 1 导致布局重新绘制，同时将位置 1 的 view 设置成 change 状态。在绘制过程中，位置位置 1，2 所在的那一行豆腐块虽然被绘制了，但不消化可用空间的值，对应 RecyclerView 来说相当于多了一行豆腐块绘制空间，让位置 9，10 的豆腐块可以被 addView 和 attach。在后续 dispatchLayoutStep3 中中又会将不在屏幕的 view 移除掉。造成位置 9 和 10 的 viewholder 不断的 attach 和 detach。</p>
-<h2 id="解决方法"><a class="anchor" href="#解决方法">#</a> 解决方法</h2>
-<p>从代码上判断，这个是 RecyclerView 的正常绘制逻辑，无法避免。</p>
-<p>RecyclerView 在 dispatchLayoutStep1 中多 add 一些 view，dispatchLayoutStep3 中将不合适的 view 移出去，达到动画效果。</p>
-<p>dispatchLayoutStep1 和 dispatchLayoutStep3 都是在一个消息循环中完成的，所以我们可以通过 post 操作完成曝光和取消曝光的功能。</p>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">val</span> task<span class="token operator">=</span> Runnable <span class="token punctuation">&#123;</span> </pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token comment">// 曝光逻辑</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onViewAttachedToWindow</span><span class="token punctuation">(</span>holder<span class="token operator">:</span> BaseViewHolder<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    holder<span class="token punctuation">.</span>itemView<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onViewDetachedFromWindow</span><span class="token punctuation">(</span>holder<span class="token operator">:</span> BaseViewHolder<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    holder<span class="token punctuation">.</span>itemView<span class="token punctuation">.</span><span class="token function">removeCallbacks</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>Android</category>
-      </categories>
-      <tags>
-        <tag>RecyclerView</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>RecyclerView曝光踩坑-1</title>
     <url>/post/22258c7a.html</url>
     <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC82OTQ5MTg2ODg3NjA5MjIxMTMz">万字长文 - 史上最全 ConstraintLayout</span></p>
@@ -646,6 +602,50 @@ MeasureSpec.UNSPECIFIED  0
       <tags>
         <tag>RecyclerView</tag>
         <tag>ConstraintLayout</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RecyclerView曝光踩坑-2</title>
+    <url>/post/412d5155.html</url>
+    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9sYW5zaHVzaHVpLmdpdGh1Yi5pby9wb3N0LzIyMjU4YzdhLmh0bWw=">RecyclerView 曝光踩坑 - 1</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9sYW5zaHVzaHVpLmdpdGh1Yi5pby9wb3N0LzM2MmE2MWMzLmh0bWw=">RecyclerView 曝光踩坑 - 3</span></p>
+<p>基于 RecyclerView 1.2.1 版本分析</p>
+<p><em>问题场景是 发现屏幕内的一个豆腐块调用 notifyItemChanged 后，会导致屏幕外的 viewHolder 的 onViewAttachedToWindow 也会被调用</em></p>
+<p><span id="more"></span></p>
+<h2 id="1notifyitemchanged导致不在屏幕上的viewholder曝光"><a class="anchor" href="#1notifyitemchanged导致不在屏幕上的viewholder曝光">#</a> 1.notifyItemChanged 导致不在屏幕上的 viewHolder 曝光</h2>
+<p>RecyclerView 场景：</p>
+<pre><code>-----------
+| 1     2 |
+| 3     4 |
+| 5     6 |
+| 7     8 |
+----------
+  9    10
+</code></pre>
+<p>当 notifyItemChanged 位置 1 时，&lt;font color=&quot;red&quot;&gt; 位置 9 和位置 10 的 onViewAttachedToWindow 会被调用 &lt;/font&gt;，导致不断上报错误的曝光数据。</p>
+<p>特别是位置 1 需要持续刷新，调用 notifyItemChanged，上报的错误量不断增加。</p>
+<p><em>前提：要了解 RecyclerView 基本的 Layout 逻辑</em></p>
+<p><strong>基础调用链：</strong></p>
+<p><strong>RecyclerView                        --                  dispatchLayout()</strong></p>
+<p><strong>RecyclerView                        --                  dispatchLayoutStep1()</strong></p>
+<p><strong>LinearLayoutManager        --                  onLayoutChildren()</strong></p>
+<p><strong>LinearLayoutManager        --                  fill()</strong></p>
+<p>分析：</p>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//LinearLayoutManager 类   fill 函数</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">int</span> <span class="token function">fill</span><span class="token punctuation">(</span><span class="token class-name">RecyclerView<span class="token punctuation">.</span>Recycler</span> recycler<span class="token punctuation">,</span> <span class="token class-name">LayoutState</span> layoutState<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre>         <span class="token class-name">RecyclerView<span class="token punctuation">.</span>State</span> state<span class="token punctuation">,</span> <span class="token keyword">boolean</span> stopOnFocusable<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>  	<span class="token comment">// 可用空间</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">int</span> remainingSpace <span class="token operator">=</span> layoutState<span class="token punctuation">.</span>mAvailable <span class="token operator">+</span> layoutState<span class="token punctuation">.</span>mExtraFillSpace<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token comment">//layout 完子 item 后，子 item 的相关数据的封装类</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token class-name">LayoutChunkResult</span> layoutChunkResult <span class="token operator">=</span> mLayoutChunkResult<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token comment">// 不断地判断 可用空间，若大于零则不断加入 View</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>layoutState<span class="token punctuation">.</span>mInfinite <span class="token operator">||</span> remainingSpace <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> layoutState<span class="token punctuation">.</span><span class="token function">hasMore</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token comment">// 初始化 layoutChunkResult</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        layoutChunkResult<span class="token punctuation">.</span><span class="token function">resetInternal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        <span class="token comment">// 正在布局子 item, 并将 layout 完，将子 item 的相关数据封装在 layoutChunkResult 中</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token function">layoutChunk</span><span class="token punctuation">(</span>recycler<span class="token punctuation">,</span> state<span class="token punctuation">,</span> layoutState<span class="token punctuation">,</span> layoutChunkResult<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>        </pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>layoutChunkResult<span class="token punctuation">.</span>mFinished<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            <span class="token keyword">break</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        <span class="token comment">// 增加偏移量</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        layoutState<span class="token punctuation">.</span>mOffset <span class="token operator">+=</span> layoutChunkResult<span class="token punctuation">.</span>mConsumed <span class="token operator">*</span> layoutState<span class="token punctuation">.</span>mLayoutDirection<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        </pre></td></tr><tr><td data-num="21"></td><td><pre>        <span class="token comment">// 关键代码，提取 layout 的消耗空间，将可用空间不断减少</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token comment">// 是条件进入的，说明有些情况，即使我们 addView 了，也不会消耗可用空间，RecyclerView 会继续 while 循环 addView</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token comment">// 我们的 BUG 是因为第一个判断导致的，即 mIgnoreConsumed 为 ture。通常该变量都是 false 的</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>layoutChunkResult<span class="token punctuation">.</span>mIgnoreConsumed <span class="token operator">||</span> layoutState<span class="token punctuation">.</span>mScrapList <span class="token operator">!=</span> <span class="token keyword">null</span></pre></td></tr><tr><td data-num="25"></td><td><pre>            <span class="token operator">||</span> <span class="token operator">!</span>state<span class="token punctuation">.</span><span class="token function">isPreLayout</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>            layoutState<span class="token punctuation">.</span>mAvailable <span class="token operator">-=</span> layoutChunkResult<span class="token punctuation">.</span>mConsumed<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>           	<span class="token comment">// 可用空间不断减少</span></pre></td></tr><tr><td data-num="28"></td><td><pre>            remainingSpace <span class="token operator">-=</span> layoutChunkResult<span class="token punctuation">.</span>mConsumed<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="30"></td><td><pre></pre></td></tr><tr><td data-num="31"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>layoutState<span class="token punctuation">.</span>mScrollingOffset <span class="token operator">!=</span> <span class="token class-name">LayoutState<span class="token punctuation">.</span>SCROLLING_OFFSET_NaN</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="32"></td><td><pre>            layoutState<span class="token punctuation">.</span>mScrollingOffset <span class="token operator">+=</span> layoutChunkResult<span class="token punctuation">.</span>mConsumed<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="33"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>layoutState<span class="token punctuation">.</span>mAvailable <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="34"></td><td><pre>                layoutState<span class="token punctuation">.</span>mScrollingOffset <span class="token operator">+=</span> layoutState<span class="token punctuation">.</span>mAvailable<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="35"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="36"></td><td><pre>            <span class="token function">recycleByLayoutState</span><span class="token punctuation">(</span>recycler<span class="token punctuation">,</span> layoutState<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="37"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="38"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>stopOnFocusable <span class="token operator">&amp;&amp;</span> layoutChunkResult<span class="token punctuation">.</span>mFocusable<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="39"></td><td><pre>            <span class="token keyword">break</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="40"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="41"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="42"></td><td><pre>    <span class="token keyword">return</span> start <span class="token operator">-</span> layoutState<span class="token punctuation">.</span>mAvailable<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="43"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>什么情况下 mIgnoreConsumed 是 true 呢，继续跟进 layoutChunk 函数</p>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//LinearLayoutManager 类   fill 函数</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">void</span> <span class="token function">layoutChunk</span><span class="token punctuation">(</span><span class="token class-name">RecyclerView<span class="token punctuation">.</span>Recycler</span> recycler<span class="token punctuation">,</span> <span class="token class-name">RecyclerView<span class="token punctuation">.</span>State</span> state<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre>                 <span class="token class-name">LayoutState</span> layoutState<span class="token punctuation">,</span> <span class="token class-name">LayoutChunkResult</span> result<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token comment">///...</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token class-name">View</span> view <span class="token operator">=</span> layoutState<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span>recycler<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token class-name">LayoutParams</span> params <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">LayoutParams</span><span class="token punctuation">)</span> view<span class="token punctuation">.</span><span class="token function">getLayoutParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>     <span class="token comment">// 如果该 view 是 remove 状态或者是 change 状态，将 mIgnoreConsumed 设置 false，不消化可用空间</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>params<span class="token punctuation">.</span><span class="token function">isItemRemoved</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> params<span class="token punctuation">.</span><span class="token function">isItemChanged</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        result<span class="token punctuation">.</span>mIgnoreConsumed <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token comment">///...</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>由上面可以看出，当对应的 view 是 change 状态时，addView 也不会消耗 RecyclerView 的可用空间，让 RecyclerView 可以 add 进更多的 View</p>
+<h2 id="总结问题原因"><a class="anchor" href="#总结问题原因">#</a> 总结问题原因</h2>
+<p>因为我们 notifyItemChanged 位置 1 导致布局重新绘制，同时将位置 1 的 view 设置成 change 状态。在绘制过程中，位置位置 1，2 所在的那一行豆腐块虽然被绘制了，但不消化可用空间的值，对应 RecyclerView 来说相当于多了一行豆腐块绘制空间，让位置 9，10 的豆腐块可以被 addView 和 attach。在后续 dispatchLayoutStep3 中中又会将不在屏幕的 view 移除掉。造成位置 9 和 10 的 viewholder 不断的 attach 和 detach。</p>
+<h2 id="解决方法"><a class="anchor" href="#解决方法">#</a> 解决方法</h2>
+<p>从代码上判断，这个是 RecyclerView 的正常绘制逻辑，无法避免。</p>
+<p>RecyclerView 在 dispatchLayoutStep1 中多 add 一些 view，dispatchLayoutStep3 中将不合适的 view 移出去，达到动画效果。</p>
+<p>dispatchLayoutStep1 和 dispatchLayoutStep3 都是在一个消息循环中完成的，所以我们可以通过 post 操作完成曝光和取消曝光的功能。</p>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">val</span> task<span class="token operator">=</span> Runnable <span class="token punctuation">&#123;</span> </pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token comment">// 曝光逻辑</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onViewAttachedToWindow</span><span class="token punctuation">(</span>holder<span class="token operator">:</span> BaseViewHolder<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    holder<span class="token punctuation">.</span>itemView<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onViewDetachedFromWindow</span><span class="token punctuation">(</span>holder<span class="token operator">:</span> BaseViewHolder<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    holder<span class="token punctuation">.</span>itemView<span class="token punctuation">.</span><span class="token function">removeCallbacks</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>Android</category>
+      </categories>
+      <tags>
+        <tag>RecyclerView</tag>
       </tags>
   </entry>
   <entry>
@@ -819,11 +819,11 @@ MeasureSpec.UNSPECIFIED  0
 <p>Keep Moving Forward</p>
 ]]></content>
       <categories>
-        <category>C++</category>
+        <category>CPP</category>
       </categories>
       <tags>
         <tag>知识点</tag>
-        <tag>C++</tag>
+        <tag>CPP</tag>
       </tags>
   </entry>
   <entry>
@@ -1344,74 +1344,6 @@ MyViewGroup-- setOnTouchListener
       </tags>
   </entry>
   <entry>
-    <title>Flow知识点</title>
-    <url>/post/58bbdd0e.html</url>
-    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC82OTg5NTM2ODc2MDk2OTEzNDM5">【Kotlin Flow】 一眼看全 ——Flow 操作符大全</span></p>
-<h1 id="flow-的collect的正常用法"><a class="anchor" href="#flow-的collect的正常用法">#</a> Flow 的 collect 的正常用法</h1>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre>mainScope<span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    flow<span class="token punctuation">.</span><span class="token function">collect</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        <span class="token comment">//do something</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>mainScope<span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    flow2<span class="token punctuation">.</span><span class="token function">collect</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token comment">//do something</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>flow 的 collect 是个 suspend 函数，内部逻辑是个 while (true) 死循环，所以不能在 collect 之后写任何代码，因为执行不到</p>
-<p><span id="more"></span></p>
-<p>下面为 <strong>SharedFlowImpl</strong> 的代码</p>
-<pre><code>override suspend fun collect(collector: FlowCollector&lt;T&gt;): Nothing &#123;
-    val slot = allocateSlot()
-    try &#123;
-        if (collector is SubscribedFlowCollector) collector.onSubscription()
-        val collectorJob = currentCoroutineContext()[Job]
-        while (true) &#123;
-            var newValue: Any?
-            while (true) &#123;
-                newValue = tryTakeValue(slot) // attempt no-suspend fast path first
-                if (newValue !== NO_VALUE) break
-                awaitValue(slot) // await signal that the new value is available
-            &#125;
-            collectorJob?.ensureActive()
-            collector.emit(newValue as T)
-        &#125;
-    &#125; finally &#123;
-        freeSlot(slot)
-    &#125;
-&#125;
-</code></pre>
-<p>&lt;font color='red'&gt; 如果需要 collect 一个 flow，需要单独起一个协程，该协程内只能 collect 一个 flow，不能在 collect 函数后面加任何代码 &lt;/font&gt;</p>
-<h1 id="zip操作符和combine操作符区别"><a class="anchor" href="#zip操作符和combine操作符区别">#</a> <em>zip</em> 操作符和<em> combine</em> 操作符区别</h1>
-<ol>
-<li>
-<p>zip 要求 ：两个流发送数据的次数必须一致，1+1 合并成新的数据</p>
-<p>​     如果 A 流发两个数据，B 流发一个数据，则 A 流的第二个数据因为找不到 B 流的对应数据，不会触发 zip 流的合并发送</p>
-</li>
-<li>
-<p>combine 要求：没啥要求，两个流任意一个流的数据刷新，combine 流都会取两个流的最新值进行合并</p>
-</li>
-</ol>
-<h1 id="tryemit方法"><a class="anchor" href="#tryemit方法">#</a> tryEmit 方法</h1>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">/**</pre></td></tr><tr><td data-num="2"></td><td><pre>     * Tries to emit a [value] to this shared flow without suspending. It returns `true` if the value was</pre></td></tr><tr><td data-num="3"></td><td><pre>     * emitted successfully (see below). When this function returns `false`, it means that a call to a plain [emit]</pre></td></tr><tr><td data-num="4"></td><td><pre>     * function would suspend until there is buffer space available.</pre></td></tr><tr><td data-num="5"></td><td><pre>     *</pre></td></tr><tr><td data-num="6"></td><td><pre>     * This call can return `false` only when the [BufferOverflow] strategy is</pre></td></tr><tr><td data-num="7"></td><td><pre>     * [SUSPEND][BufferOverflow.SUSPEND] **and** there are subscribers collecting this shared flow.</pre></td></tr><tr><td data-num="8"></td><td><pre>     *</pre></td></tr><tr><td data-num="9"></td><td><pre>     * If there are no subscribers, the buffer is not used.</pre></td></tr><tr><td data-num="10"></td><td><pre>     * Instead, the most recently emitted value is simply stored into</pre></td></tr><tr><td data-num="11"></td><td><pre>     * the replay cache if one was configured, displacing the older elements there,</pre></td></tr><tr><td data-num="12"></td><td><pre>     * or dropped if no replay cache was configured. In any case, `tryEmit` returns `true`.</pre></td></tr><tr><td data-num="13"></td><td><pre>     *</pre></td></tr><tr><td data-num="14"></td><td><pre>     * This method is **thread-safe** and can be safely invoked from concurrent coroutines without</pre></td></tr><tr><td data-num="15"></td><td><pre>     * external synchronization.</pre></td></tr><tr><td data-num="16"></td><td><pre>     */</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">fun</span> <span class="token function">tryEmit</span><span class="token punctuation">(</span>value<span class="token operator">:</span> T<span class="token punctuation">)</span><span class="token operator">:</span> Boolean</pre></td></tr></table></figure><p><strong>慎用 tryEmit，看备注可知，当 strategy 是 BufferOverflow.SUSPEND 时（默认策略），且有 subscribers 时 就会发送失败，返回 false</strong></p>
-<h1 id="stateflow-data-class-的问题"><a class="anchor" href="#stateflow-data-class-的问题">#</a> StateFlow + data class 的问题</h1>
-<p>data class 重写了 equal，判断每个属性是否相等，而不是判断内存地址</p>
-<p>而 StateFlow 发现 新旧数据 equal 时则不会发送新数据</p>
-<h1 id="livedata和stateflow-优缺点"><a class="anchor" href="#livedata和stateflow-优缺点">#</a> LiveData 和 StateFlow 优缺点</h1>
-<ul>
-<li>
-<p><code>StateFlow</code>  需要将初始状态传递给构造函数，而  <code>LiveData</code>  不需要</p>
-</li>
-<li>
-<p>LiveData 观察者的回调永远发生在主线程；value 是 nullable 的； <code>LiveData</code>  是不防抖的； <code>LiveData</code>  的  <code>transformation</code>  工作在主线程</p>
-</li>
-<li>
-<p>Flow 属于 Kotlin 协程的一部分，仅 Kotlin 使用；value 空安全；防抖；提供很多操作符支持切换线程</p>
-</li>
-<li>
-<p>当 View 进入  <code>STOPPED</code>  状态时， <code>LiveData.observe()</code>  会自动取消注册使用方，而从  <code>StateFlow</code>  或任何其他数据流收集数据的操作并不会自动停止。如需实现相同的行为，您需要从  <code>Lifecycle.repeatOnLifecycle</code>  块收集数据流。</p>
-</li>
-</ul>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>Android</category>
-      </categories>
-      <tags>
-        <tag>Flow</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>DialogFragment知识点</title>
     <url>/post/6b67b819.html</url>
     <content><![CDATA[<h2 id="生命周期"><a class="anchor" href="#生命周期">#</a> 生命周期</h2>
@@ -1484,6 +1416,74 @@ MyViewGroup-- setOnTouchListener
       </categories>
       <tags>
         <tag>Fragment</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Flow知识点</title>
+    <url>/post/58bbdd0e.html</url>
+    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC82OTg5NTM2ODc2MDk2OTEzNDM5">【Kotlin Flow】 一眼看全 ——Flow 操作符大全</span></p>
+<h1 id="flow-的collect的正常用法"><a class="anchor" href="#flow-的collect的正常用法">#</a> Flow 的 collect 的正常用法</h1>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre>mainScope<span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    flow<span class="token punctuation">.</span><span class="token function">collect</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        <span class="token comment">//do something</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>mainScope<span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    flow2<span class="token punctuation">.</span><span class="token function">collect</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token comment">//do something</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>flow 的 collect 是个 suspend 函数，内部逻辑是个 while (true) 死循环，所以不能在 collect 之后写任何代码，因为执行不到</p>
+<p><span id="more"></span></p>
+<p>下面为 <strong>SharedFlowImpl</strong> 的代码</p>
+<pre><code>override suspend fun collect(collector: FlowCollector&lt;T&gt;): Nothing &#123;
+    val slot = allocateSlot()
+    try &#123;
+        if (collector is SubscribedFlowCollector) collector.onSubscription()
+        val collectorJob = currentCoroutineContext()[Job]
+        while (true) &#123;
+            var newValue: Any?
+            while (true) &#123;
+                newValue = tryTakeValue(slot) // attempt no-suspend fast path first
+                if (newValue !== NO_VALUE) break
+                awaitValue(slot) // await signal that the new value is available
+            &#125;
+            collectorJob?.ensureActive()
+            collector.emit(newValue as T)
+        &#125;
+    &#125; finally &#123;
+        freeSlot(slot)
+    &#125;
+&#125;
+</code></pre>
+<p>&lt;font color='red'&gt; 如果需要 collect 一个 flow，需要单独起一个协程，该协程内只能 collect 一个 flow，不能在 collect 函数后面加任何代码 &lt;/font&gt;</p>
+<h1 id="zip操作符和combine操作符区别"><a class="anchor" href="#zip操作符和combine操作符区别">#</a> <em>zip</em> 操作符和<em> combine</em> 操作符区别</h1>
+<ol>
+<li>
+<p>zip 要求 ：两个流发送数据的次数必须一致，1+1 合并成新的数据</p>
+<p>​     如果 A 流发两个数据，B 流发一个数据，则 A 流的第二个数据因为找不到 B 流的对应数据，不会触发 zip 流的合并发送</p>
+</li>
+<li>
+<p>combine 要求：没啥要求，两个流任意一个流的数据刷新，combine 流都会取两个流的最新值进行合并</p>
+</li>
+</ol>
+<h1 id="tryemit方法"><a class="anchor" href="#tryemit方法">#</a> tryEmit 方法</h1>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">/**</pre></td></tr><tr><td data-num="2"></td><td><pre>     * Tries to emit a [value] to this shared flow without suspending. It returns `true` if the value was</pre></td></tr><tr><td data-num="3"></td><td><pre>     * emitted successfully (see below). When this function returns `false`, it means that a call to a plain [emit]</pre></td></tr><tr><td data-num="4"></td><td><pre>     * function would suspend until there is buffer space available.</pre></td></tr><tr><td data-num="5"></td><td><pre>     *</pre></td></tr><tr><td data-num="6"></td><td><pre>     * This call can return `false` only when the [BufferOverflow] strategy is</pre></td></tr><tr><td data-num="7"></td><td><pre>     * [SUSPEND][BufferOverflow.SUSPEND] **and** there are subscribers collecting this shared flow.</pre></td></tr><tr><td data-num="8"></td><td><pre>     *</pre></td></tr><tr><td data-num="9"></td><td><pre>     * If there are no subscribers, the buffer is not used.</pre></td></tr><tr><td data-num="10"></td><td><pre>     * Instead, the most recently emitted value is simply stored into</pre></td></tr><tr><td data-num="11"></td><td><pre>     * the replay cache if one was configured, displacing the older elements there,</pre></td></tr><tr><td data-num="12"></td><td><pre>     * or dropped if no replay cache was configured. In any case, `tryEmit` returns `true`.</pre></td></tr><tr><td data-num="13"></td><td><pre>     *</pre></td></tr><tr><td data-num="14"></td><td><pre>     * This method is **thread-safe** and can be safely invoked from concurrent coroutines without</pre></td></tr><tr><td data-num="15"></td><td><pre>     * external synchronization.</pre></td></tr><tr><td data-num="16"></td><td><pre>     */</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">fun</span> <span class="token function">tryEmit</span><span class="token punctuation">(</span>value<span class="token operator">:</span> T<span class="token punctuation">)</span><span class="token operator">:</span> Boolean</pre></td></tr></table></figure><p><strong>慎用 tryEmit，看备注可知，当 strategy 是 BufferOverflow.SUSPEND 时（默认策略），且有 subscribers 时 就会发送失败，返回 false</strong></p>
+<h1 id="stateflow-data-class-的问题"><a class="anchor" href="#stateflow-data-class-的问题">#</a> StateFlow + data class 的问题</h1>
+<p>data class 重写了 equal，判断每个属性是否相等，而不是判断内存地址</p>
+<p>而 StateFlow 发现 新旧数据 equal 时则不会发送新数据</p>
+<h1 id="livedata和stateflow-优缺点"><a class="anchor" href="#livedata和stateflow-优缺点">#</a> LiveData 和 StateFlow 优缺点</h1>
+<ul>
+<li>
+<p><code>StateFlow</code>  需要将初始状态传递给构造函数，而  <code>LiveData</code>  不需要</p>
+</li>
+<li>
+<p>LiveData 观察者的回调永远发生在主线程；value 是 nullable 的； <code>LiveData</code>  是不防抖的； <code>LiveData</code>  的  <code>transformation</code>  工作在主线程</p>
+</li>
+<li>
+<p>Flow 属于 Kotlin 协程的一部分，仅 Kotlin 使用；value 空安全；防抖；提供很多操作符支持切换线程</p>
+</li>
+<li>
+<p>当 View 进入  <code>STOPPED</code>  状态时， <code>LiveData.observe()</code>  会自动取消注册使用方，而从  <code>StateFlow</code>  或任何其他数据流收集数据的操作并不会自动停止。如需实现相同的行为，您需要从  <code>Lifecycle.repeatOnLifecycle</code>  块收集数据流。</p>
+</li>
+</ul>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>Android</category>
+      </categories>
+      <tags>
+        <tag>Flow</tag>
       </tags>
   </entry>
   <entry>
