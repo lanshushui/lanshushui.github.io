@@ -67,6 +67,23 @@ Flex({justifyContent :FlexAlign.Center}) {
 >
 > **子组件定义的state变量= 看情况，如果是父组件的普遍变量，则是值传递，否则是引用传递  ；**
 
+> 子组件是在父组件的@builder修饰的方法中初始化的场景，普通写法按值传递时: 父组件的变量变化能否影响子组件？
+>
+> **基础类型或者string类型  ： 不能通知到子组件**
+>
+> @Observed修饰的类：
+>
+> | 子组件\父组件  | 普通变量 | prop变量 | state变量 |
+> | :------------: | -------- | -------- | --------- |
+> |    普通变量    | 不能     | 不能     | 不能      |
+> |    prop变量    | 能       | 不能     | 不能      |
+> |   state变量    | 能       | 不能     | 不能      |
+> |    link变量    | 不允许   | 不允许   | 不允许    |
+> | ObjectLink变量 | 能       | 不能     | 不能      |
+>
+
+> 总结：**只有父组件申明为普通变量，子组件声明为带装饰器的变量时，Observed修饰的类才会通知到子组件**。
+
 >  '@Link', '@Consume',  '@ObjectLink' 装饰的变量不能初始化，必须由父组件传递过来，这也是父组件必传参数
 >
 >  '@State', '@StorageLink', '@StorageProp', '@LocalStorageLink', '@LocalStorageProp' and '@Provide' 必须本地初始化

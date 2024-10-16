@@ -28,17 +28,36 @@ abbrlink: 44bbaae6
 
 > this并不是一个常规变量, 而是一个 **右值**, 所以不能取得`this`的地址.(不能`&this`, 左值右值的区别就在于是否可以取地址)
 
+> c++实现多态条件：virtual方法+父类指针指向子类对象 **必须是指针
+
+> ```
+> People p ;
+> Animal a =p;
+> a.eat();  //打印Animal eat  说明多态失败；这一点和JAVA不一样
+> 
+> Animal* animal = new People();
+> animal->eat(); //打印 People eat  说明多态成功
+> 
+> //由此延申到具体业务场景：需要用vector或者unordered_map存储子类时，value必须是智能指针(shared_ptr)才能实现多态
+> ```
+
 
 
 ## 基础开发特点
 
 ### 基础语法：
 
+> [拷贝构造函数，赋值函数的区别](https://www.cnblogs.com/liushui-sky/p/7728902.html)
+
 > [using语法和typedef语法区别](https://subingwen.cn/cpp/using/)
 
 > [nullptr和NULL的区别](https://subingwen.cn/cpp/nullptr/)
 
 > [C++命名空间（namespace）](https://www.54benniao.com/view/6326.html)
+
+
+
+### std标准库
 
 > [std::is_enum   检查 `T` 是否为枚举类型](https://www.apiref.com/cpp-zh/cpp/types/is_enum.html)
 
