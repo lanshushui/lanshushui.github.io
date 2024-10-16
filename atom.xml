@@ -244,8 +244,12 @@ Tid:56718, Name:IPC_3_56718
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;子组件定义的普遍变量，link 变量 = 引用传递  ；子组件定义的 prop 变量 = 值传递（不同对象）  ；&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;子组件定义的 state 变量 = 看情况，如果是父组件的普遍变量，则是值传递，否则是引用传递  ；&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
 &lt;p&gt;子组件是在父组件的 @builder 修饰的方法中初始化的场景，普通写法按值传递时：父组件的变量变化能否影响子组件？&lt;/p&gt;
-&lt;p&gt;基础类型或者 string 类型  ： 不能通知到子组件&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;基础类型或者 string 类型  ： 不能通知到子组件&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;@Observed 修饰的类：&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -289,11 +293,9 @@ Tid:56718, Name:IPC_3_56718
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;总结：只有父组件申明为普通变量，子组件声明为带装饰器的变量时，Observed 修饰的类才会通知到子组件。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;子组件定义的普遍变量，link 变量 = 引用传递  ；子组件定义的 prop 变量 = 值传递（不同对象）  ；&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;子组件定义的 state 变量 = 看情况，如果是父组件的普遍变量，则是值传递，否则是引用传递  ；&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;总结：&lt;strong&gt;只有父组件申明为普通变量，子组件声明为带装饰器的变量时，Observed 修饰的类才会通知到子组件&lt;/strong&gt;。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&#39;@Link&#39;, &#39;@Consume&#39;,  &#39;@ObjectLink&#39; 装饰的变量不能初始化，必须由父组件传递过来，这也是父组件必传参数&lt;/p&gt;
@@ -432,8 +434,8 @@ Tid:56718, Name:IPC_3_56718
 &lt;p&gt;Keep Moving Forward&lt;/p&gt;
 </content>
         <category term="H5" scheme="http://example.com/categories/H5/" />
-        <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
         <category term="JS" scheme="http://example.com/tags/JS/" />
+        <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
         <updated>2024-04-30T15:56:44.568Z</updated>
     </entry>
     <entry>
@@ -1119,6 +1121,28 @@ MyViewGroup-- setOnTouchListener
         <updated>2023-09-23T02:31:14.285Z</updated>
     </entry>
     <entry>
+        <id>http://example.com/post/c4311606.html</id>
+        <title>Comparator知识点</title>
+        <link rel="alternate" href="http://example.com/post/c4311606.html"/>
+        <content type="html">&lt;h2 id=&#34;1comparator接口-compare方法实现返回值探究&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1comparator接口-compare方法实现返回值探究&#34;&gt;#&lt;/a&gt; 1.Comparator 接口  compare 方法实现返回值探究&lt;/h2&gt;
+&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;object &lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Comparator&lt;/span&gt;&lt;span class=&#34;token generics&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            override fun &lt;span class=&#34;token function&#34;&gt;compare&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;o1&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;?&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; o2&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;?&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Int&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;​&lt;/p&gt;
+&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;01.&lt;/span&gt;xxx &lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;02.&lt;/span&gt;xxx&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;代表着升序队列，xx 属性越小的排在越前面 ，适用场景&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;xxx 属性代表着进场顺序，而队列需要 FIFO&lt;/li&gt;
+&lt;li&gt;xxx 属性代表着创建时间，而队列需要先创建先出&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;02.&lt;/span&gt;xxx &lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;01.&lt;/span&gt;xxx&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;代表着降序队列，xx 属性越大的排在越前面 ，适用场景&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;xxx 属性代表着优先级，而队列是高优先级队列&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Keep Moving Forward&lt;/p&gt;
+</content>
+        <category term="Android" scheme="http://example.com/categories/Android/" />
+        <category term="Comparator" scheme="http://example.com/tags/Comparator/" />
+        <updated>2023-09-05T12:58:32.614Z</updated>
+    </entry>
+    <entry>
         <id>http://example.com/post/3098f3f8.html</id>
         <title>ASM知识点</title>
         <link rel="alternate" href="http://example.com/post/3098f3f8.html"/>
@@ -1151,28 +1175,6 @@ MyViewGroup-- setOnTouchListener
         <category term="Android" scheme="http://example.com/categories/Android/" />
         <category term="ASM" scheme="http://example.com/tags/ASM/" />
         <category term="HOOK" scheme="http://example.com/tags/HOOK/" />
-        <updated>2023-09-05T12:58:32.614Z</updated>
-    </entry>
-    <entry>
-        <id>http://example.com/post/c4311606.html</id>
-        <title>Comparator知识点</title>
-        <link rel="alternate" href="http://example.com/post/c4311606.html"/>
-        <content type="html">&lt;h2 id=&#34;1comparator接口-compare方法实现返回值探究&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1comparator接口-compare方法实现返回值探究&#34;&gt;#&lt;/a&gt; 1.Comparator 接口  compare 方法实现返回值探究&lt;/h2&gt;
-&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;object &lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Comparator&lt;/span&gt;&lt;span class=&#34;token generics&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            override fun &lt;span class=&#34;token function&#34;&gt;compare&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;o1&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;?&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; o2&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;?&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Int&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;​&lt;/p&gt;
-&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;01.&lt;/span&gt;xxx &lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;02.&lt;/span&gt;xxx&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;代表着升序队列，xx 属性越小的排在越前面 ，适用场景&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;xxx 属性代表着进场顺序，而队列需要 FIFO&lt;/li&gt;
-&lt;li&gt;xxx 属性代表着创建时间，而队列需要先创建先出&lt;/li&gt;
-&lt;/ol&gt;
-&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;02.&lt;/span&gt;xxx &lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;01.&lt;/span&gt;xxx&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;代表着降序队列，xx 属性越大的排在越前面 ，适用场景&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;xxx 属性代表着优先级，而队列是高优先级队列&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Keep Moving Forward&lt;/p&gt;
-</content>
-        <category term="Android" scheme="http://example.com/categories/Android/" />
-        <category term="Comparator" scheme="http://example.com/tags/Comparator/" />
         <updated>2023-09-05T12:58:32.614Z</updated>
     </entry>
     <entry>
