@@ -20,6 +20,8 @@ abbrlink: 3066680b
 
 [《ArkUI实战》](https://www.arkui.club/)
 
+[HarmonyOS-Cases/官方Cases](https://gitee.com/harmonyos-cases/cases)
+
 [**声明式UI中实现组件动态创建**](https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-ui-dynamic-operations-V5)
 
 [鸿蒙开发之android开发人员指南《基础知识》](https://juejin.cn/post/7304538199149412415?searchId=202405091120302872C6F8568234876E6C)
@@ -126,6 +128,8 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 > [ts中没有string.format方法，所以鸿蒙提供了util工具函数](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-util-V5#utilformat9)
 
+> [设置input的长按菜单内容](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-text-common-V5#editmenuoptions对象说明)
+
 
 
 ## 高级知识
@@ -141,6 +145,8 @@ Flex({justifyContent :FlexAlign.Center}) {
 ###### 1. API12   Auto属性太坑了 ，强烈推荐不使用。问题：会导致父view的高度不会随着子view变化
 
 ###### 2. 父组件不允许传普通变量给子组件的link变量，正常来说编译器会报错，但在Builder装饰器方法内不会报错，要注意这一点
+
+###### 3.[使用对象数组和ForEach结合起来使用，但是写法不当的话会出现UI不刷新的情况。](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/properly-use-state-management-to-develope-V5#%E5%9C%A8foreach%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E6%90%AD%E9%85%8D%E5%AF%B9%E8%B1%A1%E6%95%B0%E7%BB%84) 
 
 
 
