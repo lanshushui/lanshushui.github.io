@@ -278,4 +278,102 @@ struct  Child2{
 
 
 
+#### 场景3：使用ObservedV2装饰器来处理 自定义对象属性 和 自定义对象的数组
+
+```typescript
+import { BuilderNode, FrameNode, NodeController, UIContext } from '@kit.ArkUI'
+
+@Entry
+@Component
+struct Index {
+  controller=new MyNodeController()
+  build() {
+    Stack(){
+      NodeContainer(this.controller)
+        .width('100%')
+        .height('100%')
+    }
+  }
+}
+
+@ObservedV2
+class Params {
+  @Trace text: StringWrap = new StringWrap("1");
+  @Trace addAar:StringWrap[]=[]
+  @Trace replaceAAr:StringWrap[]=[new StringWrap("replaceAAr")]
+}
+
+@ObservedV2
+class StringWrap{
+  @Trace  text: string = 'Hello World';
+
+  constructor(text:string) {
+    this.text =text
+  }
+}
+
+class MyNodeController extends NodeController{
+  private textNode: BuilderNode<[Params]> | null = null;
+  private params = new Params()
+  makeNode(context: UIContext): FrameNode | null {
+    this.textNode = new BuilderNode(context);
+    this.textNode.build(wrapBuilder<[Params]>(buildText), this.params);
+    return this.textNode.getFrameNode();
+  }
+
+  constructor() {
+    super()
+    setTimeout(()=>{
+      this.params.text.text="2"
+      this.params.addAar.push(new StringWrap("addArr"))
+      this.params.replaceAAr[0].text="replaceAArUpdate"
+
+    },2000)
+  }
+}
+
+@Builder
+function buildText(params: Params) {
+  Child({ params: params})
+}
+
+@Component
+struct  Child{
+
+  params: Params=new Params()
+
+  build() {
+    Column() {
+      Text(this.params.text.text)
+        .fontSize(50)
+        .fontWeight(FontWeight.Bold)
+        .margin({bottom: 36})
+        .fontColor("#000000")
+
+      ForEach(this.params.addAar,(item:StringWrap,index:number)=>{
+        Text(item.text)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+          .margin({bottom: 36})
+          .fontColor("#000000")
+      })
+      ForEach(this.params.replaceAAr,(item:StringWrap,index:number)=>{
+        Text(item.text)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+          .margin({bottom: 36})
+          .fontColor("#000000")
+      },(item:string,index:number)=>{
+        return index+""
+      })
+
+    }
+  }
+}
+```
+
+**最完美的一次的，不需要使用NodeController的update或者updateConfiguration方法进行更新，子组件也不需要装饰器进行参数的接受。推荐使用这种方式进行UI更新**
+
+
+
 Keep Moving Forward

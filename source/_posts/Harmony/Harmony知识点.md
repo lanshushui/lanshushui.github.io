@@ -73,7 +73,7 @@ Flex({justifyContent :FlexAlign.Center}) {
 >
 > **基础类型或者string类型  ： 不能通知到子组件**
 >
-> @Observed修饰的类：
+> @Observed修饰的类修改**非嵌套属性**：
 >
 > | 子组件\父组件  | 普通变量 | prop变量 | state变量 |
 > | :------------: | -------- | -------- | --------- |
@@ -84,7 +84,11 @@ Flex({justifyContent :FlexAlign.Center}) {
 > | ObjectLink变量 | 能       | 不能     | 不能      |
 >
 
-> 总结：**只有父组件申明为普通变量，子组件声明为带装饰器的变量时，Observed修饰的类才会通知到子组件**。
+> 总结：**只有父组件申明为普通变量，子组件声明为带装饰器的变量时，Observed修饰的类非嵌套属性才会通知到子组件**。
+
+> [推荐设计单独的自定义组件来渲染每一个数组或对象。此时，对象数组或嵌套对象（属性是对象的对象称为嵌套对象）需要两个自定义组件，一个自定义组件呈现外部数组/对象，另一个自定义组件呈现嵌套在数组/对象内的类对象。 @State、@Prop、@Link、@ObjectLink装饰的变量只能观察到第一层的变化。](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-mvvm-V5#prop和objectlink嵌套数据结构)
+
+> [**@ObservedV2类装饰器**实现对嵌套类对象属性变化直接观测](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-new-observedv2-and-trace-V5#状态管理v1版本对嵌套类对象属性变化直接观测的局限性)
 
 >  '@Link', '@Consume',  '@ObjectLink' 装饰的变量不能初始化，必须由父组件传递过来，这也是父组件必传参数
 >
@@ -146,7 +150,7 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 ###### 2. 父组件不允许传普通变量给子组件的link变量，正常来说编译器会报错，但在Builder装饰器方法内不会报错，要注意这一点
 
-###### 3.[使用对象数组和ForEach结合起来使用，但是写法不当的话会出现UI不刷新的情况。](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/properly-use-state-management-to-develope-V5#%E5%9C%A8foreach%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E6%90%AD%E9%85%8D%E5%AF%B9%E8%B1%A1%E6%95%B0%E7%BB%84) 
+###### 3.[使用对象数组和ForEach结合起来使用，但是写法不当的话会出现UI不刷新的情况。（ObservedV2装饰器也是个解决方法）](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/properly-use-state-management-to-develope-V5#%E5%9C%A8foreach%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E6%90%AD%E9%85%8D%E5%AF%B9%E8%B1%A1%E6%95%B0%E7%BB%84) 
 
 
 
