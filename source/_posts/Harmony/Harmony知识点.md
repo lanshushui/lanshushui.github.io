@@ -10,9 +10,13 @@ abbrlink: 3066680b
 
 [ArkTS基础语法](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V2/arkts-basic-syntax-0000001504650057-V2)
 
-[ArkTS容器组件](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/4_4_u5bb9_u5668_u7ec4_u4ef6-0000001862687637)
+[ArkTS容器组件](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/arkui-declarative-comp-V5)
 
-[ArkTS组件的通用属性](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/5_2_u901a_u7528_u5c5e_u6027-0000001862687533)
+[ArkTS组件的通用属性](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/5_2_u901a_u7528_u5c5e_u6027-V5)
+
+[UIContext 文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-uicontext-V5#uicontext)
+
+[软键盘布局适配场景介绍](https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-keyboard-layout-adapt-V5)
 
 
 
@@ -134,6 +138,8 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 > [设置input的长按菜单内容](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-text-common-V5#editmenuoptions对象说明)
 
+> [如何获取底部安全距离](https://developer.huawei.com/consumer/cn/forum/topic/0208153489793857836)
+
 
 
 ## 高级知识
@@ -141,6 +147,8 @@ Flex({justifyContent :FlexAlign.Center}) {
 [基于C++能力的资源访问](https://developer.huawei.com/consumer/cn/forum/topic/0208153164602857814)
 
 [**基于Navigation的路由管理**](https://developer.huawei.com/consumer/cn/forum/topic/0204150545294348010)
+
+[将普通不可观察数据变为可观察数据](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-statemanagement-V5#makeobserved12)
 
 
 
