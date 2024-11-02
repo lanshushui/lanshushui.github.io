@@ -8,7 +8,24 @@
     <author>
       <name>懒鼠睡zzz</name>
     </author>
-    <updated>2024-10-19T11:52:03.834Z</updated>
+    <updated>2024-11-02T03:27:24.663Z</updated>
+    <entry>
+        <id>http://example.com/post/502a37a0.html</id>
+        <title>Hdc命令</title>
+        <link rel="alternate" href="http://example.com/post/502a37a0.html"/>
+        <content type="html">&lt;h2 id=&#34;&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#&#34;&gt;#&lt;/a&gt; &lt;/h2&gt;
+&lt;h3 id=&#34;macos环境变量设置方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#macos环境变量设置方法&#34;&gt;#&lt;/a&gt; macOS 环境变量设置方法&lt;/h3&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9oZGMtVjUjJUU1JThGJUFGJUU5JTgwJTg5JUU5JTg1JThEJUU3JUJEJUFFJUU1JTg1JUE4JUU1JUIxJTgwJUU3JThFJUFGJUU1JUEyJTgzJUU1JThGJTk4JUU5JTg3JThG&#34;&gt;官方文档&lt;/span&gt;    &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vbW9vbnNvZnQvcC8xNTk5MDQ1MC5odG1s&#34;&gt;Linux 报错：bash:vi:command not find 如何解决&lt;/span&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight typescript&#34;&gt;&lt;figcaption data-lang=&#34;typescript&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;、打开终端工具，执行以下命令，根据输出结果分别执行不同命令。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;echo $&lt;span class=&#34;token constant&#34;&gt;SHELL&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;如果输出结果为&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;bin&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;bash，则执行以下命令，打开&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;bash_profile文件。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;vi &lt;span class=&#34;token operator&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;bash_profile&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;如果输出结果为&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;bin&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;zsh，则执行以下命令，打开&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;zshrc文件。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;vi &lt;span class=&#34;token operator&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;zshrc&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;、单击字母“i”，进入Insert模式。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;3&lt;/span&gt;、输入以下内容&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;token constant&#34;&gt;PATH&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;$&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;PATH&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; sdk路径&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;openharmony&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;toolchains&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;4&lt;/span&gt;、编辑完成后，单击Esc键，退出编辑模式，然后输入“&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;wq”，单击Enter键保存。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;5&lt;/span&gt;、执行以下命令，使配置的环境变量生效。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;如果步骤&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;时打开的是&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;bash_profile文件，请执行如下命令：&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;source &lt;span class=&#34;token operator&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;bash_profile&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;如果步骤&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;时打开的是&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;zshrc文件，请执行如下命令：&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;source &lt;span class=&#34;token operator&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;zshrc&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;6&lt;/span&gt;、环境变量配置完成后，关闭并重启DevEco Studio。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;ul&gt;
+&lt;li&gt;使用 &lt;code&gt;hdc kill -r&lt;/code&gt;  命令可以杀掉异常进程并重启 hdc 服务。&lt;/li&gt;
+&lt;li&gt;如果 &lt;code&gt;hdc list targets&lt;/code&gt;  获取不到设备信息，检查是否有 hdc 进程存在，并尝试重启 hdc 服务。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Keep Moving Forward&lt;/p&gt;
+</content>
+        <category term="Harmony" scheme="http://example.com/categories/Harmony/" />
+        <category term="命令" scheme="http://example.com/tags/%E5%91%BD%E4%BB%A4/" />
+        <updated>2024-11-02T03:27:24.663Z</updated>
+    </entry>
     <entry>
         <id>http://example.com/post/92fbcac0.html</id>
         <title>NodeContainer更新方式</title>
@@ -91,10 +108,13 @@ animal-&amp;gt;eat(); //打印 People eat  说明多态成功
 &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zdWJpbmd3ZW4uY24vY3BwL3VzaW5nLw==&#34;&gt;using 语法和 typedef 语法区别&lt;/span&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zdWJpbmd3ZW4uY24vY3BwL251bGxwdHIv&#34;&gt;nullptr 和 NULL 的区别&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zdWJpbmd3ZW4uY24vY3BwL251bGxwdHIv&#34;&gt;nullptr 和 NULL 的区别&lt;/span&gt;   &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuYXBpcmVmLmNvbS9jcHAtemgvY3BwL3V0aWxpdHkvb3B0aW9uYWwvbnVsbG9wdC5odG1s&#34;&gt;std::nullopt&lt;/span&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuNTRiZW5uaWFvLmNvbS92aWV3LzYzMjYuaHRtbA==&#34;&gt;C++ 命名空间（namespace）&lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cubHVvemhpeXVuLmNvbS9hcmNoaXZlcy83NTY=&#34;&gt;const &amp;amp; constexpr 的区别&lt;/span&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h3 id=&#34;std标准库&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#std标准库&#34;&gt;#&lt;/a&gt; std 标准库&lt;/h3&gt;
 &lt;blockquote&gt;
@@ -1179,28 +1199,6 @@ MyViewGroup-- setOnTouchListener
         <category term="Android" scheme="http://example.com/categories/Android/" />
         <category term="View" scheme="http://example.com/tags/View/" />
         <updated>2023-09-23T02:31:14.285Z</updated>
-    </entry>
-    <entry>
-        <id>http://example.com/post/c4311606.html</id>
-        <title>Comparator知识点</title>
-        <link rel="alternate" href="http://example.com/post/c4311606.html"/>
-        <content type="html">&lt;h2 id=&#34;1comparator接口-compare方法实现返回值探究&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1comparator接口-compare方法实现返回值探究&#34;&gt;#&lt;/a&gt; 1.Comparator 接口  compare 方法实现返回值探究&lt;/h2&gt;
-&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;object &lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Comparator&lt;/span&gt;&lt;span class=&#34;token generics&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            override fun &lt;span class=&#34;token function&#34;&gt;compare&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;o1&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;?&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; o2&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;?&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Int&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;​&lt;/p&gt;
-&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;01.&lt;/span&gt;xxx &lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;02.&lt;/span&gt;xxx&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;代表着升序队列，xx 属性越小的排在越前面 ，适用场景&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;xxx 属性代表着进场顺序，而队列需要 FIFO&lt;/li&gt;
-&lt;li&gt;xxx 属性代表着创建时间，而队列需要先创建先出&lt;/li&gt;
-&lt;/ol&gt;
-&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;02.&lt;/span&gt;xxx &lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;01.&lt;/span&gt;xxx&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;代表着降序队列，xx 属性越大的排在越前面 ，适用场景&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;xxx 属性代表着优先级，而队列是高优先级队列&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Keep Moving Forward&lt;/p&gt;
-</content>
-        <category term="Android" scheme="http://example.com/categories/Android/" />
-        <category term="Comparator" scheme="http://example.com/tags/Comparator/" />
-        <updated>2023-09-05T12:58:32.614Z</updated>
     </entry>
     <entry>
         <id>http://example.com/post/3098f3f8.html</id>
