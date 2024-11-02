@@ -51,9 +51,11 @@ abbrlink: 44bbaae6
 
 > [using语法和typedef语法区别](https://subingwen.cn/cpp/using/)
 
-> [nullptr和NULL的区别](https://subingwen.cn/cpp/nullptr/)
+> [nullptr和NULL的区别](https://subingwen.cn/cpp/nullptr/)   [std::nullopt](https://www.apiref.com/cpp-zh/cpp/utility/optional/nullopt.html)
 
 > [C++命名空间（namespace）](https://www.54benniao.com/view/6326.html)
+
+> [const & constexpr的区别](https://www.luozhiyun.com/archives/756)
 
 
 
