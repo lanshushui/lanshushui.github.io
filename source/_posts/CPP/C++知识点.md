@@ -32,7 +32,7 @@ abbrlink: 44bbaae6
 
 > ```
 > People p ;
-> Animal a =p;
+> Animal a =p; //这是利用复制构造函数创建了个a，不是java语法的用引用a指向实例p
 > a.eat();  //打印Animal eat  说明多态失败；这一点和JAVA不一样
 > 
 > Animal* animal = new People();
@@ -41,11 +41,17 @@ abbrlink: 44bbaae6
 > //由此延申到具体业务场景：需要用vector或者unordered_map存储子类时，value必须是智能指针(shared_ptr)才能实现多态
 > ```
 
+> [C++类定义中，数据成员不能被指定为自身类型，但可以是指向自身类型的指针或引用？为什么在类体内可以定义将静态成员声明为其所属类的类型呢 ?](https://www.cnblogs.com/guxuanqing/p/5876768.html)
+
+
+
 
 
 ## 基础开发特点
 
 ### 基础语法：
+
+> if(auto xxx = fun()){} ，可以这样子判空
 
 > [拷贝构造函数，赋值函数的区别](https://www.cnblogs.com/liushui-sky/p/7728902.html)
 
@@ -60,6 +66,32 @@ abbrlink: 44bbaae6
 
 
 ### std标准库
+
+#### std::string
+
+> <font color="red">switch 不能用std::string  </font>
+
+> std::string 判断字符串相等 可以直接用==
+
+> [数值类型和字符串之间的转换: to_string , stoi](https://subingwen.cn/cpp/convert/)
+
+> [使用R“()” 定义原始字面量](https://subingwen.cn/cpp/R/)
+
+
+
+#### unordered_map知识
+
+> unordered_map用 []访问，但key不存在时，访问仍然成功，取得value对象默认构造的值
+
+> unordered_map取值方式：  if (map.find(key) != map.end()) {}
+
+> enum可以直接作为map的key，却不能直接作为unordered_map的key【除非指定第三个参数std::hash<int>】。
+
+> value不能是抽象类，针对这场景需要用到指针或者智能指针shared_ptr
+
+
+
+#### 杂余：
 
 > [std::is_enum   检查 `T` 是否为枚举类型](https://www.apiref.com/cpp-zh/cpp/types/is_enum.html)
 
@@ -81,23 +113,7 @@ abbrlink: 44bbaae6
 
 ## 业务开发特点
 
-> [数值类型和字符串之间的转换: to_string , stoi](https://subingwen.cn/cpp/convert/)
-
-> [使用R“()” 定义原始字面量](https://subingwen.cn/cpp/R/)
-
 > 测试数据时如果需要在头文件中定义并实现函数，为了避免函数重复定义导致编译失败，方法可以用inline修饰
-
-
-
-
-
-#### unordered_map知识
-
-> unordered_map用 []访问，但key不存在时，访问仍然成功，取得value对象默认构造的值
-
-> enum可以直接作为map的key，却不能直接作为unordered_map的key。
-
-> value不能是抽象类，针对这场景需要用到指针或者智能指针shared_ptr
 
 
 
