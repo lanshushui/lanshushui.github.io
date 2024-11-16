@@ -14,6 +14,8 @@ abbrlink: 44bbaae6
 
 [C++ 参考手册API](https://www.apiref.com/cpp-zh/index.html)
 
+[cpp11 features case](https://gitcode.com/gh_mirrors/my/myCpp11Study/tree/master/cpp11features)
+
 [CMake 保姆级教程](https://subingwen.cn/cmake/CMake-primer/)
 
 

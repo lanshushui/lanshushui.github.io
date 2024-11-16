@@ -14,6 +14,8 @@ abbrlink: 3066680b
 
 [ArkTS组件的通用属性](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/5_2_u901a_u7528_u5c5e_u6027-V5)
 
+[window文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#windowcreatewindow9)
+
 [UIContext 文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-uicontext-V5#uicontext)
 
 [软键盘布局适配场景介绍](https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-keyboard-layout-adapt-V5)
