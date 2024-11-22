@@ -12,6 +12,10 @@ abbrlink: 1cfedf1f
 
 [《Flutter实战·第二版》](https://book.flutterchina.club/chapter2/flutter_package_mgr.html#_2-5-1-%E7%AE%80%E4%BB%8B)
 
+[Flutter Android 工程结构及应用层编译源码深入分析](https://blog.csdn.net/yanbober/article/details/118758871)
+
+[Flutter Android 端 Activity/Fragment 流程源码分析](https://yanbober.blog.csdn.net/article/details/119039500)
+
 [Flutter 混合开发 - 动态下发 libflutter.so & libapp.so](https://juejin.cn/post/7313446602441785382)
 
 ## 第三方库

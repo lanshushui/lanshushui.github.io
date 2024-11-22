@@ -65,6 +65,12 @@ abbrlink: 44bbaae6
 
 > [const & constexpr的区别](https://www.luozhiyun.com/archives/756)
 
+> `typedef int (FUNC)(int,int)`，定义了一个函数类型FUNC，可以使用FUNC去定义函数。
+>
+> `typedef int (*FUNC_P)(int, int)`, 定义了一个函数指针类型，可以使用`FUNC_P`去定义指向函数的指针
+>
+> [typedef函数知识来源](https://blog.51cto.com/u_15295315/2999214)
+
 
 
 ### std标准库
