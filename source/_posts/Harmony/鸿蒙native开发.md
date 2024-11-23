@@ -133,6 +133,24 @@ clang++: warning: argument unused during compilation: '--gcc-toolchain=C:/Users/
 
 
 
+## C++如何调用TS
 
+[Native侧如何获取ArkTS侧类实例](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-53-V5)
+
+> 通过demo代码的debug，发现 ts调到napi_init.cpp的代码，debug区域的线程信息是不同的，但实际通过pid==tid判断，发现是同线程调用，官方文档也有佐证 [通过按钮点击事件调用Native层的接口时，Native层代码是在主线程中执行的](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-14-V5)
+>
+> [如何判断是否为主线程](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs/faqs-arkts-68-V5)
+
+> 很多时候C++层需要长期持有ts的对象，方便随时回调
+>
+> 不能直接保存napi_value，因为它有生命周期！！！[Native侧如何合理管控对象的生命周期](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-80-V5)
+>
+> 通过napi_ref 延长对象生命周期，napi_create_reference; napi_get_reference_value；napi_delete_reference 来保存获取ts对象
+
+
+
+## 小知识点
+
+[暂不支持在c++子线程调用ArkTS接口，当前只能通过callback异步调用或者线程安全的方式进行回调处理](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-8-V5)
 
 Keep Moving Forward
