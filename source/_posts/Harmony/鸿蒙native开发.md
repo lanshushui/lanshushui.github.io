@@ -11,6 +11,12 @@ abbrlink: df80432a
 
 [NDK开发用例文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-development-V5)
 
+[Native侧如何获取ArkTS侧类实例](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-53-V5)
+
+[如何在C++调用从ArkTS传递过来的function](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-26-V5)
+
+[libuv](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V13/libuv-V13#%E6%94%AF%E6%8C%81%E7%9A%84%E8%83%BD%E5%8A%9B)
+
 
 
 <!-- more -->
@@ -108,6 +114,8 @@ clang++: warning: argument unused during compilation: '--gcc-toolchain=C:/Users/
 ## 接入带napi信息的so库
 
 [官方指导文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-21-V5)
+
+> types文件夹下定义so信息的子文件夹**一定要lib开头**，libxxx。不然会报错
 
 > 前提知识点：
 >

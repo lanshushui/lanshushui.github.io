@@ -18,6 +18,8 @@ abbrlink: 3066680b
 
 [UIContext 文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-uicontext-V5#uicontext)
 
+[build-profile.json5](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-hvigor-build-profile-V5)
+
 [软键盘布局适配场景介绍](https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-keyboard-layout-adapt-V5)
 
 
