@@ -8,7 +8,31 @@
     <author>
       <name>懒鼠睡zzz</name>
     </author>
-    <updated>2024-11-30T05:47:29.852Z</updated>
+    <updated>2024-12-04T15:26:18.591Z</updated>
+    <entry>
+        <id>http://example.com/post/d5cb24be.html</id>
+        <title>编译实操</title>
+        <link rel="alternate" href="http://example.com/post/d5cb24be.html"/>
+        <content type="html">&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jbG91ZC50ZW5jZW50LmNvbS9kZXZlbG9wZXIvYXJ0aWNsZS8xNDE0OTg4&#34;&gt;NM 命令详解&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&#34;创建一个dllso文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#创建一个dllso文件&#34;&gt;#&lt;/a&gt; 创建一个 DLL (SO) 文件&lt;/h2&gt;
+&lt;p&gt;1. 利用 clion 创建一个 library 工程，cmke 文件如下&lt;/p&gt;
+&lt;figure class=&#34;highlight cmake&#34;&gt;&lt;figcaption data-lang=&#34;CMake&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;cmake_minimum_required&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token property&#34;&gt;VERSION&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;3.28&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;project&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;librarydemo&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;CMAKE_CXX_STANDARD&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;add_library&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;librarydemo &lt;span class=&#34;token namespace&#34;&gt;SHARED&lt;/span&gt; library.cpp&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;2. 创建 build 文件夹，并进入&lt;/p&gt;
+&lt;p&gt;2. 执行命令   &lt;code&gt;cmake ../ -G &amp;quot;ninja&amp;quot;&lt;/code&gt;   生成 build.ninja 相关文件。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;window 下默认生成器是 NMake Makefiles ，需要额外适配，而 ninja 工具在 clion 文件夹下有，所以用这个更方便&lt;/p&gt;
+&lt;p&gt;目录为：D:\CLion\bin\ninja\win\x64，配置在系统环境下&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;3. 执行 ninja 命令，生成 dll 文件，执行 nm 命令，查看符号&lt;/p&gt;
+&lt;figure class=&#34;highlight sh&#34;&gt;&lt;figcaption data-lang=&#34;sh&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;PS D:&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;CLionProjects&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;librarydemo&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;build&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt; cmake &lt;span class=&#34;token punctuation&#34;&gt;..&lt;/span&gt;/ &lt;span class=&#34;token parameter variable&#34;&gt;-G&lt;/span&gt; Ninja                        &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- The C compiler identification is GNU &lt;span class=&#34;token number&#34;&gt;13.1&lt;/span&gt;.0&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- The CXX compiler identification is GNU &lt;span class=&#34;token number&#34;&gt;13.1&lt;/span&gt;.0&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Detecting C compiler ABI info&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Detecting C compiler ABI info - &lt;span class=&#34;token keyword&#34;&gt;done&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Check &lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt; working C compiler: D:/CLion/bin/mingw/bin/gcc.exe - skipped&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Detecting C compile features&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Detecting C compile features - &lt;span class=&#34;token keyword&#34;&gt;done&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Detecting CXX compiler ABI info&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Detecting CXX compiler ABI info - &lt;span class=&#34;token keyword&#34;&gt;done&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Check &lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt; working CXX compiler: D:/CLion/bin/mingw/bin/g++.exe - skipped&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Detecting CXX compile features&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Detecting CXX compile features - &lt;span class=&#34;token keyword&#34;&gt;done&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Configuring &lt;span class=&#34;token keyword&#34;&gt;done&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;6&lt;/span&gt;.8s&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Generating &lt;span class=&#34;token keyword&#34;&gt;done&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;.0s&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-- Build files have been written to: D:/CLionProjects/librarydemo/build&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;PS D:&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;CLionProjects&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;librarydemo&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;build&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt; ninja&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;/2&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; Linking CXX shared library liblibrarydemo.dll&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;PS D:&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;CLionProjects&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;librarydemo&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;build&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt; nm &lt;span class=&#34;token parameter variable&#34;&gt;-C&lt;/span&gt; .&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;liblibrarydemo.dll  &lt;span class=&#34;token operator&#34;&gt;|&lt;/span&gt;findstr hello&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;000000039b7014b0 T hello&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;PS D:&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;CLionProjects&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;librarydemo&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;build&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;strong&gt;hello () 为 C++ 符号，且为 T。说明是可以在其他文件中被引用&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;符号类型如果是小写，符号通常是本地的；如果是大写，符号是全局的（外部的）。但是，有一些小写符号类型表示特殊的全局符号，例如 “u”、“v” 和 “w”。&lt;/p&gt;
+&lt;p&gt;Keep Moving Forward&lt;/p&gt;
+</content>
+        <category term="CPP" scheme="http://example.com/categories/CPP/" />
+        <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
+        <category term="CPP" scheme="http://example.com/tags/CPP/" />
+        <updated>2024-12-04T15:26:18.591Z</updated>
+    </entry>
     <entry>
         <id>http://example.com/post/ea3b9d7a.html</id>
         <title>V8知识点</title>
@@ -69,8 +93,8 @@ int main(int argc, char* argv[]) &amp;#123;
 &lt;p&gt;Keep Moving Forward&lt;/p&gt;
 </content>
         <category term="H5" scheme="http://example.com/categories/H5/" />
-        <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
         <category term="V8" scheme="http://example.com/tags/V8/" />
+        <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
         <updated>2024-11-30T05:47:29.852Z</updated>
     </entry>
     <entry>
@@ -1427,33 +1451,5 @@ Tid:56718, Name:IPC_3_56718
         <category term="Android" scheme="http://example.com/categories/Android/" />
         <category term="KSP" scheme="http://example.com/tags/KSP/" />
         <updated>2024-04-22T15:17:46.013Z</updated>
-    </entry>
-    <entry>
-        <id>http://example.com/post/7abbf13b.html</id>
-        <title>Vue知识点</title>
-        <link rel="alternate" href="http://example.com/post/7abbf13b.html"/>
-        <content type="html">&lt;p&gt;小知识点&lt;/p&gt;
-&lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;1. 插值语法  双括号用于标签体&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;2. 指令语法  用于标签属性   标签里属性用变量赋值不能直接用双括号，必须使用：前置，这样子的双引号内的内容就被当成表达式&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;pre&gt;&lt;code class=&#34;language-vue&#34;&gt;&amp;lt;a v-bind:href=&amp;quot;url&amp;quot;/&amp;gt;   //简写等同于 &amp;lt;a :href=&amp;quot;url&amp;quot;/&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;blockquote&gt;
-&lt;p&gt;v-bind:xx 单向数据绑定  ；v-model:value 双向数据绑定，只能用在表单类标签，可以简写成 v-model, 因为默认收集的就是 value 值&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;pre&gt;&lt;code class=&#34;language-vue&#34;&gt;&amp;lt;input type=&amp;quot;text&amp;quot; v-model:value=&amp;quot;name&amp;quot;/&amp;gt;   //简写等同于  &amp;lt;input type=&amp;quot;text&amp;quot; v-model=&amp;quot;name&amp;quot;/&amp;gt;  
-&lt;/code&gt;&lt;/pre&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vd2FuZ3lpbmdibG9jay9wLzE1Mzk4NDU2Lmh0bWw=&#34;&gt;Vue .sync 修饰符与 this.$emit (update:xxx) &lt;/span&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Keep Moving Forward&lt;/p&gt;
-</content>
-        <category term="H5" scheme="http://example.com/categories/H5/" />
-        <category term="Vue" scheme="http://example.com/tags/Vue/" />
-        <updated>2024-04-10T14:32:58.163Z</updated>
     </entry>
 </feed>
