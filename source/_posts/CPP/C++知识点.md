@@ -75,7 +75,7 @@ abbrlink: 44bbaae6
 
 ### std标准库
 
-#### std::string
+#### std::string知识
 
 > <font color="red">switch 不能用std::string  </font>
 
@@ -87,7 +87,7 @@ abbrlink: 44bbaae6
 
 
 
-#### unordered_map知识
+#### std::unordered_map知识
 
 > unordered_map用 []访问，但key不存在时，访问仍然成功，取得value对象默认构造的值
 
@@ -96,6 +96,43 @@ abbrlink: 44bbaae6
 > enum可以直接作为map的key，却不能直接作为unordered_map的key【除非指定第三个参数std::hash<int>】。
 
 > value不能是抽象类，针对这场景需要用到指针或者智能指针shared_ptr
+
+
+
+#### std::function知识 + std::ref知识
+
+> [std::ref用法以及和&引用区别](https://blog.csdn.net/qq_44918090/article/details/127354840)
+
+> 参数为int，返回值为string ：std::function\<std::string(int)> func         
+>
+> 无参，返回值为void            ：std::function<void()> func
+
+[对 this 的捕获，通过 `[&]` 和 `[=]` 对 this 的隐式捕获，以及 `[this]` 显式捕获都是 `by-reference` 的，其实捕获的都是 this 指针。](https://cloud.tencent.com/developer/article/2220354)
+
+> 将一个类的函数赋值给std::function变量，使用std::bind方法 [用例](https://blog.csdn.net/qq_38410730/article/details/103637778)
+>
+> ```
+> 
+> class Demo{
+> public:
+>     void A(std::string str){
+>         std::cout << str << std::endl;
+>    }
+>    void B(std::function<void(std::string)> func){
+>        func("hello world");
+>    }
+>     void call(){
+>         B(std::bind(&Demo::A,this, std::placeholders::_1)); //使用占位符，打印hello world
+>         B(std::bind(&Demo::A,this, "test")); //传入实际参数，会忽略后续调用传入的参数，打印test
+>      }
+> };
+> ```
+
+
+
+#### std::mutex知识
+
+> [lock_guard、unique_lock、shared_lock、scoped_lock、recursive_mutex](https://blog.csdn.net/weixin_44477424/article/details/130694304)
 
 
 
@@ -127,7 +164,9 @@ abbrlink: 44bbaae6
 
 ## 问题场景
 
-###### 
+##### 1.头文件互相引用，导致编译不通过
+
+[头文件中使用前向定义，不引入依赖头文件，把依赖头文件写入放入其cpp文件中](https://blog.csdn.net/qq_34018840/article/details/106433498)
 
 
 
