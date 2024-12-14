@@ -116,15 +116,25 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 
 
-## 业务开发特点
+## UI开发特点
+
+> onTouch方法 是先内部组件触发，再外部组件触发，通过stopPropagation方法可以阻止冒泡
 
 > borderRadius设置的圆角不会限制内部组件，内部组件的四个角会超出圆角范围！！
 >
 > 采用 [clip(true)方法](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ts-universal-attributes-sharp-clipping-0000001815927520)
 
-> CustomDialogController可以重复open，传入的builder函数会被重复调用，但其他传入参数是不会变化，例如 传入isModal参数是个函数，也不会被调用，只会使用第一次调用的值
-
 > 组件默认拦截点击事件 ，可通过 enable方法设置
+
+> [设置input的长按菜单内容](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-text-common-V5#editmenuoptions对象说明)
+
+> [如何获取底部安全距离](https://developer.huawei.com/consumer/cn/forum/topic/0208153489793857836)
+
+
+
+## 业务开发特点
+
+> CustomDialogController可以重复open，传入的builder函数会被重复调用，但其他传入参数是不会变化，例如 传入isModal参数是个函数，也不会被调用，只会使用第一次调用的值
 
 > NavDestination只能有一个子组件，如果有多个子组件，下面的组件不会展示 
 
@@ -140,9 +150,19 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 > [ts中没有string.format方法，所以鸿蒙提供了util工具函数](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-util-V5#utilformat9)
 
-> [设置input的长按菜单内容](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-text-common-V5#editmenuoptions对象说明)
+> [如何定位解决焦点问题](https://developer.huawei.com/consumer/cn/forum/topic/0203160240720406659)
 
-> [如何获取底部安全距离](https://developer.huawei.com/consumer/cn/forum/topic/0208153489793857836)
+> 关闭键盘的方式：	
+>
+> ```typescript
+> //方式1
+> let inputMethodController = inputMethod.getController();
+> inputMethodController.stopInputSession()
+> //方式2
+> TextInputController.stopEditing()
+> //方式3
+> this.getUIContext().getFocusController().clearFocus()
+> ```
 
 
 
@@ -163,6 +183,8 @@ Flex({justifyContent :FlexAlign.Center}) {
 ###### 2. 父组件不允许传普通变量给子组件的link变量，正常来说编译器会报错，但在Builder装饰器方法内不会报错，要注意这一点
 
 ###### 3.[使用对象数组和ForEach结合起来使用，但是写法不当的话会出现UI不刷新的情况。（ObservedV2装饰器也是个解决方法）](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/properly-use-state-management-to-develope-V5#%E5%9C%A8foreach%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E6%90%AD%E9%85%8D%E5%AF%B9%E8%B1%A1%E6%95%B0%E7%BB%84) 
+
+###### 4.**组件内部不可以使用getter函数**
 
 
 
