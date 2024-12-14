@@ -55,6 +55,13 @@ int main() &amp;#123;
 &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;3. 执行右上角运行，第一次会运行失败 &lt;strong&gt;Error 0xc0000135&lt;/strong&gt;，因为执行 link 成功，但运行时还是找不到动态库。所以我们要把 liblibrarydemo.dll 文件再次复制到 build 目录下，即 executabledemo.exe 同级目录，再次运行即可正常运行&lt;/p&gt;
+&lt;h2 id=&#34;应用场景&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#应用场景&#34;&gt;#&lt;/a&gt; 应用场景&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL0Euc28=&#34;&gt;A.so&lt;/span&gt; link B.so 的场景下:&lt;/p&gt;
+&lt;p&gt;要点 1：由 B 工程写头文件，和实现。A 工程通过 B 工程提供的头文件向 B 通信。&lt;/p&gt;
+&lt;p&gt;要点 2：如果 B 工程需要向 A 工程通信，可以通过头文件设置 std::function 回调函数的方式进行。不能 B 定义一个类的头文件，A 实现类的方法，通过要点 1 传这个类的实例给 B，让 B 调用类方法实现 B 向 A 工程通信，因为类的实现在 A 工程的话，B 调用类的方法是找不到类函数实现而无法编译通过。&lt;/p&gt;
+&lt;p&gt;要点 3：由于 struct 的属性是按偏移量来读取的，所以 A 工程的回调函数可以返回 struct 结构数据，只要两个工程都定义了一样的数据结构。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Keep Moving Forward&lt;/p&gt;
  ]]></description>
         </item>
@@ -1335,16 +1342,26 @@ Tid:56718, Name:IPC_3_56718
 &lt;blockquote&gt;
 &lt;p&gt;API12   自定义构建函数的参数传递不能是 state 参数；因为&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WMi9hcmt0cy1idWlsZGVyLTAwMDAwMDE1MjQxNzY5ODEtVjIjc2VjdGlvbjE3NzE1MTg2MTAzNTM=&#34;&gt;调用 @Builder 装饰的函数默认按值传递&lt;/span&gt;。当传递的参数为状态变量时，状态变量的改变不会引起 @Builder 方法内的 UI 刷新。 有这种使用场景抽象成组件，不要用 @Builder 装饰的函数。&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2 id=&#34;业务开发特点&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#业务开发特点&#34;&gt;#&lt;/a&gt; 业务开发特点&lt;/h2&gt;
+&lt;h2 id=&#34;ui开发特点&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#ui开发特点&#34;&gt;#&lt;/a&gt; UI 开发特点&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;onTouch 方法 是先内部组件触发，再外部组件触发，通过 stopPropagation 方法可以阻止冒泡&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;blockquote&gt;
 &lt;p&gt;borderRadius 设置的圆角不会限制内部组件，内部组件的四个角会超出圆角范围！！&lt;/p&gt;
 &lt;p&gt;采用 &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtc2hhcnAtY2xpcHBpbmctMDAwMDAwMTgxNTkyNzUyMA==&#34;&gt;clip (true) 方法&lt;/span&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;CustomDialogController 可以重复 open，传入的 builder 函数会被重复调用，但其他传入参数是不会变化，例如 传入 isModal 参数是个函数，也不会被调用，只会使用第一次调用的值&lt;/p&gt;
+&lt;p&gt;组件默认拦截点击事件 ，可通过 enable 方法设置&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;组件默认拦截点击事件 ，可通过 enable 方法设置&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvdHMtdGV4dC1jb21tb24tVjUjZWRpdG1lbnVvcHRpb25zJUU1JUFGJUI5JUU4JUIxJUExJUU4JUFGJUI0JUU2JTk4JThF&#34;&gt;设置 input 的长按菜单内容&lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9mb3J1bS90b3BpYy8wMjA4MTUzNDg5NzkzODU3ODM2&#34;&gt;如何获取底部安全距离&lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;业务开发特点&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#业务开发特点&#34;&gt;#&lt;/a&gt; 业务开发特点&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;CustomDialogController 可以重复 open，传入的 builder 函数会被重复调用，但其他传入参数是不会变化，例如 传入 isModal 参数是个函数，也不会被调用，只会使用第一次调用的值&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
 &lt;p&gt;NavDestination 只能有一个子组件，如果有多个子组件，下面的组件不会展示&lt;/p&gt;
@@ -1362,11 +1379,11 @@ Tid:56718, Name:IPC_3_56718
 &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy11dGlsLVY1I3V0aWxmb3JtYXQ5&#34;&gt;ts 中没有 string.format 方法，所以鸿蒙提供了 util 工具函数&lt;/span&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvdHMtdGV4dC1jb21tb24tVjUjZWRpdG1lbnVvcHRpb25zJUU1JUFGJUI5JUU4JUIxJUExJUU4JUFGJUI0JUU2JTk4JThF&#34;&gt;设置 input 的长按菜单内容&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9mb3J1bS90b3BpYy8wMjAzMTYwMjQwNzIwNDA2NjU5&#34;&gt;如何定位解决焦点问题&lt;/span&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9mb3J1bS90b3BpYy8wMjA4MTUzNDg5NzkzODU3ODM2&#34;&gt;如何获取底部安全距离&lt;/span&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;关闭键盘的方式：&lt;/p&gt;
+&lt;figure class=&#34;highlight typescript&#34;&gt;&lt;figcaption data-lang=&#34;typescript&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;// 方式 1&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;let&lt;/span&gt; inputMethodController &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; inputMethod&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getController&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;inputMethodController&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;stopInputSession&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;// 方式 2&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;TextInputController&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;stopEditing&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;// 方式 3&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getUIContext&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getFocusController&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;clearFocus&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/blockquote&gt;
 &lt;h2 id=&#34;高级知识&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#高级知识&#34;&gt;#&lt;/a&gt; 高级知识&lt;/h2&gt;
 &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9mb3J1bS90b3BpYy8wMjA4MTUzMTY0NjAyODU3ODE0&#34;&gt;基于 C++ 能力的资源访问&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://developer.huawei.com/consumer/cn/forum/topic/0204150545294348010&#34;&gt;&lt;strong&gt;基于 Navigation 的路由管理&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
@@ -1375,6 +1392,7 @@ Tid:56718, Name:IPC_3_56718
 &lt;h6 id=&#34;1-api12-auto属性太坑了-强烈推荐不使用-问题会导致父view的高度不会随着子view变化&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-api12-auto属性太坑了-强烈推荐不使用-问题会导致父view的高度不会随着子view变化&#34;&gt;#&lt;/a&gt; 1. API12   Auto 属性太坑了 ，强烈推荐不使用。问题：会导致父 view 的高度不会随着子 view 变化&lt;/h6&gt;
 &lt;h6 id=&#34;2-父组件不允许传普通变量给子组件的link变量正常来说编译器会报错但在builder装饰器方法内不会报错要注意这一点&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2-父组件不允许传普通变量给子组件的link变量正常来说编译器会报错但在builder装饰器方法内不会报错要注意这一点&#34;&gt;#&lt;/a&gt; 2. 父组件不允许传普通变量给子组件的 link 变量，正常来说编译器会报错，但在 Builder 装饰器方法内不会报错，要注意这一点&lt;/h6&gt;
 &lt;h6 id=&#34;3使用对象数组和foreach结合起来使用但是写法不当的话会出现ui不刷新的情况-observedv2装饰器也是个解决方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3使用对象数组和foreach结合起来使用但是写法不当的话会出现ui不刷新的情况-observedv2装饰器也是个解决方法&#34;&gt;#&lt;/a&gt; 3.&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9wcm9wZXJseS11c2Utc3RhdGUtbWFuYWdlbWVudC10by1kZXZlbG9wZS1WNSMlRTUlOUMlQThmb3JlYWNoJUU0JUI4JUFEJUU0JUJEJUJGJUU3JTk0JUE4JUU4JTg3JUFBJUU1JUFFJTlBJUU0JUI5JTg5JUU3JUJCJTg0JUU0JUJCJUI2JUU2JTkwJUFEJUU5JTg1JThEJUU1JUFGJUI5JUU4JUIxJUExJUU2JTk1JUIwJUU3JUJCJTg0&#34;&gt; 使用对象数组和 ForEach 结合起来使用，但是写法不当的话会出现 UI 不刷新的情况。（ObservedV2 装饰器也是个解决方法）&lt;/span&gt;&lt;/h6&gt;
+&lt;h6 id=&#34;4组件内部不可以使用getter函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#4组件内部不可以使用getter函数&#34;&gt;#&lt;/a&gt; 4.&lt;strong&gt; 组件内部不可以使用 getter 函数&lt;/strong&gt;&lt;/h6&gt;
 &lt;p&gt;Keep Moving Forward&lt;/p&gt;
  ]]></description>
         </item>
