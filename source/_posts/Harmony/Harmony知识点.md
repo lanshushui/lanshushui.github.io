@@ -164,6 +164,10 @@ Flex({justifyContent :FlexAlign.Center}) {
 > this.getUIContext().getFocusController().clearFocus()
 > ```
 
+> 点击触摸事件汇总：
+>
+> [自定义事件分发](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-on-child-touch-test-V5) [触摸测试控制](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ts-universal-attributes-hit-test-behavior-V5) [自定义事件拦截](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-on-touch-intercept-V5)  [触摸热区设置](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-touch-target-V5)
+
 
 
 ## 高级知识
