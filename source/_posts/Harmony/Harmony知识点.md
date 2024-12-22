@@ -190,7 +190,7 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 ###### 4.**组件内部不可以使用getter函数**
 
-
+###### 5.编译时没有问题，运行时报Error message: a is not initialized，是模块循环依赖导致的，使用lazy import解决  [来源](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-module-side-effects-V5#%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96)
 
 
 
