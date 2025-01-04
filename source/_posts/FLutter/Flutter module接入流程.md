@@ -160,4 +160,70 @@ To learn more, visit https://flutter.dev/to/integrate-android-archive
 
 
 
+## 3.使用FlutterView展示页面
+
+[NA嵌入Flutter页面](https://juejin.cn/post/6996982173928521764)
+
+##### 代码1：
+
+```kotlin
+class MainActivity : Activity() {
+    lateinit var flutterEngine: FlutterEngine
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        flutterEngine = FlutterEngine(this)
+        flutterEngine.dartExecutor.executeDartEntrypoint(
+            //定义默认的入口函数
+            DartExecutor.DartEntrypoint.createDefault()
+        )
+        val flutterView = FlutterView(this)
+        flutterView.attachToFlutterEngine(flutterEngine)
+        setContentView(flutterView)
+    }
+}
+```
+
+最简单的代码，该代码能成功展示默认的flutter页面，但**无法点击交互**
+
+##### 代码2：
+
+```kotlin
+class MainActivity : Activity() {
+    lateinit var flutterEngine: FlutterEngine
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        flutterEngine = FlutterEngine(this)
+        flutterEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
+        val flutterView = FlutterView(this)
+        flutterView.attachToFlutterEngine(flutterEngine)
+        setContentView(flutterView)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // flutterEngine.getLifecycleChannel()获取到的是一个LifecycleChannel对象，类比于MethodChannel，
+        // 作用大概就是将Flutter和原生端的生命周期相互联系起来。
+        flutterEngine.lifecycleChannel.appIsResumed()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        flutterEngine.lifecycleChannel.appIsInactive()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        flutterEngine.lifecycleChannel.appIsPaused()
+    }
+}
+```
+
+解决了代码1的问题，flutter能正常交互点击了
+
+
+
 Keep Moving Forward

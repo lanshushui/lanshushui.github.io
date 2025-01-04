@@ -8,11 +8,25 @@ tags:
 abbrlink: 3066680b
 ---
 
+[JS，TS 知识点](https://lanshushui.github.io/post/dc4ac76f.html)
+
+
+
 [ArkTS基础语法](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V2/arkts-basic-syntax-0000001504650057-V2)
 
 [ArkTS容器组件](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/arkui-declarative-comp-V5)
 
 [ArkTS组件的通用属性](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/5_2_u901a_u7528_u5c5e_u6027-V5)
+
+
+
+[官方各种问题场景解决方案](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs/faqs-arkui-kit-V5)
+
+[HarmonyOS-Cases/官方Cases](https://gitee.com/harmonyos-cases/cases)
+
+[ArkTS语法规则下将TS代码适配成ArkTS代码的建议](https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/quick-start/arkts-more-cases.md)
+
+
 
 [window文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#windowcreatewindow9)
 
@@ -22,13 +36,7 @@ abbrlink: 3066680b
 
 [软键盘布局适配场景介绍](https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-keyboard-layout-adapt-V5)
 
-
-
-[ArkTS语法规则下将TS代码适配成ArkTS代码的建议](https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/quick-start/arkts-more-cases.md)
-
 [《ArkUI实战》](https://www.arkui.club/)
-
-[HarmonyOS-Cases/官方Cases](https://gitee.com/harmonyos-cases/cases)
 
 [**声明式UI中实现组件动态创建**](https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-ui-dynamic-operations-V5)
 
@@ -164,9 +172,21 @@ Flex({justifyContent :FlexAlign.Center}) {
 > this.getUIContext().getFocusController().clearFocus()
 > ```
 
-> 点击触摸事件汇总：
+> 点击，触摸事件汇总：
 >
 > [自定义事件分发](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-on-child-touch-test-V5) [触摸测试控制](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ts-universal-attributes-hit-test-behavior-V5) [自定义事件拦截](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-on-touch-intercept-V5)  [触摸热区设置](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-touch-target-V5)
+
+> Navigation+NodeContainer 复用相同的node实现不同页面展示相同的Flutter页面(flutter页面单路由)场景，解决闪屏问题
+>
+> 1.不需要NavDestination的mode改为DIALOG [mode(value: NavDestinationMode)](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ts-basic-components-navdestination-V5#mode-11)
+>
+> 2.将跳页时直接将node attach到新的NavDestination的NodeContainer中就可以了
+>
+> 3.返回时操作NavPathStack pop前，先把node attach到之前页面的NodeContainer，再进行pop操作
+
+> 修改state，prop变量而不触发UI更新： [如何获取状态管理框架代理前的原始对象](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-arkui-367-V5)
+
+> [componentSnapshot 实现截图功能](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentsnapshot-V5#componentsnapshotgetsync12)
 
 
 
@@ -177,6 +197,8 @@ Flex({justifyContent :FlexAlign.Center}) {
 [**基于Navigation的路由管理**](https://developer.huawei.com/consumer/cn/forum/topic/0204150545294348010)
 
 [将普通不可观察数据变为可观察数据](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-statemanagement-V5#makeobserved12)
+
+[基于反混淆工具混淆后的日志定位](https://developer.huawei.com/consumer/cn/forum/topic/0202157390662286372)
 
 
 
@@ -191,6 +213,25 @@ Flex({justifyContent :FlexAlign.Center}) {
 ###### 4.**组件内部不可以使用getter函数**
 
 ###### 5.编译时没有问题，运行时报Error message: a is not initialized，是模块循环依赖导致的，使用lazy import解决  [来源](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-module-side-effects-V5#%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96)
+
+###### 6.解析JSON数据方式
+
+```typescript
+let paramsJson: Record<string, Object> = JSON.parse(data);
+let placeholderStyleJson = paramsJson["placeholderStyle"] as Record<string, Object>
+//通过placeholderStyleJson["fontWeight"] as string来获取数据
+//不能as为对象后，通过属性来获取，debug没有问题，但release版本混淆会出问题
+
+```
+
+###### 7.cannot find record '&library/Index&修改前的旧版本号', please check the request  path.'/data/storage/el1/bundle/entry/ets/modules.abc'.
+
+1. 删除 entry 目录下的 build 目录（依赖该问题模块的模块）
+2. 主菜单 => 构建 => 清理项目
+
+###### 8.[使用BuilderParam在父组件调用this的方法报错：Error message:is not callable](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs/faqs-arkui-229-V5)
+
+
 
 
 

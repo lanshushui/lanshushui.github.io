@@ -18,6 +18,8 @@ abbrlink: 1cfedf1f
 
 [Flutter 混合开发 - 动态下发 libflutter.so & libapp.so](https://juejin.cn/post/7313446602441785382)
 
+[鸿蒙Flutter MD文档](https://gitee.com/openharmony-sig/flutter_samples/tree/5aadae27be32aa85f3c90d27bdd16f27f4413352/ohos/docs/04_development)
+
 ## 第三方库
 
 
@@ -32,7 +34,9 @@ abbrlink: 1cfedf1f
 >
 > [知识来源](https://juejin.cn/post/7189533148022046778)
 
-
+> Flutter Framework层：用Dart编写，封装整个Flutter架构的核心功能，包括Widget、动画、绘制、手势等功能，有Material（Android风格UI）和Cupertino（iOS风格）的UI界面， 可构建Widget控件以及实现UI布局。
+>
+> Flutter Engine层：用C++编写，用于高质量移动应用的轻量级运行时环境，实现了Flutter的核心库，包括Dart虚拟机、动画和图形、文字渲染、通信通道、事件通知、插件架构等。引擎渲染采用的是2D图形渲染库Skia，虚拟机采用的是面向对象语言Dart VM，并将它们托管到Flutter的嵌入层。shell实现了平台相关的代码，比如跟屏幕键盘IME和系统应用生命周期事件的交互。不同平台有不同的shell，比如Android和iOS的shell。
 
 
 

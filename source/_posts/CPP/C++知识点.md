@@ -87,6 +87,12 @@ abbrlink: 44bbaae6
 
 
 
+#### std::list知识
+
+> 获得倒数第二个元素：double penultimate = *std::prev(foo.end(), 2)     [来源](https://cloud.tencent.com/developer/ask/sof/89429)
+
+
+
 #### std::unordered_map知识
 
 > unordered_map用 []访问，但key不存在时，访问仍然成功，取得value对象默认构造的值
@@ -133,6 +139,23 @@ abbrlink: 44bbaae6
 #### std::mutex知识
 
 > [lock_guard、unique_lock、shared_lock、scoped_lock、recursive_mutex](https://blog.csdn.net/weixin_44477424/article/details/130694304)
+
+
+
+#### 指针知识
+
+```c++
+//基类指针转为子类指针
+if(auto* prt =std::dynamic_cast<XXX>(basePtr)){
+ 
+}
+//基类智能指针转为子类智能指针
+if(auto* prt =std::dynamic_pointer_cast<XXX>(basePtr)){
+ 
+}
+//指针转为long类型
+long p = std::reinterpret_cast<Long>(ptr)
+```
 
 
 

@@ -70,6 +70,8 @@ abbrlink: dc4ac76f
 
 > null ==  undefined 返回 true             null === undefined 返回 false
 
+> **Map 不能使用[]操作符，只能使用 set,  get 方法操作数据**；forEach循环中可以删除元素，不会和Java一样操作异常 [文档](https://zh.javascript.info/map-set)
+
 
 
 ## 知识点
