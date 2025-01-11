@@ -188,6 +188,8 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 > [componentSnapshot 实现截图功能](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentsnapshot-V5#componentsnapshotgetsync12)
 
+> [传递不同的LocalStorage实例给自定义组件](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-localstorage-V5#navigation%E7%BB%84%E4%BB%B6%E5%92%8Clocalstorage%E8%81%94%E5%90%88%E4%BD%BF%E7%94%A8)
+
 
 
 ## 高级知识

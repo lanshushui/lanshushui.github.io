@@ -26,6 +26,10 @@ abbrlink: 44bbaae6
 
 ## Java 和 C++ 对比
 
+> C++ 特色：子类不会自动继承父类的构造函数！（除非父类的构造函数是没有参数的默认构造函数） [来源](https://parallel101.github.io/cppguidebook/cpp_tricks/#_7)
+
+> c++类的属性都会默认初始化，如果要延迟初始化，可以用  指针 或者 std::optional [来源](https://parallel101.github.io/cppguidebook/cpp_tricks/#optional)
+
 > C++ 类继承也有修饰词 关键字class时默认的继承方式是private， 使用struct时默认的继承方式是public
 
 > this并不是一个常规变量, 而是一个 **右值**, 所以不能取得`this`的地址.(不能`&this`, 左值右值的区别就在于是否可以取地址)
@@ -93,15 +97,25 @@ abbrlink: 44bbaae6
 
 
 
+#### std::vector知识
+
+> [高效删除单个 vector 元素](https://parallel101.github.io/cppguidebook/cpp_tricks/#vector)
+
+
+
 #### std::unordered_map知识
 
 > unordered_map用 []访问，但key不存在时，访问仍然成功，取得value对象默认构造的值
+
+> insert 不会替换现有值，可以使用 `[]` 运算符或者`insert_or_assign` 函数
 
 > unordered_map取值方式：  if (map.find(key) != map.end()) {}
 
 > enum可以直接作为map的key，却不能直接作为unordered_map的key【除非指定第三个参数std::hash<int>】。
 
 > value不能是抽象类，针对这场景需要用到指针或者智能指针shared_ptr
+
+> [一边遍历 map，一边删除](https://parallel101.github.io/cppguidebook/cpp_tricks/#map)
 
 
 
