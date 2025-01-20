@@ -935,6 +935,22 @@ int main(int argc, char** argv)
 &lt;li&gt;使用 &lt;code&gt;hdc kill -r&lt;/code&gt;  命令可以杀掉异常进程并重启 hdc 服务。&lt;/li&gt;
 &lt;li&gt;如果 &lt;code&gt;hdc list targets&lt;/code&gt;  获取不到设备信息，检查是否有 hdc 进程存在，并尝试重启 hdc 服务。&lt;/li&gt;
 &lt;/ul&gt;
+&lt;h3 id=&#34;hvigorw命令&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#hvigorw命令&#34;&gt;#&lt;/a&gt; hvigorw 命令&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;命令格式  hvigor [taskNames...] &amp;lt;options...&amp;gt;  &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9pZGUtaHZpZ29yLWNvbW1hbmRsaW5lLVY1&#34;&gt;官方文档&lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h6 id=&#34;查看当前工程可用的tasks&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看当前工程可用的tasks&#34;&gt;#&lt;/a&gt; 查看当前工程可用的 tasks&lt;/h6&gt;
+&lt;blockquote&gt;
+&lt;p&gt;hvigorw tasks&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h6 id=&#34;打包hap&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#打包hap&#34;&gt;#&lt;/a&gt; 打包 Hap&lt;/h6&gt;
+&lt;blockquote&gt;
+&lt;p&gt;hvigorw assembleApp --mode project -p product=default -p buildMode=debug --no-daemon&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h6 id=&#34;打包har&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#打包har&#34;&gt;#&lt;/a&gt; 打包 har&lt;/h6&gt;
+&lt;blockquote&gt;
+&lt;p&gt;hvigorw assembleHsp --mode module -p product=default -p module=library@default --no-daemon&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Keep Moving Forward&lt;/p&gt;
 </content>
         <category term="Harmony" scheme="http://example.com/categories/Harmony/" />
@@ -998,6 +1014,9 @@ int main(int argc, char** argv)
 &lt;h2 id=&#34;java-和-c-对比&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#java-和-c-对比&#34;&gt;#&lt;/a&gt; Java 和 C++ 对比&lt;/h2&gt;
 &lt;blockquote&gt;
 &lt;p&gt;C++ 特色：子类不会自动继承父类的构造函数！（除非父类的构造函数是没有参数的默认构造函数） &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9wYXJhbGxlbDEwMS5naXRodWIuaW8vY3BwZ3VpZGVib29rL2NwcF90cmlja3MvI183&#34;&gt;来源&lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;不要在构造函数体内部初始化数据成员，因为只有当类的所有成员初始化完成之后才开始执行构造函数体，此时并不是真正意义上的初始化，而是重新 ** 赋值  **&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly94aWUuaW5mb3EuY24vYXJ0aWNsZS82M2FmZjVjYzBiODk2ZjRiZDFlOGYzZWQz&#34;&gt; 来源&lt;/span&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
 &lt;p&gt;c++ 类的属性都会默认初始化，如果要延迟初始化，可以用  指针 或者 std::optional &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9wYXJhbGxlbDEwMS5naXRodWIuaW8vY3BwZ3VpZGVib29rL2NwcF90cmlja3MvI29wdGlvbmFs&#34;&gt;来源&lt;/span&gt;&lt;/p&gt;
