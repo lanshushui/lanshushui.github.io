@@ -45,4 +45,22 @@ source ~/.zshrc
 
 
 
+### hvigorw命令
+
+> 命令格式  hvigor [taskNames...] <options...>  [官方文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-hvigor-commandline-V5)
+
+###### 查看当前工程可用的tasks
+
+> hvigorw tasks
+
+###### 打包Hap
+
+> hvigorw assembleApp --mode project -p product=default -p buildMode=debug --no-daemon
+
+###### 打包har
+
+> hvigorw assembleHsp --mode module -p product=default -p module=library@default --no-daemon
+
+
+
 Keep Moving Forward

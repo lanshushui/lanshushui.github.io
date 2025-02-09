@@ -158,20 +158,6 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 > [ts中没有string.format方法，所以鸿蒙提供了util工具函数](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-util-V5#utilformat9)
 
-> [如何定位解决焦点问题](https://developer.huawei.com/consumer/cn/forum/topic/0203160240720406659)
-
-> 关闭键盘的方式：	
->
-> ```typescript
-> //方式1
-> let inputMethodController = inputMethod.getController();
-> inputMethodController.stopInputSession()
-> //方式2
-> TextInputController.stopEditing()
-> //方式3
-> this.getUIContext().getFocusController().clearFocus()
-> ```
-
 > 点击，触摸事件汇总：
 >
 > [自定义事件分发](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-on-child-touch-test-V5) [触摸测试控制](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ts-universal-attributes-hit-test-behavior-V5) [自定义事件拦截](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-on-touch-intercept-V5)  [触摸热区设置](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-touch-target-V5)
@@ -232,8 +218,6 @@ let placeholderStyleJson = paramsJson["placeholderStyle"] as Record<string, Obje
 2. 主菜单 => 构建 => 清理项目
 
 ###### 8.[使用BuilderParam在父组件调用this的方法报错：Error message:is not callable](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs/faqs-arkui-229-V5)
-
-
 
 
 

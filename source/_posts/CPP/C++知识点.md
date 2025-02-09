@@ -28,6 +28,8 @@ abbrlink: 44bbaae6
 
 > C++ 特色：子类不会自动继承父类的构造函数！（除非父类的构造函数是没有参数的默认构造函数） [来源](https://parallel101.github.io/cppguidebook/cpp_tricks/#_7)
 
+> 不要在构造函数体内部初始化数据成员，因为只有当类的所有成员初始化完成之后才开始执行构造函数体，此时并不是真正意义上的初始化，而是重新**赋值  **[来源](https://xie.infoq.cn/article/63aff5cc0b896f4bd1e8f3ed3)
+
 > c++类的属性都会默认初始化，如果要延迟初始化，可以用  指针 或者 std::optional [来源](https://parallel101.github.io/cppguidebook/cpp_tricks/#optional)
 
 > C++ 类继承也有修饰词 关键字class时默认的继承方式是private， 使用struct时默认的继承方式是public
@@ -55,6 +57,10 @@ abbrlink: 44bbaae6
 
 ## 基础开发特点
 
+[标准库的类型萃取类型](https://zh.cppreference.com/w/cpp/meta#Type_traits)
+
+
+
 ### 基础语法：
 
 > if(auto xxx = fun()){} ，可以这样子判空
@@ -79,15 +85,32 @@ abbrlink: 44bbaae6
 
 ### std标准库
 
+#### char知识
+
+[判断某个字符型是否为数字: isdigit()函数](https://blog.csdn.net/qq_36736330/article/details/81448324)
+
 #### std::string知识
 
 > <font color="red">switch 不能用std::string  </font>
 
-> std::string 判断字符串相等 可以直接用==
+> std::string 判断字符串相等 可以直接用== ，判空可以用 isEmpty()
 
 > [数值类型和字符串之间的转换: to_string , stoi](https://subingwen.cn/cpp/convert/)
 
 > [使用R“()” 定义原始字面量](https://subingwen.cn/cpp/R/)
+
+> 分割版本字符串并转换为整数
+>
+> ```c
+> int numbers[3];
+> std::istringstream ss(version);
+> std::string token;
+> size_t index = 0;
+> while (std::getline(ss, token, '.') && index < 3) {
+>     numbers[index] = std::stoi(token);
+>     ++index;
+> }
+> ```
 
 
 
@@ -97,9 +120,15 @@ abbrlink: 44bbaae6
 
 
 
+
+
 #### std::vector知识
 
 > [高效删除单个 vector 元素](https://parallel101.github.io/cppguidebook/cpp_tricks/#vector)
+
+> vector字节怎么转换为string :    std::string str(vec.begin(), vec.end());
+>
+> vector字节怎么转换为char* :    char* char_ptr = reinterpret_cast<char*>(vec.data());
 
 
 
@@ -150,9 +179,31 @@ abbrlink: 44bbaae6
 
 
 
+#### std::span知识
+
+> absl::Span对std::vector就像absl::string_view对std::string一样。它为vector的元素提供只读接口，但是它也可以从由非vector(如数组和初始化列表)来构造，并且不会产生拷贝元素的消耗。[来源](https://blog.csdn.net/feihe0755/article/details/119428065)
+
+[C++ 20新特性之std::span 用法](https://juejin.cn/post/7398741211657191465)
+
+
+
 #### std::mutex知识
 
 > [lock_guard、unique_lock、shared_lock、scoped_lock、recursive_mutex](https://blog.csdn.net/weixin_44477424/article/details/130694304)
+
+
+
+#### std::getline知识
+
+`getline` 从输入流读取字符并将它们放进字符串 [官方文档](https://zh.cppreference.com/w/cpp/string/basic_string/getline)
+
+
+
+#### std::is_same std::is_base_of知识
+
+常用于模板中判断是否是某类型(的子类) [官方文档](https://zh.cppreference.com/w/cpp/types/is_base_of)
+
+
 
 
 
