@@ -38,7 +38,7 @@ abbrlink: 44bbaae6
 
 > c++实现多态条件：virtual方法+父类指针指向子类对象 **必须是指针
 
-> ```
+> ```c
 > People p ;
 > Animal a =p; //这是利用复制构造函数创建了个a，不是java语法的用引用a指向实例p
 > a.eat();  //打印Animal eat  说明多态失败；这一点和JAVA不一样
@@ -160,7 +160,7 @@ abbrlink: 44bbaae6
 
 > 将一个类的函数赋值给std::function变量，使用std::bind方法 [用例](https://blog.csdn.net/qq_38410730/article/details/103637778)
 >
-> ```
+> ```c
 > 
 > class Demo{
 > public:
@@ -209,7 +209,7 @@ abbrlink: 44bbaae6
 
 #### 指针知识
 
-```c++
+```c
 //基类指针转为子类指针
 if(auto* prt =std::dynamic_cast<XXX>(basePtr)){
  

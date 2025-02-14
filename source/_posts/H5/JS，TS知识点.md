@@ -128,7 +128,15 @@ abbrlink: dc4ac76f
 
 
 
+## 泛型知识点
 
+泛型方法定义
+
+```
+public get<T>(key: string): T | undefined {
+ return this.obj[key] as T
+}
+```
 
 
 

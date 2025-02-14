@@ -5,6 +5,7 @@ categories:
 tags:
   - 知识点
   - 鸿蒙
+top: 100
 abbrlink: 3066680b
 ---
 
@@ -65,8 +66,6 @@ Flex({justifyContent :FlexAlign.Center}) {
     Text()
 }
 ```
-
-
 
 
 
@@ -220,5 +219,47 @@ let placeholderStyleJson = paramsJson["placeholderStyle"] as Record<string, Obje
 ###### 8.[使用BuilderParam在父组件调用this的方法报错：Error message:is not callable](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs/faqs-arkui-229-V5)
 
 
+
+## 场景代码
+
+##### Uint8Array转为图片显示
+
+```typescript
+@Component
+struct ImageComponent {
+ public bitmapBytes?: Uint8Array
+ @State pixelMapImg: PixelMap | undefined = undefined
+ private imageWidth = 0
+ private imageHeight = 0
+
+
+ aboutToAppear(): void {
+   if (this.bitmapBytes) {
+     let imgSource: image.ImageSource = image.createImageSource(this.bitmapBytes.buffer)
+     if (imgSource) {
+       let decodingOptions: image.DecodingOptions = {
+         editable: false,
+         desiredPixelFormat: image.PixelMapFormat.RGBA_8888,
+       }
+       imgSource.createPixelMap(decodingOptions).then(async (pixel) => {
+         const info = await imgSource.getImageInfo(0)
+         this.imageWidth=px2vp(info.size.width)
+         this.imageHeight=px2vp(info.size.height)
+         this.pixelMapImg = pixel
+       })
+     }
+   }
+ }
+
+
+ build() {
+   if (this.pixelMapImg) {
+     Image(this.pixelMapImg)
+       .width(this.imageWidth)
+       .height(this.imageHeight)
+   }
+ }
+}
+```
 
 Keep Moving Forward
