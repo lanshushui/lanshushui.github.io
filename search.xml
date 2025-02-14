@@ -1,6 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>鸿蒙native开发</title>
+    <url>/post/df80432a.html</url>
+    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9zdWJpbmd3ZW4uY24vY21ha2UvQ01ha2UtcHJpbWVyLw==">CMake 保姆级教程</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstZGV2ZWxvcG1lbnQtVjU=">NDK 开发用例文档</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstNTMtVjU=">Native 侧如何获取 ArkTS 侧类实例</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstMjYtVjU=">如何在 C++ 调用从 ArkTS 传递过来的 function</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjEzL2xpYnV2LVYxMyMlRTYlOTQlQUYlRTYlOEMlODElRTclOUElODQlRTglODMlQkQlRTUlOEElOUI=">libuv</span></p>
+<p><span id="more"></span></p>
+<h2 id="目录结构"><a class="anchor" href="#目录结构">#</a> 目录结构</h2>
+<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/22/c5d1207d4e2ea7b9.png" alt="" /></p>
+<h2 id="修改生成的so文件名称"><a class="anchor" href="#修改生成的so文件名称">#</a> 修改生成的 so 文件名称</h2>
+<blockquote>
+<p>Ensure that the .so name is the same as that in oh-package.json5 under module directory.</p>
+</blockquote>
+<h5 id="1修改types文件夹下的文件夹名称为so库的名称及其目录下的oh-packagejson5的name属性"><a class="anchor" href="#1修改types文件夹下的文件夹名称为so库的名称及其目录下的oh-packagejson5的name属性">#</a> 1. 修改 types 文件夹下的文件夹名称为 so 库的名称，及其目录下的 oh-package.json5 的 name 属性</h5>
+<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/9fee13dc5dc6a4c3.png" alt="" /></p>
+<h5 id="2修改cmakeliststxt文件"><a class="anchor" href="#2修改cmakeliststxt文件">#</a> 2. 修改 CMakeLists.txt 文件</h5>
+<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/d999dd7b567cfc9c.png" alt="" /></p>
+<h5 id="3修改napi_initcpp文件napi_module的nm_modname属性"><a class="anchor" href="#3修改napi_initcpp文件napi_module的nm_modname属性">#</a> 3. 修改 napi_init.cpp 文件，napi_module 的 nm_modname 属性</h5>
+<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/01779d12e71d7555.png" alt="" /></p>
+<h5 id="4修改entry-模块的oh-packagejson5的依赖和引用so库的est文件"><a class="anchor" href="#4修改entry-模块的oh-packagejson5的依赖和引用so库的est文件">#</a> 4. 修改 entry 模块的 oh-package.json5 的依赖，和引用 so 库的 est 文件</h5>
+<p><img data-src="C:%5CUsers%5Clanshushui%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20241123001601426.png" alt="image-20241123001601426" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/1c2fab04c909e368.png" alt="" /></p>
+<h2 id="命令行生成so文件"><a class="anchor" href="#命令行生成so文件">#</a> 命令行生成 so 文件</h2>
+<blockquote>
+<p>鸿蒙 ndk 中有 ninja.exe ，所以采用 cmake+nanji 构建 so 库   <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvYmVzdC1wcmFjdGljZXMtVjUvYnB0YS1jbWFrZS1hZGFwdHMtdG8taGFybW9ueW9zLVY1">官方指定文档</span></p>
+<p>window cmake 默认的生成器是 NMake Makefiles，所以 cmake 命令需要特定指定生成器</p>
+</blockquote>
+<p>前提：PATH 环境配置 ndk 的 bin 目录，在源代码目录新建立 build 目录，并 cd 进入。</p>
+<h5 id="1执行cmke命令"><a class="anchor" href="#1执行cmke命令">#</a> 1. 执行 cmke 命令</h5>
+<blockquote>
+<p>可以通过 cmake -help 命令查看命令</p>
+</blockquote>
+<blockquote>
+<p>cmake -S=..\ -DCMAKE_TOOLCHAIN_FILE=C:\Users\lanshushui\AppData\Local\OpenHarmony\Sdk\12\native\build\cmake\ohos.toolchain.cmake   -DOHOS_ARCH=arm64-v8a -G=Ninja</p>
+</blockquote>
+<p>-DCMAKE_TOOLCHAIN_FILE  为一个特定的平台编译代码时，可以使用  <code>-DCMAKE_TOOLCHAIN_FILE=path/to/your/toolchain/file.cmake</code>  来指定工具链文件。这样，CMake 会使用该文件中的设置来配置构建过程。</p>
+<p>-S 指定源代码目录</p>
+<p>-G 指定生成器</p>
+<p><strong>生成的目录结构：</strong></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/73e5ef2d8f58b0da.png" alt="" /></p>
+<h5 id="2执行ninji命令"><a class="anchor" href="#2执行ninji命令">#</a> 2. 执行 ninji 命令</h5>
+<blockquote>
+<p>ninja</p>
+</blockquote>
+<p><strong>生成的目录结构：</strong></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/23823ecbcdca869b.png" alt="" /></p>
+<h5 id="3命令记录"><a class="anchor" href="#3命令记录">#</a> 3. 命令记录</h5>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>D<span class="token operator">:</span>\DevEcoStudioProjects\NATIVEOHOS\entry\src\main\cpp\build<span class="token operator">></span>cmake <span class="token operator">-</span>S<span class="token operator">=</span><span class="token punctuation">.</span><span class="token punctuation">.</span>\ <span class="token operator">-</span>DCMAKE_TOOLCHAIN_FILE<span class="token operator">=</span>C<span class="token operator">:</span>\Users\lanshushui\AppData\Local\OpenHarmony\Sdk\<span class="token number">12</span>\native\build\cmake\ohos<span class="token punctuation">.</span>toolchain<span class="token punctuation">.</span>cmake   <span class="token operator">-</span>DOHOS_ARCH<span class="token operator">=</span>arm64<span class="token operator">-</span>v8a <span class="token operator">-</span>G<span class="token operator">=</span>Ninja</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">--</span> The C compiler identification is Clang <span class="token number">15.0</span><span class="token number">.4</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">--</span> The CXX compiler identification is Clang <span class="token number">15.0</span><span class="token number">.4</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token operator">--</span> Detecting C compiler ABI info</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token operator">--</span> Detecting C compiler ABI info <span class="token operator">-</span> done</pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token operator">--</span> Check <span class="token keyword">for</span> working C compiler<span class="token operator">:</span> C<span class="token operator">:</span><span class="token operator">/</span>Users<span class="token operator">/</span>lanshushui<span class="token operator">/</span>AppData<span class="token operator">/</span>Local<span class="token operator">/</span>OpenHarmony<span class="token operator">/</span>Sdk<span class="token operator">/</span><span class="token number">12</span><span class="token operator">/</span>native<span class="token operator">/</span>llvm<span class="token operator">/</span>bin<span class="token operator">/</span>clang<span class="token punctuation">.</span>exe <span class="token operator">-</span> skipped</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token operator">--</span> Detecting C compile features</pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token operator">--</span> Detecting C compile features <span class="token operator">-</span> done</pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token operator">--</span> Detecting CXX compiler ABI info</pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token operator">--</span> Detecting CXX compiler ABI info <span class="token operator">-</span> done</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token operator">--</span> Check <span class="token keyword">for</span> working CXX compiler<span class="token operator">:</span> C<span class="token operator">:</span><span class="token operator">/</span>Users<span class="token operator">/</span>lanshushui<span class="token operator">/</span>AppData<span class="token operator">/</span>Local<span class="token operator">/</span>OpenHarmony<span class="token operator">/</span>Sdk<span class="token operator">/</span><span class="token number">12</span><span class="token operator">/</span>native<span class="token operator">/</span>llvm<span class="token operator">/</span>bin<span class="token operator">/</span>clang<span class="token operator">++</span><span class="token punctuation">.</span>exe <span class="token operator">-</span> skipped</pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token operator">--</span> Detecting CXX compile features</pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token operator">--</span> Detecting CXX compile features <span class="token operator">-</span> done</pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token operator">--</span> Configuring <span class="token function">done</span> <span class="token punctuation">(</span><span class="token number">5.2</span>s<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token operator">--</span> Generating <span class="token function">done</span> <span class="token punctuation">(</span><span class="token number">0.0</span>s<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token operator">--</span> Build files have been written to<span class="token operator">:</span> D<span class="token operator">:</span><span class="token operator">/</span>DevEcoStudioProjects<span class="token operator">/</span>NATIVEOHOS<span class="token operator">/</span>entry<span class="token operator">/</span>src<span class="token operator">/</span>main<span class="token operator">/</span>cpp<span class="token operator">/</span>build</pre></td></tr><tr><td data-num="17"></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td><pre>D<span class="token operator">:</span>\DevEcoStudioProjects\NATIVEOHOS\entry\src\main\cpp\build<span class="token operator">></span>ninja</pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">/</span><span class="token number">2</span><span class="token punctuation">]</span> Building CXX object CMakeFiles<span class="token operator">/</span>change<span class="token punctuation">.</span>dir<span class="token operator">/</span>napi_init<span class="token punctuation">.</span>cpp<span class="token punctuation">.</span>o</pre></td></tr><tr><td data-num="20"></td><td><pre>clang<span class="token operator">++</span><span class="token operator">:</span> warning<span class="token operator">:</span> argument unused during compilation<span class="token operator">:</span> '<span class="token operator">--</span>gcc<span class="token operator">-</span>toolchain<span class="token operator">=</span>C<span class="token operator">:</span><span class="token operator">/</span>Users<span class="token operator">/</span>lanshushui<span class="token operator">/</span>AppData<span class="token operator">/</span>Local<span class="token operator">/</span>OpenHarmony<span class="token operator">/</span>Sdk<span class="token operator">/</span><span class="token number">12</span><span class="token operator">/</span>native<span class="token operator">/</span>llvm' <span class="token punctuation">[</span><span class="token operator">-</span>Wunused<span class="token operator">-</span>command<span class="token operator">-</span>line<span class="token operator">-</span>argument<span class="token punctuation">]</span></pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token punctuation">[</span><span class="token number">2</span><span class="token operator">/</span><span class="token number">2</span><span class="token punctuation">]</span> Linking CXX shared library libchange<span class="token punctuation">.</span>so</pre></td></tr></table></figure><h2 id="接入带napi信息的so库"><a class="anchor" href="#接入带napi信息的so库">#</a> 接入带 napi 信息的 so 库</h2>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstMjEtVjU=">官方指导文档</span></p>
+<blockquote>
+<p>types 文件夹下定义 so 信息的子文件夹<strong>一定要 lib 开头</strong>，libxxx。不然会报错</p>
+</blockquote>
+<blockquote>
+<p>前提知识点：</p>
+<p>native 模板代码生成的 hap 中 lib 文件夹，除了自定义代码生成的 so 库，还有 c<ins> 运行时标准库 **libc</ins>_shared.so**</p>
+<p>所以如果我们要在纯 ArkTs 项目中接入命令行生成的 so 库时，还需要接入 libc++_shared.so</p>
+<p>本地目录：C:\Users\lanshushui\AppData\Local\OpenHarmony\Sdk\12\native\llvm\lib\arm-linux-ohos\libc++_shared.so</p>
+<p>IDE 编译目录：D:\DevEcoStudioProjects\NATIVEOHOS\entry\build\default\intermediates\libs\default\arm64-v8a\libc++_shared.so</p>
+</blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vamFja2llYXRob21lL3AvMTc5Mzc3MDA=">android 通过 ANDROID_STL 变量来决定使用动态库还是静态库</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvY3BwLVY1">鸿蒙通过 OHOS_STL 变量来决定使用动态库还是静态库</span></p>
+<h6 id="将一个native的demo项目改成一个带so库的纯artts项目通过该操作来了解第三方so库的接入"><a class="anchor" href="#将一个native的demo项目改成一个带so库的纯artts项目通过该操作来了解第三方so库的接入">#</a> <em>将一个 native 的 demo 项目改成一个带 so 库的纯 ArtTs 项目，通过该操作来了解第三方 so 库的接入</em></h6>
+<ol>
+<li>build 后，将 \entry\build\default\intermediates\libs\default\arm64-v8a 目录下的两个 so 库都复制到 lib 目录下</li>
+<li>删除 cpp 目录下的 napi_init.cpp 和 CMakeLists.txt 文件，以及 entry/build-profile.json5 的 externalNativeOptions 属性，使其变成个纯 ArkTs 项目</li>
+<li>运行，功能正常</li>
+</ol>
+<blockquote>
+<p>type 目录下定义的导出文件可能爆红：Declared function 'add' has no native implementation.&lt;ArkTSCheck&gt; ，但实际没有运行问题</p>
+</blockquote>
+<h2 id="c如何调用ts"><a class="anchor" href="#c如何调用ts">#</a> C++ 如何调用 TS</h2>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstNTMtVjU=">Native 侧如何获取 ArkTS 侧类实例</span></p>
+<blockquote>
+<p>通过 demo 代码的 debug，发现 ts 调到 napi_init.cpp 的代码，debug 区域的线程信息是不同的，但实际通过 pid==tid 判断，发现是同线程调用，官方文档也有佐证 <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstMTQtVjU=">通过按钮点击事件调用 Native 层的接口时，Native 层代码是在主线程中执行的</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMvZmFxcy1hcmt0cy02OC1WNQ==">如何判断是否为主线程</span></p>
+</blockquote>
+<blockquote>
+<p>很多时候 C++ 层需要长期持有 ts 的对象，方便随时回调</p>
+<p>不能直接保存 napi_value，因为它有生命周期！！！<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstODAtVjU=">Native 侧如何合理管控对象的生命周期</span></p>
+<p>通过 napi_ref 延长对象生命周期，napi_create_reference; napi_get_reference_value；napi_delete_reference 来保存获取 ts 对象</p>
+</blockquote>
+<h2 id="小知识点"><a class="anchor" href="#小知识点">#</a> 小知识点</h2>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstOC1WNQ==">暂不支持在 c++ 子线程调用 ArkTS 接口，当前只能通过 callback 异步调用或者线程安全的方式进行回调处理</span></p>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>Harmony</category>
+      </categories>
+      <tags>
+        <tag>Native</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Flutter知识点</title>
     <url>/post/1cfedf1f.html</url>
     <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9ib29rLmZsdXR0ZXJjaGluYS5jbHViL2NoYXB0ZXIyL2ZsdXR0ZXJfcGFja2FnZV9tZ3IuaHRtbCNfMi01LTEtJUU3JUFFJTgwJUU0JUJCJThC">《Flutter 实战・第二版》</span></p>
@@ -451,6 +545,285 @@ To learn more, visit https://flutter.dev/to/integrate-android-archive
       </tags>
   </entry>
   <entry>
+    <title>Hdc命令</title>
+    <url>/post/502a37a0.html</url>
+    <content><![CDATA[<h2 id=""><a class="anchor" href="#">#</a> </h2>
+<h3 id="macos环境变量设置方法"><a class="anchor" href="#macos环境变量设置方法">#</a> macOS 环境变量设置方法</h3>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9oZGMtVjUjJUU1JThGJUFGJUU5JTgwJTg5JUU5JTg1JThEJUU3JUJEJUFFJUU1JTg1JUE4JUU1JUIxJTgwJUU3JThFJUFGJUU1JUEyJTgzJUU1JThGJTk4JUU5JTg3JThG">官方文档</span>    <span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vbW9vbnNvZnQvcC8xNTk5MDQ1MC5odG1s">Linux 报错：bash:vi:command not find 如何解决</span></p>
+<figure class="highlight typescript"><figcaption data-lang="typescript"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">1</span>、打开终端工具，执行以下命令，根据输出结果分别执行不同命令。</pre></td></tr><tr><td data-num="2"></td><td><pre>echo $<span class="token constant">SHELL</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">-</span>如果输出结果为<span class="token operator">/</span>bin<span class="token operator">/</span>bash，则执行以下命令，打开<span class="token punctuation">.</span>bash_profile文件。</pre></td></tr><tr><td data-num="4"></td><td><pre>vi <span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>bash_profile</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token operator">-</span>如果输出结果为<span class="token operator">/</span>bin<span class="token operator">/</span>zsh，则执行以下命令，打开<span class="token punctuation">.</span>zshrc文件。</pre></td></tr><tr><td data-num="6"></td><td><pre>vi <span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>zshrc</pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token number">2</span>、单击字母“i”，进入Insert模式。</pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token number">3</span>、输入以下内容</pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token keyword">export</span> <span class="token constant">PATH</span><span class="token operator">=</span>$<span class="token punctuation">&#123;</span><span class="token constant">PATH</span><span class="token punctuation">&#125;</span><span class="token operator">:</span> sdk路径<span class="token operator">/</span>openharmony<span class="token operator">/</span><span class="token number">10</span><span class="token operator">/</span>toolchains</pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token number">4</span>、编辑完成后，单击Esc键，退出编辑模式，然后输入“<span class="token operator">:</span>wq”，单击Enter键保存。</pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token number">5</span>、执行以下命令，使配置的环境变量生效。</pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token operator">-</span>如果步骤<span class="token number">1</span>时打开的是<span class="token punctuation">.</span>bash_profile文件，请执行如下命令：</pre></td></tr><tr><td data-num="18"></td><td><pre>source <span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>bash_profile</pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token operator">-</span>如果步骤<span class="token number">1</span>时打开的是<span class="token punctuation">.</span>zshrc文件，请执行如下命令：</pre></td></tr><tr><td data-num="20"></td><td><pre>source <span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>zshrc</pre></td></tr><tr><td data-num="21"></td><td><pre></pre></td></tr><tr><td data-num="22"></td><td><pre><span class="token number">6</span>、环境变量配置完成后，关闭并重启DevEco Studio。</pre></td></tr></table></figure><ul>
+<li>使用 <code>hdc kill -r</code>  命令可以杀掉异常进程并重启 hdc 服务。</li>
+<li>如果 <code>hdc list targets</code>  获取不到设备信息，检查是否有 hdc 进程存在，并尝试重启 hdc 服务。</li>
+</ul>
+<h3 id="hvigorw命令"><a class="anchor" href="#hvigorw命令">#</a> hvigorw 命令</h3>
+<blockquote>
+<p>命令格式  hvigor [taskNames...] &lt;options...&gt;  <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9pZGUtaHZpZ29yLWNvbW1hbmRsaW5lLVY1">官方文档</span></p>
+</blockquote>
+<h6 id="查看当前工程可用的tasks"><a class="anchor" href="#查看当前工程可用的tasks">#</a> 查看当前工程可用的 tasks</h6>
+<blockquote>
+<p>hvigorw tasks</p>
+</blockquote>
+<h6 id="打包hap"><a class="anchor" href="#打包hap">#</a> 打包 Hap</h6>
+<blockquote>
+<p>hvigorw assembleApp --mode project -p product=default -p buildMode=debug --no-daemon</p>
+</blockquote>
+<h6 id="打包har"><a class="anchor" href="#打包har">#</a> 打包 har</h6>
+<blockquote>
+<p>hvigorw assembleHsp --mode module -p product=default -p module=library@default --no-daemon</p>
+</blockquote>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>Harmony</category>
+      </categories>
+      <tags>
+        <tag>命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Harmony知识点</title>
+    <url>/post/3066680b.html</url>
+    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9sYW5zaHVzaHVpLmdpdGh1Yi5pby9wb3N0L2RjNGFjNzZmLmh0bWw=">JS，TS 知识点</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WMi9hcmt0cy1iYXNpYy1zeW50YXgtMDAwMDAwMTUwNDY1MDA1Ny1WMg==">ArkTS 基础语法</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvYXJrdWktZGVjbGFyYXRpdmUtY29tcC1WNQ==">ArkTS 容器组件</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvNV8yX3U5MDFhX3U3NTI4X3U1YzVlX3U2MDI3LVY1">ArkTS 组件的通用属性</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMvZmFxcy1hcmt1aS1raXQtVjU=">官方各种问题场景解决方案</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9naXRlZS5jb20vaGFybW9ueW9zLWNhc2VzL2Nhc2Vz">HarmonyOS-Cases / 官方 Cases</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9naXRlZS5jb20vb3Blbmhhcm1vbnkvZG9jcy9ibG9iL21hc3Rlci96aC1jbi9hcHBsaWNhdGlvbi1kZXYvcXVpY2stc3RhcnQvYXJrdHMtbW9yZS1jYXNlcy5tZA==">ArkTS 语法规则下将 TS 代码适配成 ArkTS 代码的建议</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy13aW5kb3ctVjUjd2luZG93Y3JlYXRld2luZG93OQ==">window 文档</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy1hcmt1aS11aWNvbnRleHQtVjUjdWljb250ZXh0">UIContext 文档</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy9pZGUtaHZpZ29yLWJ1aWxkLXByb2ZpbGUtVjU=">build-profile.json5</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvYmVzdC1wcmFjdGljZXMtVjUvYnB0YS1rZXlib2FyZC1sYXlvdXQtYWRhcHQtVjU=">软键盘布局适配场景介绍</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuYXJrdWkuY2x1Yi8=">《ArkUI 实战》</span></p>
+<p><a href="https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-ui-dynamic-operations-V5"><strong>声明式 UI 中实现组件动态创建</strong></a></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC83MzA0NTM4MTk5MTQ5NDEyNDE1P3NlYXJjaElkPTIwMjQwNTA5MTEyMDMwMjg3MkM2Rjg1NjgyMzQ4NzZFNkM=">鸿蒙开发之 android 开发人员指南《基础知识》</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WMi91aWFiaWxpdHktb3ZlcnZpZXctMDAwMDAwMTQ3Nzk4MDkyOS1WMg==">UIAbility 组件概述</span></p>
+<p><span id="more"></span></p>
+<h2 id="android-和-鸿蒙对标的配置"><a class="anchor" href="#android-和-鸿蒙对标的配置">#</a> Android 和 鸿蒙对标的配置</h2>
+<blockquote>
+<p>match_parent  ==  width(&quot;100%&quot;)    wrap_content ==  height('auto')</p>
+</blockquote>
+<blockquote>
+<p>weight 1 ==  flexGrow(1)</p>
+</blockquote>
+<blockquote>
+<p>宽是 1dp 的空白 View  ==  Blank ().width (1).height (&quot;100%&quot;)</p>
+</blockquote>
+<blockquote>
+<p>FrameLayout ==  Stack 组件</p>
+</blockquote>
+<figure class="highlight typescript"><figcaption data-lang="typescript"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//View 实现居中对齐  </span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">Flex</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>justifyContent <span class="token operator">:</span>FlexAlign<span class="token punctuation">.</span>Center<span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token function">Text</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token function">Text</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h2 id="基础开发特点"><a class="anchor" href="#基础开发特点">#</a> 基础开发特点</h2>
+<blockquote>
+<p>子组件定义的变量都可以通过父组件传递过来，不仅限于 prop 和 state 变量，普通变量也可以，这是选填参数</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">子组件 \ 父组件</th>
+<th>普通变量</th>
+<th>prop 变量</th>
+<th>state 变量</th>
+<th>link 变量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">普通变量</td>
+<td>引用传递，同对象</td>
+<td>引用传递，同对象</td>
+<td>引用传递，同对象</td>
+<td>引用传递，同对象</td>
+</tr>
+<tr>
+<td style="text-align:center">prop 变量</td>
+<td>值传递，不同对象</td>
+<td>值传递，不同对象</td>
+<td>值传递，不同对象</td>
+<td>值传递，不同对象</td>
+</tr>
+<tr>
+<td style="text-align:center">state 变量</td>
+<td>值传递，不同对象</td>
+<td>引用传递，同对象</td>
+<td>引用传递，同对象</td>
+<td>引用传递，同对象</td>
+</tr>
+<tr>
+<td style="text-align:center">link 变量</td>
+<td>不允许</td>
+<td>引用传递，同对象</td>
+<td>引用传递，同对象</td>
+<td>引用传递，同对象</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>子组件定义的普遍变量，link 变量 = 引用传递  ；子组件定义的 prop 变量 = 值传递（不同对象）  ；</strong></p>
+<p><strong>子组件定义的 state 变量 = 看情况，如果是父组件的普遍变量，则是值传递，否则是引用传递  ；</strong></p>
+</blockquote>
+<blockquote>
+<p>子组件是在父组件的 @builder 修饰的方法中初始化的场景，普通写法按值传递时：父组件的变量变化能否影响子组件？</p>
+<p><strong>基础类型或者 string 类型  ： 不能通知到子组件</strong></p>
+<p>@Observed 修饰的类修改<strong>非嵌套属性</strong>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">子组件 \ 父组件</th>
+<th>普通变量</th>
+<th>prop 变量</th>
+<th>state 变量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">普通变量</td>
+<td>不能</td>
+<td>不能</td>
+<td>不能</td>
+</tr>
+<tr>
+<td style="text-align:center">prop 变量</td>
+<td>能</td>
+<td>不能</td>
+<td>不能</td>
+</tr>
+<tr>
+<td style="text-align:center">state 变量</td>
+<td>能</td>
+<td>不能</td>
+<td>不能</td>
+</tr>
+<tr>
+<td style="text-align:center">link 变量</td>
+<td>不允许</td>
+<td>不允许</td>
+<td>不允许</td>
+</tr>
+<tr>
+<td style="text-align:center">ObjectLink 变量</td>
+<td>能</td>
+<td>不能</td>
+<td>不能</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<blockquote>
+<p>总结：<strong>只有父组件申明为普通变量，子组件声明为带装饰器的变量时，Observed 修饰的类非嵌套属性才会通知到子组件</strong>。</p>
+</blockquote>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9hcmt0cy1tdnZtLVY1I3Byb3AlRTUlOTIlOENvYmplY3RsaW5rJUU1JUI1JThDJUU1JUE1JTk3JUU2JTk1JUIwJUU2JThEJUFFJUU3JUJCJTkzJUU2JTlFJTg0">推荐设计单独的自定义组件来渲染每一个数组或对象。此时，对象数组或嵌套对象（属性是对象的对象称为嵌套对象）需要两个自定义组件，一个自定义组件呈现外部数组 / 对象，另一个自定义组件呈现嵌套在数组 / 对象内的类对象。 @State、@Prop、@Link、@ObjectLink 装饰的变量只能观察到第一层的变化。</span></p>
+</blockquote>
+<blockquote>
+<p><a href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-new-observedv2-and-trace-V5#%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86v1%E7%89%88%E6%9C%AC%E5%AF%B9%E5%B5%8C%E5%A5%97%E7%B1%BB%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E5%8F%98%E5%8C%96%E7%9B%B4%E6%8E%A5%E8%A7%82%E6%B5%8B%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><strong>@ObservedV2 类装饰器</strong>实现对嵌套类对象属性变化直接观测</a></p>
+</blockquote>
+<blockquote>
+<p>'@Link', '@Consume',  '@ObjectLink' 装饰的变量不能初始化，必须由父组件传递过来，这也是父组件必传参数</p>
+<p>'@State', '@StorageLink', '@StorageProp', '@LocalStorageLink', '@LocalStorageProp' and '@Provide' 必须本地初始化</p>
+</blockquote>
+<blockquote>
+<p>在 aboutToAppear 方法内时，组件内的参数都已经由父组件初始化好了</p>
+</blockquote>
+<blockquote>
+<p>鸿蒙 监听一个 state 修改另外的 state。使用 watch 装饰器</p>
+</blockquote>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WMi9hcmt0cy1yZW5kZXJpbmctY29udHJvbC1sYXp5Zm9yZWFjaC0wMDAwMDAxNTI0NDE3MjEzLVYy">LazyForEach 必须使用 DataChangeListener 对象来进行更新，第一个参数 dataSource 使用状态变量时，状态变量改变不会触发 LazyForEach 的 UI 刷新</span></p>
+</blockquote>
+<blockquote>
+<p>@Watch 设置的函数是同步调用的，即修改 @prop 变量后会马上调用改函数，然后再执行修改 prop 变量的下一行代码</p>
+</blockquote>
+<blockquote>
+<p>子组件的 prop 变量是由父组件的 prop 或者 state 变量传递的情况下，如果父组件修改了变量，子组件的 prop 变量修改是在下一次的事件循环中修改，即如果子组件设置了 watch， 顺序是 .1. 父组件修改变量 2. 执行父组件修改变量的下面代码 3. 执行子组件的 watch 函数</p>
+</blockquote>
+<blockquote>
+<p>API12   自定义构建函数的参数传递不能是 state 参数；因为<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WMi9hcmt0cy1idWlsZGVyLTAwMDAwMDE1MjQxNzY5ODEtVjIjc2VjdGlvbjE3NzE1MTg2MTAzNTM=">调用 @Builder 装饰的函数默认按值传递</span>。当传递的参数为状态变量时，状态变量的改变不会引起 @Builder 方法内的 UI 刷新。 有这种使用场景抽象成组件，不要用 @Builder 装饰的函数。</p>
+</blockquote>
+<h2 id="ui开发特点"><a class="anchor" href="#ui开发特点">#</a> UI 开发特点</h2>
+<blockquote>
+<p>onTouch 方法 是先内部组件触发，再外部组件触发，通过 stopPropagation 方法可以阻止冒泡</p>
+</blockquote>
+<blockquote>
+<p>borderRadius 设置的圆角不会限制内部组件，内部组件的四个角会超出圆角范围！！</p>
+<p>采用 <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtc2hhcnAtY2xpcHBpbmctMDAwMDAwMTgxNTkyNzUyMA==">clip (true) 方法</span></p>
+</blockquote>
+<blockquote>
+<p>组件默认拦截点击事件 ，可通过 enable 方法设置</p>
+</blockquote>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvdHMtdGV4dC1jb21tb24tVjUjZWRpdG1lbnVvcHRpb25zJUU1JUFGJUI5JUU4JUIxJUExJUU4JUFGJUI0JUU2JTk4JThF">设置 input 的长按菜单内容</span></p>
+</blockquote>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9mb3J1bS90b3BpYy8wMjA4MTUzNDg5NzkzODU3ODM2">如何获取底部安全距离</span></p>
+</blockquote>
+<h2 id="业务开发特点"><a class="anchor" href="#业务开发特点">#</a> 业务开发特点</h2>
+<blockquote>
+<p>CustomDialogController 可以重复 open，传入的 builder 函数会被重复调用，但其他传入参数是不会变化，例如 传入 isModal 参数是个函数，也不会被调用，只会使用第一次调用的值</p>
+</blockquote>
+<blockquote>
+<p>NavDestination 只能有一个子组件，如果有多个子组件，下面的组件不会展示</p>
+</blockquote>
+<blockquote>
+<p>@Prop 装饰变量时会进行深拷贝，<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy1pbWFnZS1WNSNwaXhlbG1hcDc=">PixelMap</span> 由于有部分实现在 Native 侧，因此无法在 ArkTS 侧通过深拷贝获得完整的数据。所以子组件 prop 变量中如果有 PixelMap 变量，无法通过父组件传递图像数据，导致子组件无法展示图片。<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9hcmt0cy1wcm9wLVY1">限制条件</span></p>
+<p>解决方案：</p>
+<p>1. 不使用 prop 装饰器，使用 link 装饰器或者不使用装饰器</p>
+<p>2. 子组件 prop 变量中不定义 PixelMap 变量，而定义返回 PixelMap 变量的匿名函数</p>
+</blockquote>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuYXJrdWkuY2x1Yi9jaGFwdGVyMi8yXzNfcmVzb3VyY2UuaHRtbCNfMi0zLTQtJUU4JUI1JTg0JUU2JUJBJTkwJUU3JUFFJUExJUU3JTkwJTg2JUU1JTk5JUE4">通过 resourceManager 访问字符串资源</span></p>
+</blockquote>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy11dGlsLVY1I3V0aWxmb3JtYXQ5">ts 中没有 string.format 方法，所以鸿蒙提供了 util 工具函数</span></p>
+</blockquote>
+<blockquote>
+<p>点击，触摸事件汇总：</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtb24tY2hpbGQtdG91Y2gtdGVzdC1WNQ==">自定义事件分发</span> <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtaGl0LXRlc3QtYmVoYXZpb3ItVjU=">触摸测试控制</span> <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtb24tdG91Y2gtaW50ZXJjZXB0LVY1">自定义事件拦截</span>  <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtdG91Y2gtdGFyZ2V0LVY1">触摸热区设置</span></p>
+</blockquote>
+<blockquote>
+<p>Navigation+NodeContainer 复用相同的 node 实现不同页面展示相同的 Flutter 页面 (flutter 页面单路由) 场景，解决闪屏问题</p>
+<p>1. 不需要 NavDestination 的 mode 改为 DIALOG <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMvdHMtYmFzaWMtY29tcG9uZW50cy1uYXZkZXN0aW5hdGlvbi1WNSNtb2RlLTEx">mode(value: NavDestinationMode)</span></p>
+<p>2. 将跳页时直接将 node attach 到新的 NavDestination 的 NodeContainer 中就可以了</p>
+<p>3. 返回时操作 NavPathStack pop 前，先把 node attach 到之前页面的 NodeContainer，再进行 pop 操作</p>
+</blockquote>
+<blockquote>
+<p>修改 state，prop 变量而不触发 UI 更新： <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1hcmt1aS0zNjctVjU=">如何获取状态管理框架代理前的原始对象</span></p>
+</blockquote>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy1hcmt1aS1jb21wb25lbnRzbmFwc2hvdC1WNSNjb21wb25lbnRzbmFwc2hvdGdldHN5bmMxMg==">componentSnapshot 实现截图功能</span></p>
+</blockquote>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy9hcmt0cy1sb2NhbHN0b3JhZ2UtVjUjbmF2aWdhdGlvbiVFNyVCQiU4NCVFNCVCQiVCNiVFNSU5MiU4Q2xvY2Fsc3RvcmFnZSVFOCU4MSU5NCVFNSU5MCU4OCVFNCVCRCVCRiVFNyU5NCVBOA==">传递不同的 LocalStorage 实例给自定义组件</span></p>
+</blockquote>
+<h2 id="高级知识"><a class="anchor" href="#高级知识">#</a> 高级知识</h2>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9mb3J1bS90b3BpYy8wMjA4MTUzMTY0NjAyODU3ODE0">基于 C++ 能力的资源访问</span></p>
+<p><a href="https://developer.huawei.com/consumer/cn/forum/topic/0204150545294348010"><strong>基于 Navigation 的路由管理</strong></a></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy1zdGF0ZW1hbmFnZW1lbnQtVjUjbWFrZW9ic2VydmVkMTI=">将普通不可观察数据变为可观察数据</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9mb3J1bS90b3BpYy8wMjAyMTU3MzkwNjYyMjg2Mzcy">基于反混淆工具混淆后的日志定位</span></p>
+<h2 id="问题场景"><a class="anchor" href="#问题场景">#</a> 问题场景</h2>
+<h6 id="1-api12-auto属性太坑了-强烈推荐不使用-问题会导致父view的高度不会随着子view变化"><a class="anchor" href="#1-api12-auto属性太坑了-强烈推荐不使用-问题会导致父view的高度不会随着子view变化">#</a> 1. API12   Auto 属性太坑了 ，强烈推荐不使用。问题：会导致父 view 的高度不会随着子 view 变化</h6>
+<h6 id="2-父组件不允许传普通变量给子组件的link变量正常来说编译器会报错但在builder装饰器方法内不会报错要注意这一点"><a class="anchor" href="#2-父组件不允许传普通变量给子组件的link变量正常来说编译器会报错但在builder装饰器方法内不会报错要注意这一点">#</a> 2. 父组件不允许传普通变量给子组件的 link 变量，正常来说编译器会报错，但在 Builder 装饰器方法内不会报错，要注意这一点</h6>
+<h6 id="3使用对象数组和foreach结合起来使用但是写法不当的话会出现ui不刷新的情况-observedv2装饰器也是个解决方法"><a class="anchor" href="#3使用对象数组和foreach结合起来使用但是写法不当的话会出现ui不刷新的情况-observedv2装饰器也是个解决方法">#</a> 3.<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9wcm9wZXJseS11c2Utc3RhdGUtbWFuYWdlbWVudC10by1kZXZlbG9wZS1WNSMlRTUlOUMlQThmb3JlYWNoJUU0JUI4JUFEJUU0JUJEJUJGJUU3JTk0JUE4JUU4JTg3JUFBJUU1JUFFJTlBJUU0JUI5JTg5JUU3JUJCJTg0JUU0JUJCJUI2JUU2JTkwJUFEJUU5JTg1JThEJUU1JUFGJUI5JUU4JUIxJUExJUU2JTk1JUIwJUU3JUJCJTg0"> 使用对象数组和 ForEach 结合起来使用，但是写法不当的话会出现 UI 不刷新的情况。（ObservedV2 装饰器也是个解决方法）</span></h6>
+<h6 id="4组件内部不可以使用getter函数"><a class="anchor" href="#4组件内部不可以使用getter函数">#</a> 4.<strong> 组件内部不可以使用 getter 函数</strong></h6>
+<h6 id="5编译时没有问题运行时报error-message-a-is-not-initialized是模块循环依赖导致的使用lazy-import解决-来源"><a class="anchor" href="#5编译时没有问题运行时报error-message-a-is-not-initialized是模块循环依赖导致的使用lazy-import解决-来源">#</a> 5. 编译时没有问题，运行时报 Error message: a is not initialized，是模块循环依赖导致的，使用 lazy import 解决  <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9hcmt0cy1tb2R1bGUtc2lkZS1lZmZlY3RzLVY1IyVFNSVCRSVBQSVFNyU4RSVBRiVFNCVCRSU5RCVFOCVCNSU5Ng==">来源</span></h6>
+<h6 id="6解析json数据方式"><a class="anchor" href="#6解析json数据方式">#</a> 6. 解析 JSON 数据方式</h6>
+<figure class="highlight typescript"><figcaption data-lang="typescript"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">let</span> paramsJson<span class="token operator">:</span> Record<span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token punctuation">,</span> Object<span class="token operator">></span> <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">let</span> placeholderStyleJson <span class="token operator">=</span> paramsJson<span class="token punctuation">[</span><span class="token string">"placeholderStyle"</span><span class="token punctuation">]</span> <span class="token keyword">as</span> Record<span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token punctuation">,</span> Object<span class="token operator">></span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">// 通过 placeholderStyleJson ["fontWeight"] as string 来获取数据</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">// 不能 as 为对象后，通过属性来获取，debug 没有问题，但 release 版本混淆会出问题</span></pre></td></tr></table></figure><h6 id="7cannot-find-record-libraryindex修改前的旧版本号-please-check-the-request-pathdatastorageel1bundleentryetsmodulesabc"><a class="anchor" href="#7cannot-find-record-libraryindex修改前的旧版本号-please-check-the-request-pathdatastorageel1bundleentryetsmodulesabc">#</a> 7.cannot find record '&amp;library/Index &amp; 修改前的旧版本号 ', please check the request  path.'/data/storage/el1/bundle/entry/ets/modules.abc'.</h6>
+<ol>
+<li>删除 entry 目录下的 build 目录（依赖该问题模块的模块）</li>
+<li>主菜单 =&gt; 构建 =&gt; 清理项目</li>
+</ol>
+<h6 id="8使用builderparam在父组件调用this的方法报错error-messageis-not-callable"><a class="anchor" href="#8使用builderparam在父组件调用this的方法报错error-messageis-not-callable">#</a> 8.<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMvZmFxcy1hcmt1aS0yMjktVjU="> 使用 BuilderParam 在父组件调用 this 的方法报错：Error message:is not callable</span></h6>
+<h2 id="场景代码"><a class="anchor" href="#场景代码">#</a> 场景代码</h2>
+<h5 id="uint8array转为图片显示"><a class="anchor" href="#uint8array转为图片显示">#</a> Uint8Array 转为图片显示</h5>
+<figure class="highlight typescript"><figcaption data-lang="typescript"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token decorator"><span class="token at operator">@</span><span class="token function">Component</span></span></pre></td></tr><tr><td data-num="2"></td><td><pre>struct ImageComponent <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre> <span class="token keyword">public</span> bitmapBytes<span class="token operator">?</span><span class="token operator">:</span> Uint8Array</pre></td></tr><tr><td data-num="4"></td><td><pre> <span class="token decorator"><span class="token at operator">@</span><span class="token function">State</span></span> pixelMapImg<span class="token operator">:</span> PixelMap <span class="token operator">|</span> <span class="token keyword">undefined</span> <span class="token operator">=</span> <span class="token keyword">undefined</span></pre></td></tr><tr><td data-num="5"></td><td><pre> <span class="token keyword">private</span> imageWidth <span class="token operator">=</span> <span class="token number">0</span></pre></td></tr><tr><td data-num="6"></td><td><pre> <span class="token keyword">private</span> imageHeight <span class="token operator">=</span> <span class="token number">0</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre> <span class="token function">aboutToAppear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>bitmapBytes<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>     <span class="token keyword">let</span> imgSource<span class="token operator">:</span> image<span class="token punctuation">.</span>ImageSource <span class="token operator">=</span> image<span class="token punctuation">.</span><span class="token function">createImageSource</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>bitmapBytes<span class="token punctuation">.</span>buffer<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>     <span class="token keyword">if</span> <span class="token punctuation">(</span>imgSource<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>       <span class="token keyword">let</span> decodingOptions<span class="token operator">:</span> image<span class="token punctuation">.</span>DecodingOptions <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>         editable<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="15"></td><td><pre>         desiredPixelFormat<span class="token operator">:</span> image<span class="token punctuation">.</span>PixelMapFormat<span class="token punctuation">.</span><span class="token constant">RGBA_8888</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="16"></td><td><pre>       <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>       imgSource<span class="token punctuation">.</span><span class="token function">createPixelMap</span><span class="token punctuation">(</span>decodingOptions<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token punctuation">(</span>pixel<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>         <span class="token keyword">const</span> info <span class="token operator">=</span> <span class="token keyword">await</span> imgSource<span class="token punctuation">.</span><span class="token function">getImageInfo</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>         <span class="token keyword">this</span><span class="token punctuation">.</span>imageWidth<span class="token operator">=</span><span class="token function">px2vp</span><span class="token punctuation">(</span>info<span class="token punctuation">.</span>size<span class="token punctuation">.</span>width<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="20"></td><td><pre>         <span class="token keyword">this</span><span class="token punctuation">.</span>imageHeight<span class="token operator">=</span><span class="token function">px2vp</span><span class="token punctuation">(</span>info<span class="token punctuation">.</span>size<span class="token punctuation">.</span>height<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="21"></td><td><pre>         <span class="token keyword">this</span><span class="token punctuation">.</span>pixelMapImg <span class="token operator">=</span> pixel</pre></td></tr><tr><td data-num="22"></td><td><pre>       <span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="23"></td><td><pre>     <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>   <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="25"></td><td><pre> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="26"></td><td><pre></pre></td></tr><tr><td data-num="27"></td><td><pre></pre></td></tr><tr><td data-num="28"></td><td><pre> <span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>pixelMapImg<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="30"></td><td><pre>     <span class="token function">Image</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>pixelMapImg<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="31"></td><td><pre>       <span class="token punctuation">.</span><span class="token function">width</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>imageWidth<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="32"></td><td><pre>       <span class="token punctuation">.</span><span class="token function">height</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>imageHeight<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="33"></td><td><pre>   <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="34"></td><td><pre> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="35"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>Harmony</category>
+      </categories>
+      <tags>
+        <tag>知识点</tag>
+        <tag>鸿蒙</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>gradle的aar场景知识</title>
     <url>/post/59f16662.html</url>
     <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuamI1MS5uZXQvYXJ0aWNsZS8yNjMwMDMuaHRt">发布 Android library 到 Maven 解析</span></p>
@@ -755,8 +1128,8 @@ MeasureSpec.UNSPECIFIED  0
         <category>Android</category>
       </categories>
       <tags>
-        <tag>RecyclerView</tag>
         <tag>ConstraintLayout</tag>
+        <tag>RecyclerView</tag>
       </tags>
   </entry>
   <entry>
@@ -1099,100 +1472,6 @@ int main(int argc, char* argv[]) &#123;
       </tags>
   </entry>
   <entry>
-    <title>鸿蒙native开发</title>
-    <url>/post/df80432a.html</url>
-    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9zdWJpbmd3ZW4uY24vY21ha2UvQ01ha2UtcHJpbWVyLw==">CMake 保姆级教程</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstZGV2ZWxvcG1lbnQtVjU=">NDK 开发用例文档</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstNTMtVjU=">Native 侧如何获取 ArkTS 侧类实例</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstMjYtVjU=">如何在 C++ 调用从 ArkTS 传递过来的 function</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjEzL2xpYnV2LVYxMyMlRTYlOTQlQUYlRTYlOEMlODElRTclOUElODQlRTglODMlQkQlRTUlOEElOUI=">libuv</span></p>
-<p><span id="more"></span></p>
-<h2 id="目录结构"><a class="anchor" href="#目录结构">#</a> 目录结构</h2>
-<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/22/c5d1207d4e2ea7b9.png" alt="" /></p>
-<h2 id="修改生成的so文件名称"><a class="anchor" href="#修改生成的so文件名称">#</a> 修改生成的 so 文件名称</h2>
-<blockquote>
-<p>Ensure that the .so name is the same as that in oh-package.json5 under module directory.</p>
-</blockquote>
-<h5 id="1修改types文件夹下的文件夹名称为so库的名称及其目录下的oh-packagejson5的name属性"><a class="anchor" href="#1修改types文件夹下的文件夹名称为so库的名称及其目录下的oh-packagejson5的name属性">#</a> 1. 修改 types 文件夹下的文件夹名称为 so 库的名称，及其目录下的 oh-package.json5 的 name 属性</h5>
-<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/9fee13dc5dc6a4c3.png" alt="" /></p>
-<h5 id="2修改cmakeliststxt文件"><a class="anchor" href="#2修改cmakeliststxt文件">#</a> 2. 修改 CMakeLists.txt 文件</h5>
-<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/d999dd7b567cfc9c.png" alt="" /></p>
-<h5 id="3修改napi_initcpp文件napi_module的nm_modname属性"><a class="anchor" href="#3修改napi_initcpp文件napi_module的nm_modname属性">#</a> 3. 修改 napi_init.cpp 文件，napi_module 的 nm_modname 属性</h5>
-<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/01779d12e71d7555.png" alt="" /></p>
-<h5 id="4修改entry-模块的oh-packagejson5的依赖和引用so库的est文件"><a class="anchor" href="#4修改entry-模块的oh-packagejson5的依赖和引用so库的est文件">#</a> 4. 修改 entry 模块的 oh-package.json5 的依赖，和引用 so 库的 est 文件</h5>
-<p><img data-src="C:%5CUsers%5Clanshushui%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20241123001601426.png" alt="image-20241123001601426" /></p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/1c2fab04c909e368.png" alt="" /></p>
-<h2 id="命令行生成so文件"><a class="anchor" href="#命令行生成so文件">#</a> 命令行生成 so 文件</h2>
-<blockquote>
-<p>鸿蒙 ndk 中有 ninja.exe ，所以采用 cmake+nanji 构建 so 库   <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvYmVzdC1wcmFjdGljZXMtVjUvYnB0YS1jbWFrZS1hZGFwdHMtdG8taGFybW9ueW9zLVY1">官方指定文档</span></p>
-<p>window cmake 默认的生成器是 NMake Makefiles，所以 cmake 命令需要特定指定生成器</p>
-</blockquote>
-<p>前提：PATH 环境配置 ndk 的 bin 目录，在源代码目录新建立 build 目录，并 cd 进入。</p>
-<h5 id="1执行cmke命令"><a class="anchor" href="#1执行cmke命令">#</a> 1. 执行 cmke 命令</h5>
-<blockquote>
-<p>可以通过 cmake -help 命令查看命令</p>
-</blockquote>
-<blockquote>
-<p>cmake -S=..\ -DCMAKE_TOOLCHAIN_FILE=C:\Users\lanshushui\AppData\Local\OpenHarmony\Sdk\12\native\build\cmake\ohos.toolchain.cmake   -DOHOS_ARCH=arm64-v8a -G=Ninja</p>
-</blockquote>
-<p>-DCMAKE_TOOLCHAIN_FILE  为一个特定的平台编译代码时，可以使用  <code>-DCMAKE_TOOLCHAIN_FILE=path/to/your/toolchain/file.cmake</code>  来指定工具链文件。这样，CMake 会使用该文件中的设置来配置构建过程。</p>
-<p>-S 指定源代码目录</p>
-<p>-G 指定生成器</p>
-<p><strong>生成的目录结构：</strong></p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/73e5ef2d8f58b0da.png" alt="" /></p>
-<h5 id="2执行ninji命令"><a class="anchor" href="#2执行ninji命令">#</a> 2. 执行 ninji 命令</h5>
-<blockquote>
-<p>ninja</p>
-</blockquote>
-<p><strong>生成的目录结构：</strong></p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2024/11/23/23823ecbcdca869b.png" alt="" /></p>
-<h5 id="3命令记录"><a class="anchor" href="#3命令记录">#</a> 3. 命令记录</h5>
-<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>D<span class="token operator">:</span>\DevEcoStudioProjects\NATIVEOHOS\entry\src\main\cpp\build<span class="token operator">></span>cmake <span class="token operator">-</span>S<span class="token operator">=</span><span class="token punctuation">.</span><span class="token punctuation">.</span>\ <span class="token operator">-</span>DCMAKE_TOOLCHAIN_FILE<span class="token operator">=</span>C<span class="token operator">:</span>\Users\lanshushui\AppData\Local\OpenHarmony\Sdk\<span class="token number">12</span>\native\build\cmake\ohos<span class="token punctuation">.</span>toolchain<span class="token punctuation">.</span>cmake   <span class="token operator">-</span>DOHOS_ARCH<span class="token operator">=</span>arm64<span class="token operator">-</span>v8a <span class="token operator">-</span>G<span class="token operator">=</span>Ninja</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">--</span> The C compiler identification is Clang <span class="token number">15.0</span><span class="token number">.4</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">--</span> The CXX compiler identification is Clang <span class="token number">15.0</span><span class="token number">.4</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token operator">--</span> Detecting C compiler ABI info</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token operator">--</span> Detecting C compiler ABI info <span class="token operator">-</span> done</pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token operator">--</span> Check <span class="token keyword">for</span> working C compiler<span class="token operator">:</span> C<span class="token operator">:</span><span class="token operator">/</span>Users<span class="token operator">/</span>lanshushui<span class="token operator">/</span>AppData<span class="token operator">/</span>Local<span class="token operator">/</span>OpenHarmony<span class="token operator">/</span>Sdk<span class="token operator">/</span><span class="token number">12</span><span class="token operator">/</span>native<span class="token operator">/</span>llvm<span class="token operator">/</span>bin<span class="token operator">/</span>clang<span class="token punctuation">.</span>exe <span class="token operator">-</span> skipped</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token operator">--</span> Detecting C compile features</pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token operator">--</span> Detecting C compile features <span class="token operator">-</span> done</pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token operator">--</span> Detecting CXX compiler ABI info</pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token operator">--</span> Detecting CXX compiler ABI info <span class="token operator">-</span> done</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token operator">--</span> Check <span class="token keyword">for</span> working CXX compiler<span class="token operator">:</span> C<span class="token operator">:</span><span class="token operator">/</span>Users<span class="token operator">/</span>lanshushui<span class="token operator">/</span>AppData<span class="token operator">/</span>Local<span class="token operator">/</span>OpenHarmony<span class="token operator">/</span>Sdk<span class="token operator">/</span><span class="token number">12</span><span class="token operator">/</span>native<span class="token operator">/</span>llvm<span class="token operator">/</span>bin<span class="token operator">/</span>clang<span class="token operator">++</span><span class="token punctuation">.</span>exe <span class="token operator">-</span> skipped</pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token operator">--</span> Detecting CXX compile features</pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token operator">--</span> Detecting CXX compile features <span class="token operator">-</span> done</pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token operator">--</span> Configuring <span class="token function">done</span> <span class="token punctuation">(</span><span class="token number">5.2</span>s<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token operator">--</span> Generating <span class="token function">done</span> <span class="token punctuation">(</span><span class="token number">0.0</span>s<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token operator">--</span> Build files have been written to<span class="token operator">:</span> D<span class="token operator">:</span><span class="token operator">/</span>DevEcoStudioProjects<span class="token operator">/</span>NATIVEOHOS<span class="token operator">/</span>entry<span class="token operator">/</span>src<span class="token operator">/</span>main<span class="token operator">/</span>cpp<span class="token operator">/</span>build</pre></td></tr><tr><td data-num="17"></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td><pre>D<span class="token operator">:</span>\DevEcoStudioProjects\NATIVEOHOS\entry\src\main\cpp\build<span class="token operator">></span>ninja</pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">/</span><span class="token number">2</span><span class="token punctuation">]</span> Building CXX object CMakeFiles<span class="token operator">/</span>change<span class="token punctuation">.</span>dir<span class="token operator">/</span>napi_init<span class="token punctuation">.</span>cpp<span class="token punctuation">.</span>o</pre></td></tr><tr><td data-num="20"></td><td><pre>clang<span class="token operator">++</span><span class="token operator">:</span> warning<span class="token operator">:</span> argument unused during compilation<span class="token operator">:</span> '<span class="token operator">--</span>gcc<span class="token operator">-</span>toolchain<span class="token operator">=</span>C<span class="token operator">:</span><span class="token operator">/</span>Users<span class="token operator">/</span>lanshushui<span class="token operator">/</span>AppData<span class="token operator">/</span>Local<span class="token operator">/</span>OpenHarmony<span class="token operator">/</span>Sdk<span class="token operator">/</span><span class="token number">12</span><span class="token operator">/</span>native<span class="token operator">/</span>llvm' <span class="token punctuation">[</span><span class="token operator">-</span>Wunused<span class="token operator">-</span>command<span class="token operator">-</span>line<span class="token operator">-</span>argument<span class="token punctuation">]</span></pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token punctuation">[</span><span class="token number">2</span><span class="token operator">/</span><span class="token number">2</span><span class="token punctuation">]</span> Linking CXX shared library libchange<span class="token punctuation">.</span>so</pre></td></tr></table></figure><h2 id="接入带napi信息的so库"><a class="anchor" href="#接入带napi信息的so库">#</a> 接入带 napi 信息的 so 库</h2>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstMjEtVjU=">官方指导文档</span></p>
-<blockquote>
-<p>types 文件夹下定义 so 信息的子文件夹<strong>一定要 lib 开头</strong>，libxxx。不然会报错</p>
-</blockquote>
-<blockquote>
-<p>前提知识点：</p>
-<p>native 模板代码生成的 hap 中 lib 文件夹，除了自定义代码生成的 so 库，还有 c<ins> 运行时标准库 **libc</ins>_shared.so**</p>
-<p>所以如果我们要在纯 ArkTs 项目中接入命令行生成的 so 库时，还需要接入 libc++_shared.so</p>
-<p>本地目录：C:\Users\lanshushui\AppData\Local\OpenHarmony\Sdk\12\native\llvm\lib\arm-linux-ohos\libc++_shared.so</p>
-<p>IDE 编译目录：D:\DevEcoStudioProjects\NATIVEOHOS\entry\build\default\intermediates\libs\default\arm64-v8a\libc++_shared.so</p>
-</blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vamFja2llYXRob21lL3AvMTc5Mzc3MDA=">android 通过 ANDROID_STL 变量来决定使用动态库还是静态库</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvY3BwLVY1">鸿蒙通过 OHOS_STL 变量来决定使用动态库还是静态库</span></p>
-<h6 id="将一个native的demo项目改成一个带so库的纯artts项目通过该操作来了解第三方so库的接入"><a class="anchor" href="#将一个native的demo项目改成一个带so库的纯artts项目通过该操作来了解第三方so库的接入">#</a> <em>将一个 native 的 demo 项目改成一个带 so 库的纯 ArtTs 项目，通过该操作来了解第三方 so 库的接入</em></h6>
-<ol>
-<li>build 后，将 \entry\build\default\intermediates\libs\default\arm64-v8a 目录下的两个 so 库都复制到 lib 目录下</li>
-<li>删除 cpp 目录下的 napi_init.cpp 和 CMakeLists.txt 文件，以及 entry/build-profile.json5 的 externalNativeOptions 属性，使其变成个纯 ArkTs 项目</li>
-<li>运行，功能正常</li>
-</ol>
-<blockquote>
-<p>type 目录下定义的导出文件可能爆红：Declared function 'add' has no native implementation.&lt;ArkTSCheck&gt; ，但实际没有运行问题</p>
-</blockquote>
-<h2 id="c如何调用ts"><a class="anchor" href="#c如何调用ts">#</a> C++ 如何调用 TS</h2>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstNTMtVjU=">Native 侧如何获取 ArkTS 侧类实例</span></p>
-<blockquote>
-<p>通过 demo 代码的 debug，发现 ts 调到 napi_init.cpp 的代码，debug 区域的线程信息是不同的，但实际通过 pid==tid 判断，发现是同线程调用，官方文档也有佐证 <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstMTQtVjU=">通过按钮点击事件调用 Native 层的接口时，Native 层代码是在主线程中执行的</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMvZmFxcy1hcmt0cy02OC1WNQ==">如何判断是否为主线程</span></p>
-</blockquote>
-<blockquote>
-<p>很多时候 C++ 层需要长期持有 ts 的对象，方便随时回调</p>
-<p>不能直接保存 napi_value，因为它有生命周期！！！<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstODAtVjU=">Native 侧如何合理管控对象的生命周期</span></p>
-<p>通过 napi_ref 延长对象生命周期，napi_create_reference; napi_get_reference_value；napi_delete_reference 来保存获取 ts 对象</p>
-</blockquote>
-<h2 id="小知识点"><a class="anchor" href="#小知识点">#</a> 小知识点</h2>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1uZGstOC1WNQ==">暂不支持在 c++ 子线程调用 ArkTS 接口，当前只能通过 callback 异步调用或者线程安全的方式进行回调处理</span></p>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>Harmony</category>
-      </categories>
-      <tags>
-        <tag>Native</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>左值，右值与引用</title>
     <url>/post/be08ec92.html</url>
     <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9naXRjb2RlLmNvbS9naF9taXJyb3JzL215L215Q3BwMTFTdHVkeS9ibG9iL21hc3Rlci9jcHAxMWZlYXR1cmVzL3JpZ2h0X3ZhbHVlX3JlZi9yaWdodF92YWx1ZV9yZWYuY3Bw">右值引用 study-case</span></p>
@@ -1448,41 +1727,6 @@ int main(int argc, char** argv)
       </tags>
   </entry>
   <entry>
-    <title>Hdc命令</title>
-    <url>/post/502a37a0.html</url>
-    <content><![CDATA[<h2 id=""><a class="anchor" href="#">#</a> </h2>
-<h3 id="macos环境变量设置方法"><a class="anchor" href="#macos环境变量设置方法">#</a> macOS 环境变量设置方法</h3>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9oZGMtVjUjJUU1JThGJUFGJUU5JTgwJTg5JUU5JTg1JThEJUU3JUJEJUFFJUU1JTg1JUE4JUU1JUIxJTgwJUU3JThFJUFGJUU1JUEyJTgzJUU1JThGJTk4JUU5JTg3JThG">官方文档</span>    <span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vbW9vbnNvZnQvcC8xNTk5MDQ1MC5odG1s">Linux 报错：bash:vi:command not find 如何解决</span></p>
-<figure class="highlight typescript"><figcaption data-lang="typescript"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">1</span>、打开终端工具，执行以下命令，根据输出结果分别执行不同命令。</pre></td></tr><tr><td data-num="2"></td><td><pre>echo $<span class="token constant">SHELL</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">-</span>如果输出结果为<span class="token operator">/</span>bin<span class="token operator">/</span>bash，则执行以下命令，打开<span class="token punctuation">.</span>bash_profile文件。</pre></td></tr><tr><td data-num="4"></td><td><pre>vi <span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>bash_profile</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token operator">-</span>如果输出结果为<span class="token operator">/</span>bin<span class="token operator">/</span>zsh，则执行以下命令，打开<span class="token punctuation">.</span>zshrc文件。</pre></td></tr><tr><td data-num="6"></td><td><pre>vi <span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>zshrc</pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token number">2</span>、单击字母“i”，进入Insert模式。</pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token number">3</span>、输入以下内容</pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token keyword">export</span> <span class="token constant">PATH</span><span class="token operator">=</span>$<span class="token punctuation">&#123;</span><span class="token constant">PATH</span><span class="token punctuation">&#125;</span><span class="token operator">:</span> sdk路径<span class="token operator">/</span>openharmony<span class="token operator">/</span><span class="token number">10</span><span class="token operator">/</span>toolchains</pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token number">4</span>、编辑完成后，单击Esc键，退出编辑模式，然后输入“<span class="token operator">:</span>wq”，单击Enter键保存。</pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token number">5</span>、执行以下命令，使配置的环境变量生效。</pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token operator">-</span>如果步骤<span class="token number">1</span>时打开的是<span class="token punctuation">.</span>bash_profile文件，请执行如下命令：</pre></td></tr><tr><td data-num="18"></td><td><pre>source <span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>bash_profile</pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token operator">-</span>如果步骤<span class="token number">1</span>时打开的是<span class="token punctuation">.</span>zshrc文件，请执行如下命令：</pre></td></tr><tr><td data-num="20"></td><td><pre>source <span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>zshrc</pre></td></tr><tr><td data-num="21"></td><td><pre></pre></td></tr><tr><td data-num="22"></td><td><pre><span class="token number">6</span>、环境变量配置完成后，关闭并重启DevEco Studio。</pre></td></tr></table></figure><ul>
-<li>使用 <code>hdc kill -r</code>  命令可以杀掉异常进程并重启 hdc 服务。</li>
-<li>如果 <code>hdc list targets</code>  获取不到设备信息，检查是否有 hdc 进程存在，并尝试重启 hdc 服务。</li>
-</ul>
-<h3 id="hvigorw命令"><a class="anchor" href="#hvigorw命令">#</a> hvigorw 命令</h3>
-<blockquote>
-<p>命令格式  hvigor [taskNames...] &lt;options...&gt;  <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9pZGUtaHZpZ29yLWNvbW1hbmRsaW5lLVY1">官方文档</span></p>
-</blockquote>
-<h6 id="查看当前工程可用的tasks"><a class="anchor" href="#查看当前工程可用的tasks">#</a> 查看当前工程可用的 tasks</h6>
-<blockquote>
-<p>hvigorw tasks</p>
-</blockquote>
-<h6 id="打包hap"><a class="anchor" href="#打包hap">#</a> 打包 Hap</h6>
-<blockquote>
-<p>hvigorw assembleApp --mode project -p product=default -p buildMode=debug --no-daemon</p>
-</blockquote>
-<h6 id="打包har"><a class="anchor" href="#打包har">#</a> 打包 har</h6>
-<blockquote>
-<p>hvigorw assembleHsp --mode module -p product=default -p module=library@default --no-daemon</p>
-</blockquote>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>Harmony</category>
-      </categories>
-      <tags>
-        <tag>命令</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>NodeContainer更新方式</title>
     <url>/post/92fbcac0.html</url>
     <content><![CDATA[<p><span id="more"></span></p>
@@ -1557,16 +1801,7 @@ int main(int argc, char** argv)
 <p>c++ 实现多态条件：virtual 方法 + 父类指针指向子类对象 ** 必须是指针</p>
 </blockquote>
 <blockquote>
-<pre><code>People p ;
-Animal a =p; //这是利用复制构造函数创建了个a，不是java语法的用引用a指向实例p
-a.eat();  //打印Animal eat  说明多态失败；这一点和JAVA不一样
-
-Animal* animal = new People();
-animal-&gt;eat(); //打印 People eat  说明多态成功
-
-//由此延申到具体业务场景：需要用vector或者unordered_map存储子类时，value必须是智能指针(shared_ptr)才能实现多态
-</code></pre>
-</blockquote>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>People p <span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>Animal a <span class="token operator">=</span>p<span class="token punctuation">;</span> <span class="token comment">// 这是利用复制构造函数创建了个 a，不是 java 语法的用引用 a 指向实例 p</span></pre></td></tr><tr><td data-num="3"></td><td><pre>a<span class="token punctuation">.</span><span class="token function">eat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 打印 Animal eat  说明多态失败；这一点和 JAVA 不一样</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>Animal<span class="token operator">*</span> animal <span class="token operator">=</span> new <span class="token function">People</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>animal<span class="token operator">-></span><span class="token function">eat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 打印 People eat  说明多态成功</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment">// 由此延申到具体业务场景：需要用 vector 或者 unordered_map 存储子类时，value 必须是智能指针 (shared_ptr) 才能实现多态</span></pre></td></tr></table></figure></blockquote>
 <blockquote>
 <p><span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vZ3V4dWFucWluZy9wLzU4NzY3NjguaHRtbA==">C++ 类定义中，数据成员不能被指定为自身类型，但可以是指向自身类型的指针或引用？为什么在类体内可以定义将静态成员声明为其所属类的类型呢？</span></p>
 </blockquote>
@@ -1657,22 +1892,7 @@ animal-&gt;eat(); //打印 People eat  说明多态成功
 <p><a href="https://cloud.tencent.com/developer/article/2220354">对 this 的捕获，通过  <code>[&amp;]</code>  和  <code>[=]</code>  对 this 的隐式捕获，以及  <code>[this]</code>  显式捕获都是  <code>by-reference</code>  的，其实捕获的都是 this 指针。</a></p>
 <blockquote>
 <p>将一个类的函数赋值给 std::function 变量，使用 std::bind 方法 <span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4NDEwNzMwL2FydGljbGUvZGV0YWlscy8xMDM2Mzc3Nzg=">用例</span></p>
-<pre><code>
-class Demo&#123;
-public:
-    void A(std::string str)&#123;
-        std::cout &lt;&lt; str &lt;&lt; std::endl;
-   &#125;
-   void B(std::function&lt;void(std::string)&gt; func)&#123;
-       func(&quot;hello world&quot;);
-   &#125;
-    void call()&#123;
-        B(std::bind(&amp;Demo::A,this, std::placeholders::_1)); //使用占位符，打印hello world
-        B(std::bind(&amp;Demo::A,this, &quot;test&quot;)); //传入实际参数，会忽略后续调用传入的参数，打印test
-     &#125;
-&#125;;
-</code></pre>
-</blockquote>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>class Demo<span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>public<span class="token operator">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">void</span> <span class="token function">A</span><span class="token punctuation">(</span>std<span class="token operator">::</span>string str<span class="token punctuation">)</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> str <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>   <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>   <span class="token keyword">void</span> <span class="token function">B</span><span class="token punctuation">(</span>std<span class="token operator">::</span>function<span class="token operator">&lt;</span><span class="token keyword">void</span><span class="token punctuation">(</span>std<span class="token operator">::</span>string<span class="token punctuation">)</span><span class="token operator">></span> func<span class="token punctuation">)</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>       <span class="token function">func</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>   <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">void</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token function">B</span><span class="token punctuation">(</span>std<span class="token operator">::</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Demo<span class="token operator">::</span>A<span class="token punctuation">,</span>this<span class="token punctuation">,</span> std<span class="token operator">::</span>placeholders<span class="token operator">::</span>_1<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 使用占位符，打印 hello world</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        <span class="token function">B</span><span class="token punctuation">(</span>std<span class="token operator">::</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Demo<span class="token operator">::</span>A<span class="token punctuation">,</span>this<span class="token punctuation">,</span> <span class="token string">"test"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 传入实际参数，会忽略后续调用传入的参数，打印 test</span></pre></td></tr><tr><td data-num="12"></td><td><pre>     <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure></blockquote>
 <h4 id="stdspan知识"><a class="anchor" href="#stdspan知识">#</a> std::span 知识</h4>
 <blockquote>
 <p>absl::Span 对 std::vector 就像 absl::string_view 对 std::string 一样。它为 vector 的元素提供只读接口，但是它也可以从由非 vector (如数组和初始化列表) 来构造，并且不会产生拷贝元素的消耗。<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ZlaWhlMDc1NS9hcnRpY2xlL2RldGFpbHMvMTE5NDI4MDY1">来源</span></p>
@@ -1687,18 +1907,7 @@ public:
 <h4 id="stdis_same-stdis_base_of知识"><a class="anchor" href="#stdis_same-stdis_base_of知识">#</a> std::is_same std::is_base_of 知识</h4>
 <p>常用于模板中判断是否是某类型 (的子类) <span class="exturl" data-url="aHR0cHM6Ly96aC5jcHByZWZlcmVuY2UuY29tL3cvY3BwL3R5cGVzL2lzX2Jhc2Vfb2Y=">官方文档</span></p>
 <h4 id="指针知识"><a class="anchor" href="#指针知识">#</a> 指针知识</h4>
-<pre><code class="language-c++">//基类指针转为子类指针
-if(auto* prt =std::dynamic_cast&lt;XXX&gt;(basePtr))&#123;
- 
-&#125;
-//基类智能指针转为子类智能指针
-if(auto* prt =std::dynamic_pointer_cast&lt;XXX&gt;(basePtr))&#123;
- 
-&#125;
-//指针转为long类型
-long p = std::reinterpret_cast&lt;Long&gt;(ptr)
-</code></pre>
-<h4 id="杂余"><a class="anchor" href="#杂余">#</a> 杂余：</h4>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// 基类指针转为子类指针</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">auto</span><span class="token operator">*</span> prt <span class="token operator">=</span>std<span class="token operator">::</span>dynamic_cast<span class="token operator">&lt;</span>XXX<span class="token operator">></span><span class="token punctuation">(</span>basePtr<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre> </pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">// 基类智能指针转为子类智能指针</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">auto</span><span class="token operator">*</span> prt <span class="token operator">=</span>std<span class="token operator">::</span>dynamic_pointer_cast<span class="token operator">&lt;</span>XXX<span class="token operator">></span><span class="token punctuation">(</span>basePtr<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre> </pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment">// 指针转为 long 类型</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token keyword">long</span> p <span class="token operator">=</span> std<span class="token operator">::</span>reinterpret_cast<span class="token operator">&lt;</span>Long<span class="token operator">></span><span class="token punctuation">(</span>ptr<span class="token punctuation">)</span></pre></td></tr></table></figure><h4 id="杂余"><a class="anchor" href="#杂余">#</a> 杂余：</h4>
 <blockquote>
 <p><a href="https://www.apiref.com/cpp-zh/cpp/types/is_enum.html">std::is_enum   检查  <code>T</code>  是否为枚举类型</a></p>
 </blockquote>
@@ -1810,248 +2019,6 @@ Tid:56718, Name:IPC_3_56718
       </tags>
   </entry>
   <entry>
-    <title>Harmony知识点</title>
-    <url>/post/3066680b.html</url>
-    <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9sYW5zaHVzaHVpLmdpdGh1Yi5pby9wb3N0L2RjNGFjNzZmLmh0bWw=">JS，TS 知识点</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WMi9hcmt0cy1iYXNpYy1zeW50YXgtMDAwMDAwMTUwNDY1MDA1Ny1WMg==">ArkTS 基础语法</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvYXJrdWktZGVjbGFyYXRpdmUtY29tcC1WNQ==">ArkTS 容器组件</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvNV8yX3U5MDFhX3U3NTI4X3U1YzVlX3U2MDI3LVY1">ArkTS 组件的通用属性</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMvZmFxcy1hcmt1aS1raXQtVjU=">官方各种问题场景解决方案</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9naXRlZS5jb20vaGFybW9ueW9zLWNhc2VzL2Nhc2Vz">HarmonyOS-Cases / 官方 Cases</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9naXRlZS5jb20vb3Blbmhhcm1vbnkvZG9jcy9ibG9iL21hc3Rlci96aC1jbi9hcHBsaWNhdGlvbi1kZXYvcXVpY2stc3RhcnQvYXJrdHMtbW9yZS1jYXNlcy5tZA==">ArkTS 语法规则下将 TS 代码适配成 ArkTS 代码的建议</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy13aW5kb3ctVjUjd2luZG93Y3JlYXRld2luZG93OQ==">window 文档</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy1hcmt1aS11aWNvbnRleHQtVjUjdWljb250ZXh0">UIContext 文档</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy9pZGUtaHZpZ29yLWJ1aWxkLXByb2ZpbGUtVjU=">build-profile.json5</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvYmVzdC1wcmFjdGljZXMtVjUvYnB0YS1rZXlib2FyZC1sYXlvdXQtYWRhcHQtVjU=">软键盘布局适配场景介绍</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuYXJrdWkuY2x1Yi8=">《ArkUI 实战》</span></p>
-<p><a href="https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-ui-dynamic-operations-V5"><strong>声明式 UI 中实现组件动态创建</strong></a></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC83MzA0NTM4MTk5MTQ5NDEyNDE1P3NlYXJjaElkPTIwMjQwNTA5MTEyMDMwMjg3MkM2Rjg1NjgyMzQ4NzZFNkM=">鸿蒙开发之 android 开发人员指南《基础知识》</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WMi91aWFiaWxpdHktb3ZlcnZpZXctMDAwMDAwMTQ3Nzk4MDkyOS1WMg==">UIAbility 组件概述</span></p>
-<p><span id="more"></span></p>
-<h2 id="android-和-鸿蒙对标的配置"><a class="anchor" href="#android-和-鸿蒙对标的配置">#</a> Android 和 鸿蒙对标的配置</h2>
-<blockquote>
-<p>match_parent  ==  width(&quot;100%&quot;)    wrap_content ==  height('auto')</p>
-</blockquote>
-<blockquote>
-<p>weight 1 ==  flexGrow(1)</p>
-</blockquote>
-<blockquote>
-<p>宽是 1dp 的空白 View  ==  Blank ().width (1).height (&quot;100%&quot;)</p>
-</blockquote>
-<blockquote>
-<p>FrameLayout ==  Stack 组件</p>
-</blockquote>
-<figure class="highlight typescript"><figcaption data-lang="typescript"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//View 实现居中对齐  </span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">Flex</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>justifyContent <span class="token operator">:</span>FlexAlign<span class="token punctuation">.</span>Center<span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token function">Text</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token function">Text</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h2 id="基础开发特点"><a class="anchor" href="#基础开发特点">#</a> 基础开发特点</h2>
-<blockquote>
-<p>子组件定义的变量都可以通过父组件传递过来，不仅限于 prop 和 state 变量，普通变量也可以，这是选填参数</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">子组件 \ 父组件</th>
-<th>普通变量</th>
-<th>prop 变量</th>
-<th>state 变量</th>
-<th>link 变量</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">普通变量</td>
-<td>引用传递，同对象</td>
-<td>引用传递，同对象</td>
-<td>引用传递，同对象</td>
-<td>引用传递，同对象</td>
-</tr>
-<tr>
-<td style="text-align:center">prop 变量</td>
-<td>值传递，不同对象</td>
-<td>值传递，不同对象</td>
-<td>值传递，不同对象</td>
-<td>值传递，不同对象</td>
-</tr>
-<tr>
-<td style="text-align:center">state 变量</td>
-<td>值传递，不同对象</td>
-<td>引用传递，同对象</td>
-<td>引用传递，同对象</td>
-<td>引用传递，同对象</td>
-</tr>
-<tr>
-<td style="text-align:center">link 变量</td>
-<td>不允许</td>
-<td>引用传递，同对象</td>
-<td>引用传递，同对象</td>
-<td>引用传递，同对象</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p><strong>子组件定义的普遍变量，link 变量 = 引用传递  ；子组件定义的 prop 变量 = 值传递（不同对象）  ；</strong></p>
-<p><strong>子组件定义的 state 变量 = 看情况，如果是父组件的普遍变量，则是值传递，否则是引用传递  ；</strong></p>
-</blockquote>
-<blockquote>
-<p>子组件是在父组件的 @builder 修饰的方法中初始化的场景，普通写法按值传递时：父组件的变量变化能否影响子组件？</p>
-<p><strong>基础类型或者 string 类型  ： 不能通知到子组件</strong></p>
-<p>@Observed 修饰的类修改<strong>非嵌套属性</strong>：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">子组件 \ 父组件</th>
-<th>普通变量</th>
-<th>prop 变量</th>
-<th>state 变量</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">普通变量</td>
-<td>不能</td>
-<td>不能</td>
-<td>不能</td>
-</tr>
-<tr>
-<td style="text-align:center">prop 变量</td>
-<td>能</td>
-<td>不能</td>
-<td>不能</td>
-</tr>
-<tr>
-<td style="text-align:center">state 变量</td>
-<td>能</td>
-<td>不能</td>
-<td>不能</td>
-</tr>
-<tr>
-<td style="text-align:center">link 变量</td>
-<td>不允许</td>
-<td>不允许</td>
-<td>不允许</td>
-</tr>
-<tr>
-<td style="text-align:center">ObjectLink 变量</td>
-<td>能</td>
-<td>不能</td>
-<td>不能</td>
-</tr>
-</tbody>
-</table>
-</blockquote>
-<blockquote>
-<p>总结：<strong>只有父组件申明为普通变量，子组件声明为带装饰器的变量时，Observed 修饰的类非嵌套属性才会通知到子组件</strong>。</p>
-</blockquote>
-<blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9hcmt0cy1tdnZtLVY1I3Byb3AlRTUlOTIlOENvYmplY3RsaW5rJUU1JUI1JThDJUU1JUE1JTk3JUU2JTk1JUIwJUU2JThEJUFFJUU3JUJCJTkzJUU2JTlFJTg0">推荐设计单独的自定义组件来渲染每一个数组或对象。此时，对象数组或嵌套对象（属性是对象的对象称为嵌套对象）需要两个自定义组件，一个自定义组件呈现外部数组 / 对象，另一个自定义组件呈现嵌套在数组 / 对象内的类对象。 @State、@Prop、@Link、@ObjectLink 装饰的变量只能观察到第一层的变化。</span></p>
-</blockquote>
-<blockquote>
-<p><a href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-new-observedv2-and-trace-V5#%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86v1%E7%89%88%E6%9C%AC%E5%AF%B9%E5%B5%8C%E5%A5%97%E7%B1%BB%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E5%8F%98%E5%8C%96%E7%9B%B4%E6%8E%A5%E8%A7%82%E6%B5%8B%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><strong>@ObservedV2 类装饰器</strong>实现对嵌套类对象属性变化直接观测</a></p>
-</blockquote>
-<blockquote>
-<p>'@Link', '@Consume',  '@ObjectLink' 装饰的变量不能初始化，必须由父组件传递过来，这也是父组件必传参数</p>
-<p>'@State', '@StorageLink', '@StorageProp', '@LocalStorageLink', '@LocalStorageProp' and '@Provide' 必须本地初始化</p>
-</blockquote>
-<blockquote>
-<p>在 aboutToAppear 方法内时，组件内的参数都已经由父组件初始化好了</p>
-</blockquote>
-<blockquote>
-<p>鸿蒙 监听一个 state 修改另外的 state。使用 watch 装饰器</p>
-</blockquote>
-<blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WMi9hcmt0cy1yZW5kZXJpbmctY29udHJvbC1sYXp5Zm9yZWFjaC0wMDAwMDAxNTI0NDE3MjEzLVYy">LazyForEach 必须使用 DataChangeListener 对象来进行更新，第一个参数 dataSource 使用状态变量时，状态变量改变不会触发 LazyForEach 的 UI 刷新</span></p>
-</blockquote>
-<blockquote>
-<p>@Watch 设置的函数是同步调用的，即修改 @prop 变量后会马上调用改函数，然后再执行修改 prop 变量的下一行代码</p>
-</blockquote>
-<blockquote>
-<p>子组件的 prop 变量是由父组件的 prop 或者 state 变量传递的情况下，如果父组件修改了变量，子组件的 prop 变量修改是在下一次的事件循环中修改，即如果子组件设置了 watch， 顺序是 .1. 父组件修改变量 2. 执行父组件修改变量的下面代码 3. 执行子组件的 watch 函数</p>
-</blockquote>
-<blockquote>
-<p>API12   自定义构建函数的参数传递不能是 state 参数；因为<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WMi9hcmt0cy1idWlsZGVyLTAwMDAwMDE1MjQxNzY5ODEtVjIjc2VjdGlvbjE3NzE1MTg2MTAzNTM=">调用 @Builder 装饰的函数默认按值传递</span>。当传递的参数为状态变量时，状态变量的改变不会引起 @Builder 方法内的 UI 刷新。 有这种使用场景抽象成组件，不要用 @Builder 装饰的函数。</p>
-</blockquote>
-<h2 id="ui开发特点"><a class="anchor" href="#ui开发特点">#</a> UI 开发特点</h2>
-<blockquote>
-<p>onTouch 方法 是先内部组件触发，再外部组件触发，通过 stopPropagation 方法可以阻止冒泡</p>
-</blockquote>
-<blockquote>
-<p>borderRadius 设置的圆角不会限制内部组件，内部组件的四个角会超出圆角范围！！</p>
-<p>采用 <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtc2hhcnAtY2xpcHBpbmctMDAwMDAwMTgxNTkyNzUyMA==">clip (true) 方法</span></p>
-</blockquote>
-<blockquote>
-<p>组件默认拦截点击事件 ，可通过 enable 方法设置</p>
-</blockquote>
-<blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvdHMtdGV4dC1jb21tb24tVjUjZWRpdG1lbnVvcHRpb25zJUU1JUFGJUI5JUU4JUIxJUExJUU4JUFGJUI0JUU2JTk4JThF">设置 input 的长按菜单内容</span></p>
-</blockquote>
-<blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9mb3J1bS90b3BpYy8wMjA4MTUzNDg5NzkzODU3ODM2">如何获取底部安全距离</span></p>
-</blockquote>
-<h2 id="业务开发特点"><a class="anchor" href="#业务开发特点">#</a> 业务开发特点</h2>
-<blockquote>
-<p>CustomDialogController 可以重复 open，传入的 builder 函数会被重复调用，但其他传入参数是不会变化，例如 传入 isModal 参数是个函数，也不会被调用，只会使用第一次调用的值</p>
-</blockquote>
-<blockquote>
-<p>NavDestination 只能有一个子组件，如果有多个子组件，下面的组件不会展示</p>
-</blockquote>
-<blockquote>
-<p>@Prop 装饰变量时会进行深拷贝，<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy1pbWFnZS1WNSNwaXhlbG1hcDc=">PixelMap</span> 由于有部分实现在 Native 侧，因此无法在 ArkTS 侧通过深拷贝获得完整的数据。所以子组件 prop 变量中如果有 PixelMap 变量，无法通过父组件传递图像数据，导致子组件无法展示图片。<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9hcmt0cy1wcm9wLVY1">限制条件</span></p>
-<p>解决方案：</p>
-<p>1. 不使用 prop 装饰器，使用 link 装饰器或者不使用装饰器</p>
-<p>2. 子组件 prop 变量中不定义 PixelMap 变量，而定义返回 PixelMap 变量的匿名函数</p>
-</blockquote>
-<blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuYXJrdWkuY2x1Yi9jaGFwdGVyMi8yXzNfcmVzb3VyY2UuaHRtbCNfMi0zLTQtJUU4JUI1JTg0JUU2JUJBJTkwJUU3JUFFJUExJUU3JTkwJTg2JUU1JTk5JUE4">通过 resourceManager 访问字符串资源</span></p>
-</blockquote>
-<blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy11dGlsLVY1I3V0aWxmb3JtYXQ5">ts 中没有 string.format 方法，所以鸿蒙提供了 util 工具函数</span></p>
-</blockquote>
-<blockquote>
-<p>点击，触摸事件汇总：</p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtb24tY2hpbGQtdG91Y2gtdGVzdC1WNQ==">自定义事件分发</span> <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtaGl0LXRlc3QtYmVoYXZpb3ItVjU=">触摸测试控制</span> <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtb24tdG91Y2gtaW50ZXJjZXB0LVY1">自定义事件拦截</span>  <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvdHMtdW5pdmVyc2FsLWF0dHJpYnV0ZXMtdG91Y2gtdGFyZ2V0LVY1">触摸热区设置</span></p>
-</blockquote>
-<blockquote>
-<p>Navigation+NodeContainer 复用相同的 node 实现不同页面展示相同的 Flutter 页面 (flutter 页面单路由) 场景，解决闪屏问题</p>
-<p>1. 不需要 NavDestination 的 mode 改为 DIALOG <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMvdHMtYmFzaWMtY29tcG9uZW50cy1uYXZkZXN0aW5hdGlvbi1WNSNtb2RlLTEx">mode(value: NavDestinationMode)</span></p>
-<p>2. 将跳页时直接将 node attach 到新的 NavDestination 的 NodeContainer 中就可以了</p>
-<p>3. 返回时操作 NavPathStack pop 前，先把 node attach 到之前页面的 NodeContainer，再进行 pop 操作</p>
-</blockquote>
-<blockquote>
-<p>修改 state，prop 变量而不触发 UI 更新： <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMtVjUvZmFxcy1hcmt1aS0zNjctVjU=">如何获取状态管理框架代理前的原始对象</span></p>
-</blockquote>
-<blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy1hcmt1aS1jb21wb25lbnRzbmFwc2hvdC1WNSNjb21wb25lbnRzbmFwc2hvdGdldHN5bmMxMg==">componentSnapshot 实现截图功能</span></p>
-</blockquote>
-<blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy9hcmt0cy1sb2NhbHN0b3JhZ2UtVjUjbmF2aWdhdGlvbiVFNyVCQiU4NCVFNCVCQiVCNiVFNSU5MiU4Q2xvY2Fsc3RvcmFnZSVFOCU4MSU5NCVFNSU5MCU4OCVFNCVCRCVCRiVFNyU5NCVBOA==">传递不同的 LocalStorage 实例给自定义组件</span></p>
-</blockquote>
-<h2 id="高级知识"><a class="anchor" href="#高级知识">#</a> 高级知识</h2>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9mb3J1bS90b3BpYy8wMjA4MTUzMTY0NjAyODU3ODE0">基于 C++ 能力的资源访问</span></p>
-<p><a href="https://developer.huawei.com/consumer/cn/forum/topic/0204150545294348010"><strong>基于 Navigation 的路由管理</strong></a></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLXJlZmVyZW5jZXMtVjUvanMtYXBpcy1zdGF0ZW1hbmFnZW1lbnQtVjUjbWFrZW9ic2VydmVkMTI=">将普通不可观察数据变为可观察数据</span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9mb3J1bS90b3BpYy8wMjAyMTU3MzkwNjYyMjg2Mzcy">基于反混淆工具混淆后的日志定位</span></p>
-<h2 id="问题场景"><a class="anchor" href="#问题场景">#</a> 问题场景</h2>
-<h6 id="1-api12-auto属性太坑了-强烈推荐不使用-问题会导致父view的高度不会随着子view变化"><a class="anchor" href="#1-api12-auto属性太坑了-强烈推荐不使用-问题会导致父view的高度不会随着子view变化">#</a> 1. API12   Auto 属性太坑了 ，强烈推荐不使用。问题：会导致父 view 的高度不会随着子 view 变化</h6>
-<h6 id="2-父组件不允许传普通变量给子组件的link变量正常来说编译器会报错但在builder装饰器方法内不会报错要注意这一点"><a class="anchor" href="#2-父组件不允许传普通变量给子组件的link变量正常来说编译器会报错但在builder装饰器方法内不会报错要注意这一点">#</a> 2. 父组件不允许传普通变量给子组件的 link 变量，正常来说编译器会报错，但在 Builder 装饰器方法内不会报错，要注意这一点</h6>
-<h6 id="3使用对象数组和foreach结合起来使用但是写法不当的话会出现ui不刷新的情况-observedv2装饰器也是个解决方法"><a class="anchor" href="#3使用对象数组和foreach结合起来使用但是写法不当的话会出现ui不刷新的情况-observedv2装饰器也是个解决方法">#</a> 3.<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9wcm9wZXJseS11c2Utc3RhdGUtbWFuYWdlbWVudC10by1kZXZlbG9wZS1WNSMlRTUlOUMlQThmb3JlYWNoJUU0JUI4JUFEJUU0JUJEJUJGJUU3JTk0JUE4JUU4JTg3JUFBJUU1JUFFJTlBJUU0JUI5JTg5JUU3JUJCJTg0JUU0JUJCJUI2JUU2JTkwJUFEJUU5JTg1JThEJUU1JUFGJUI5JUU4JUIxJUExJUU2JTk1JUIwJUU3JUJCJTg0"> 使用对象数组和 ForEach 结合起来使用，但是写法不当的话会出现 UI 不刷新的情况。（ObservedV2 装饰器也是个解决方法）</span></h6>
-<h6 id="4组件内部不可以使用getter函数"><a class="anchor" href="#4组件内部不可以使用getter函数">#</a> 4.<strong> 组件内部不可以使用 getter 函数</strong></h6>
-<h6 id="5编译时没有问题运行时报error-message-a-is-not-initialized是模块循环依赖导致的使用lazy-import解决-来源"><a class="anchor" href="#5编译时没有问题运行时报error-message-a-is-not-initialized是模块循环依赖导致的使用lazy-import解决-来源">#</a> 5. 编译时没有问题，运行时报 Error message: a is not initialized，是模块循环依赖导致的，使用 lazy import 解决  <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWd1aWRlcy1WNS9hcmt0cy1tb2R1bGUtc2lkZS1lZmZlY3RzLVY1IyVFNSVCRSVBQSVFNyU4RSVBRiVFNCVCRSU5RCVFOCVCNSU5Ng==">来源</span></h6>
-<h6 id="6解析json数据方式"><a class="anchor" href="#6解析json数据方式">#</a> 6. 解析 JSON 数据方式</h6>
-<figure class="highlight typescript"><figcaption data-lang="typescript"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">let</span> paramsJson<span class="token operator">:</span> Record<span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token punctuation">,</span> Object<span class="token operator">></span> <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">let</span> placeholderStyleJson <span class="token operator">=</span> paramsJson<span class="token punctuation">[</span><span class="token string">"placeholderStyle"</span><span class="token punctuation">]</span> <span class="token keyword">as</span> Record<span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token punctuation">,</span> Object<span class="token operator">></span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">// 通过 placeholderStyleJson ["fontWeight"] as string 来获取数据</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">// 不能 as 为对象后，通过属性来获取，debug 没有问题，但 release 版本混淆会出问题</span></pre></td></tr></table></figure><h6 id="7cannot-find-record-libraryindex修改前的旧版本号-please-check-the-request-pathdatastorageel1bundleentryetsmodulesabc"><a class="anchor" href="#7cannot-find-record-libraryindex修改前的旧版本号-please-check-the-request-pathdatastorageel1bundleentryetsmodulesabc">#</a> 7.cannot find record '&amp;library/Index &amp; 修改前的旧版本号 ', please check the request  path.'/data/storage/el1/bundle/entry/ets/modules.abc'.</h6>
-<ol>
-<li>删除 entry 目录下的 build 目录（依赖该问题模块的模块）</li>
-<li>主菜单 =&gt; 构建 =&gt; 清理项目</li>
-</ol>
-<h6 id="8使用builderparam在父组件调用this的方法报错error-messageis-not-callable"><a class="anchor" href="#8使用builderparam在父组件调用this的方法报错error-messageis-not-callable">#</a> 8.<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuaHVhd2VpLmNvbS9jb25zdW1lci9jbi9kb2MvaGFybW9ueW9zLWZhcXMvZmFxcy1hcmt1aS0yMjktVjU="> 使用 BuilderParam 在父组件调用 this 的方法报错：Error message:is not callable</span></h6>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>Harmony</category>
-      </categories>
-      <tags>
-        <tag>知识点</tag>
-        <tag>鸿蒙</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JS，TS 知识点</title>
     <url>/post/dc4ac76f.html</url>
     <content><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIubW96aWxsYS5vcmcvemgtQ04vZG9jcy9XZWIvSmF2YVNjcmlwdC9SZWZlcmVuY2UvR2xvYmFsX09iamVjdHM=">JS 官方文档</span></p>
@@ -2128,6 +2095,12 @@ this.tsData.map((item,index)=&gt;&#123;
 <blockquote>
 <p><strong>Map 不能使用 [] 操作符，只能使用 set,  get 方法操作数据</strong>；forEach 循环中可以删除元素，不会和 Java 一样操作异常 <span class="exturl" data-url="aHR0cHM6Ly96aC5qYXZhc2NyaXB0LmluZm8vbWFwLXNldA==">文档</span></p>
 </blockquote>
+<h2 id="泛型知识点"><a class="anchor" href="#泛型知识点">#</a> 泛型知识点</h2>
+<p>泛型方法定义</p>
+<pre><code>public get&lt;T&gt;(key: string): T | undefined &#123;
+ return this.obj[key] as T
+&#125;
+</code></pre>
 <p>Keep Moving Forward</p>
 ]]></content>
       <categories>
@@ -2335,30 +2308,6 @@ MyViewGroup-- setOnTouchListener
       </tags>
   </entry>
   <entry>
-    <title>Comparator知识点</title>
-    <url>/post/c4311606.html</url>
-    <content><![CDATA[<h2 id="1comparator接口-compare方法实现返回值探究"><a class="anchor" href="#1comparator接口-compare方法实现返回值探究">#</a> 1.Comparator 接口  compare 方法实现返回值探究</h2>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre>object <span class="token operator">:</span> <span class="token class-name">Comparator</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>            override fun <span class="token function">compare</span><span class="token punctuation">(</span>o1<span class="token operator">:</span> <span class="token class-name">Object</span><span class="token operator">?</span><span class="token punctuation">,</span> o2<span class="token operator">:</span> <span class="token class-name">Object</span><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token class-name">Int</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>​</p>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">return</span> <span class="token number">01.</span>xxx <span class="token operator">-</span><span class="token number">02.</span>xxx</pre></td></tr></table></figure><p>代表着升序队列，xx 属性越小的排在越前面 ，适用场景</p>
-<ol>
-<li>xxx 属性代表着进场顺序，而队列需要 FIFO</li>
-<li>xxx 属性代表着创建时间，而队列需要先创建先出</li>
-</ol>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">return</span> <span class="token number">02.</span>xxx <span class="token operator">-</span><span class="token number">01.</span>xxx</pre></td></tr></table></figure><p>代表着降序队列，xx 属性越大的排在越前面 ，适用场景</p>
-<ol>
-<li>xxx 属性代表着优先级，而队列是高优先级队列</li>
-</ol>
-<p><span id="more"></span></p>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>Android</category>
-      </categories>
-      <tags>
-        <tag>Comparator</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>DialogFragment知识点</title>
     <url>/post/6b67b819.html</url>
     <content><![CDATA[<h2 id="生命周期"><a class="anchor" href="#生命周期">#</a> 生命周期</h2>
@@ -2388,6 +2337,30 @@ MyViewGroup-- setOnTouchListener
       </categories>
       <tags>
         <tag>DialogFragment</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Comparator知识点</title>
+    <url>/post/c4311606.html</url>
+    <content><![CDATA[<h2 id="1comparator接口-compare方法实现返回值探究"><a class="anchor" href="#1comparator接口-compare方法实现返回值探究">#</a> 1.Comparator 接口  compare 方法实现返回值探究</h2>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre>object <span class="token operator">:</span> <span class="token class-name">Comparator</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>            override fun <span class="token function">compare</span><span class="token punctuation">(</span>o1<span class="token operator">:</span> <span class="token class-name">Object</span><span class="token operator">?</span><span class="token punctuation">,</span> o2<span class="token operator">:</span> <span class="token class-name">Object</span><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token class-name">Int</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>​</p>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">return</span> <span class="token number">01.</span>xxx <span class="token operator">-</span><span class="token number">02.</span>xxx</pre></td></tr></table></figure><p>代表着升序队列，xx 属性越小的排在越前面 ，适用场景</p>
+<ol>
+<li>xxx 属性代表着进场顺序，而队列需要 FIFO</li>
+<li>xxx 属性代表着创建时间，而队列需要先创建先出</li>
+</ol>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">return</span> <span class="token number">02.</span>xxx <span class="token operator">-</span><span class="token number">01.</span>xxx</pre></td></tr></table></figure><p>代表着降序队列，xx 属性越大的排在越前面 ，适用场景</p>
+<ol>
+<li>xxx 属性代表着优先级，而队列是高优先级队列</li>
+</ol>
+<p><span id="more"></span></p>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>Android</category>
+      </categories>
+      <tags>
+        <tag>Comparator</tag>
       </tags>
   </entry>
   <entry>
@@ -2431,54 +2404,6 @@ MyViewGroup-- setOnTouchListener
       </categories>
       <tags>
         <tag>Fragment</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Glide知识点</title>
-    <url>/post/692dc279.html</url>
-    <content><![CDATA[<h1 id="glideokhttp3"><a class="anchor" href="#glideokhttp3">#</a> Glide+OKHTTP3</h1>
-<h2 id="1glide-接入okhttp3"><a class="anchor" href="#1glide-接入okhttp3">#</a> 1.Glide 接入 OKHttp3</h2>
-<figure class="highlight groovy"><figcaption data-lang="groovy"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">api</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">"com.github.bumptech.glide:glide:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token expression">glide_version</span><span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token function">exclude</span><span class="token punctuation">(</span>group<span class="token punctuation">:</span> <span class="token string">'androidx.annotation'</span><span class="token punctuation">,</span> module<span class="token punctuation">:</span> <span class="token string">'annotation'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">implementation</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">"com.github.bumptech.glide:okhttp3-integration:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token expression">glide_version</span><span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    exclude group<span class="token punctuation">:</span> <span class="token interpolation-string"><span class="token string">"com.squareup.okhttp3"</span></span><span class="token punctuation">,</span> module<span class="token punctuation">:</span> <span class="token interpolation-string"><span class="token string">"okhttp"</span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>    exclude group<span class="token punctuation">:</span> <span class="token interpolation-string"><span class="token string">"com.android.support"</span></span></pre></td></tr><tr><td data-num="7"></td><td><pre>    exclude group<span class="token punctuation">:</span> <span class="token interpolation-string"><span class="token string">"com.squareup.okio"</span></span><span class="token punctuation">,</span> module<span class="token punctuation">:</span> <span class="token interpolation-string"><span class="token string">"okio"</span></span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre>api <span class="token interpolation-string"><span class="token string">"com.squareup.okhttp3:okhttp:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token expression">okhttp_version</span><span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">"</span></span></pre></td></tr></table></figure><p><span id="more"></span></p>
-<h2 id="2okhttp3-integration核心代码"><a class="anchor" href="#2okhttp3-integration核心代码">#</a> 2.okhttp3-integration 核心代码</h2>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token annotation punctuation">@GlideModule</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">OkHttpLibraryGlideModule</span> <span class="token keyword">extends</span> <span class="token class-name">LibraryGlideModule</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>  <span class="token annotation punctuation">@Override</span></pre></td></tr><tr><td data-num="4"></td><td><pre>  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">registerComponents</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="5"></td><td><pre>      <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Context</span> context<span class="token punctuation">,</span> <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Glide</span> glide<span class="token punctuation">,</span> <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Registry</span> registry<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    registry<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token class-name">GlideUrl</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token class-name">InputStream</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">OkHttpUrlLoader<span class="token punctuation">.</span>Factory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>  <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h2 id="3替换自定义的okhttpclient"><a class="anchor" href="#3替换自定义的okhttpclient">#</a> 3. 替换自定义的 OKHttpClient</h2>
-<p>第二步可以看出，arr 中使用的是 LibraryGlideModule，项目中使用自定义的 AppGlideModule，就可以比 LibraryGlideModule 更晚执行，从而替代自定义的 OKHttpClient</p>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token annotation punctuation">@GlideModule</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">MyGlideModule</span> <span class="token keyword">extends</span> <span class="token class-name">AppGlideModule</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token annotation punctuation">@Override</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">registerComponents</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Context</span> context<span class="token punctuation">,</span> <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Glide</span> glide<span class="token punctuation">,</span> <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Registry</span> registry<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token class-name">OkHttpClient<span class="token punctuation">.</span>Builder</span> builder <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OkHttpClient<span class="token punctuation">.</span>Builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token class-name">Call<span class="token punctuation">.</span>Factory</span> factory <span class="token operator">=</span> builder<span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        registry<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token class-name">GlideUrl</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span><span class="token class-name">InputStream</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">OkHttpUrlLoader<span class="token punctuation">.</span>Factory</span><span class="token punctuation">(</span>factory<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h2 id="4glidemodule的registercomponents方法是什么时候被调用的"><a class="anchor" href="#4glidemodule的registercomponents方法是什么时候被调用的">#</a> 4.GlideModule 的 registerComponents 方法是什么时候被调用的？</h2>
-<p><img data-src="https://s3.bmp.ovh/imgs/2023/07/31/c035ed8ed3cd009e.jpg" alt="" /></p>
-<p>可以看出是图片下载被解析时，调用 getRegistry 方法时，如果还未初始化，就会走初始化逻辑，调用 registerComponents</p>
-<h1 id="glideokhttp3-线程池分析"><a class="anchor" href="#glideokhttp3-线程池分析">#</a> Glide+OKHttp3 线程池分析</h1>
-<h2 id="1glide线程池"><a class="anchor" href="#1glide线程池">#</a> 1.Glide 线程池</h2>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//com.bumptech.glide.GlideBuilder</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token class-name">Glide</span> <span class="token function">build</span><span class="token punctuation">(</span><span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Context</span> context<span class="token punctuation">,</span><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">GlideModule</span><span class="token punctuation">></span></span> manifestModules<span class="token punctuation">,</span> <span class="token class-name">AppGlideModule</span> annotationGeneratedGlideModule<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token comment">// 图片下载线程池</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>sourceExecutor <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        sourceExecutor <span class="token operator">=</span> <span class="token class-name">GlideExecutor</span><span class="token punctuation">.</span><span class="token function">newSourceExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>	<span class="token comment">// 硬盘解析线程池</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>diskCacheExecutor <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        diskCacheExecutor <span class="token operator">=</span> <span class="token class-name">GlideExecutor</span><span class="token punctuation">.</span><span class="token function">newDiskCacheExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>	<span class="token comment">// 动画解析线程池</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>animationExecutor <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        animationExecutor <span class="token operator">=</span> <span class="token class-name">GlideExecutor</span><span class="token punctuation">.</span><span class="token function">newAnimationExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p><img data-src="https://s3.bmp.ovh/imgs/2023/08/16/f29dedbeb0a190b2.jpg" alt="" /></p>
-<p>图片下载线程池是个【核心 4 线程，最多 4 线程】的线程池</p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2023/08/16/c4fcc46afe34fc6e.jpg" alt="" /></p>
-<p>硬盘解析线程池是个【核心 1 线程，最多 1 线程】的线程池</p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2023/08/16/9d4c9903a1a4901e.jpg" alt="" /></p>
-<p>动画解析线程池是个【核心 2 线程，最多 2 线程】的线程池</p>
-<ol>
-<li><em><strong>在未接入 OKHttp3 时，Source 线程池用于下载图片，可以看出最多支持 4 个图片同时下载</strong></em></li>
-<li><em><strong>在接入 OKHttp3 时，Source 线程池用于向 OKHttp3 线程池提交下载任务获得 InputStream 基本是瞬间完成提交任务，等 Okhttp3 下载回调，所以下载图片取决于 OKHttp3 配置</strong></em></li>
-</ol>
-<h2 id="2okhttp3线程池"><a class="anchor" href="#2okhttp3线程池">#</a> 2.OkHttp3 线程池</h2>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">val</span> executorService<span class="token operator">:</span> ExecutorService</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>executorServiceOrNull <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        executorServiceOrNull <span class="token operator">=</span> <span class="token function">ThreadPoolExecutor</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> Int<span class="token punctuation">.</span>MAX_VALUE<span class="token punctuation">,</span> <span class="token number">60</span><span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="5"></td><td><pre>                                                   <span class="token function">SynchronousQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">threadFactory</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$</span><span class="token expression">okHttpName</span></span><span class="token string"> Dispatcher"</span></span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">return</span> executorServiceOrNull<span class="token operator">!!</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//okhttp3.Dispatcher</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">private</span> <span class="token keyword">fun</span> <span class="token function">promoteAndExecute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Boolean <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">assertThreadDoesntHoldLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">val</span> executableCalls <span class="token operator">=</span> mutableListOf<span class="token operator">&lt;</span>AsyncCall<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">val</span> isRunning<span class="token operator">:</span> Boolean</pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token function">synchronized</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">val</span> i <span class="token operator">=</span> readyAsyncCalls<span class="token punctuation">.</span><span class="token function">iterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token keyword">while</span> <span class="token punctuation">(</span>i<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>            <span class="token keyword">val</span> asyncCall <span class="token operator">=</span> i<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>runningAsyncCalls<span class="token punctuation">.</span>size <span class="token operator">>=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>maxRequests<span class="token punctuation">)</span> <span class="token keyword">break</span> <span class="token comment">// 最多支持 64 个请求</span></pre></td></tr><tr><td data-num="13"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>asyncCall<span class="token punctuation">.</span>callsPerHost<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>maxRequestsPerHost<span class="token punctuation">)</span> <span class="token keyword">continue</span> <span class="token comment">// 每个 Host 最多支持 5 个请求</span></pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre>            i<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            asyncCall<span class="token punctuation">.</span>callsPerHost<span class="token punctuation">.</span><span class="token function">incrementAndGet</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="17"></td><td><pre>            executableCalls<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>asyncCall<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="18"></td><td><pre>            runningAsyncCalls<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>asyncCall<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        isRunning <span class="token operator">=</span> <span class="token function">runningCallsCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="22"></td><td><pre></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token keyword">in</span> <span class="token number">0</span> until executableCalls<span class="token punctuation">.</span>size<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">val</span> asyncCall <span class="token operator">=</span> executableCalls<span class="token punctuation">[</span>i<span class="token punctuation">]</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        asyncCall<span class="token punctuation">.</span><span class="token function">executeOn</span><span class="token punctuation">(</span>executorService<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="27"></td><td><pre></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token keyword">return</span> isRunning</pre></td></tr><tr><td data-num="29"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>OKhttp3 线程池是无限制的，但最多同时支持 64 个请求，每个 Host 同时最多支持 5 个请求</p>
-<h1 id="glide-into后图片加载时间"><a class="anchor" href="#glide-into后图片加载时间">#</a> Glide into () 后图片加载时间</h1>
-<h2 id="需要有具体的宽高-glide才会加载图片"><a class="anchor" href="#需要有具体的宽高-glide才会加载图片">#</a> <em><strong>需要有具体的宽高， glide 才会加载图片</strong></em></h2>
-<p>如果设置了 RequestOptions 的 override 方法，则直接调用 onSizeReady，否则设置 target 的回调监听</p>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//com.bumptech.glide.request.SingleRequest</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">begin</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name">Util</span><span class="token punctuation">.</span><span class="token function">isValidDimensions</span><span class="token punctuation">(</span>overrideWidth<span class="token punctuation">,</span> overrideHeight<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token function">onSizeReady</span><span class="token punctuation">(</span>overrideWidth<span class="token punctuation">,</span> overrideHeight<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token comment">// 设置回调</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        target<span class="token punctuation">.</span><span class="token function">getSize</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onSizeReady</span><span class="token punctuation">(</span><span class="token keyword">int</span> width<span class="token punctuation">,</span> <span class="token keyword">int</span> height<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    loadStatus <span class="token operator">=</span>engine<span class="token punctuation">.</span><span class="token function">load</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h2 id="viewtarget啥时候会返回合适的宽高"><a class="anchor" href="#viewtarget啥时候会返回合适的宽高">#</a> ViewTarget 啥时候会返回合适的宽高？</h2>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">void</span> <span class="token function">getSize</span><span class="token punctuation">(</span><span class="token annotation punctuation">@NonNull</span> <span class="token class-name">SizeReadyCallback</span> cb<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">int</span> currentWidth <span class="token operator">=</span> <span class="token function">getTargetWidth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">int</span> currentHeight <span class="token operator">=</span> <span class="token function">getTargetHeight</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token comment">// 判断目前是否有合适的宽高，是则直接返回</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isViewStateAndSizeValid</span><span class="token punctuation">(</span>currentWidth<span class="token punctuation">,</span> currentHeight<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        cb<span class="token punctuation">.</span><span class="token function">onSizeReady</span><span class="token punctuation">(</span>currentWidth<span class="token punctuation">,</span> currentHeight<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token keyword">return</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>cbs<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>cb<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        cbs<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>cb<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token comment">// 设置 addOnPreDrawListener，View 绘制前回调</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>layoutListener <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token class-name">ViewTreeObserver</span> observer <span class="token operator">=</span> view<span class="token punctuation">.</span><span class="token function">getViewTreeObserver</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>        layoutListener <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SizeDeterminerLayoutListener</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        observer<span class="token punctuation">.</span><span class="token function">addOnPreDrawListener</span><span class="token punctuation">(</span>layoutListener<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">private</span> <span class="token keyword">int</span> <span class="token function">getTargetHeight</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">int</span> verticalPadding <span class="token operator">=</span> view<span class="token punctuation">.</span><span class="token function">getPaddingTop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> view<span class="token punctuation">.</span><span class="token function">getPaddingBottom</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token class-name">LayoutParams</span> layoutParams <span class="token operator">=</span> view<span class="token punctuation">.</span><span class="token function">getLayoutParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">int</span> layoutParamSize <span class="token operator">=</span> layoutParams <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">?</span> layoutParams<span class="token punctuation">.</span>height <span class="token operator">:</span> <span class="token constant">PENDING_SIZE</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">return</span> <span class="token function">getTargetDimen</span><span class="token punctuation">(</span>view<span class="token punctuation">.</span><span class="token function">getHeight</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> layoutParamSize<span class="token punctuation">,</span> verticalPadding<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token keyword">private</span> <span class="token keyword">int</span> <span class="token function">getTargetDimen</span><span class="token punctuation">(</span><span class="token keyword">int</span> viewSize<span class="token punctuation">,</span> <span class="token keyword">int</span> paramSize<span class="token punctuation">,</span> <span class="token keyword">int</span> paddingSize<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token comment">//params 的宽高是固定值</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">int</span> adjustedParamSize <span class="token operator">=</span> paramSize <span class="token operator">-</span> paddingSize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>adjustedParamSize <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">return</span> adjustedParamSize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token comment">//View 正打算 layout 布局，返回 PENDING_SIZE 表示目前的宽高不合适，等待 PreDrawListener 回调</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>waitForLayout <span class="token operator">&amp;&amp;</span> view<span class="token punctuation">.</span><span class="token function">isLayoutRequested</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">PENDING_SIZE</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token comment">//View 存在宽高数据，因为这个宽高数据可能是脏数据，所以放这么后面</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">int</span> adjustedViewSize <span class="token operator">=</span> viewSize <span class="token operator">-</span> paddingSize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>adjustedViewSize <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">return</span> adjustedViewSize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="25"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="26"></td><td><pre></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token comment">//view 目前没有请求 layout 布局，且宽高是 WRAP_CONTENT，返回屏幕宽高的最大值</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>view<span class="token punctuation">.</span><span class="token function">isLayoutRequested</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> paramSize <span class="token operator">==</span> <span class="token class-name">LayoutParams</span><span class="token punctuation">.</span><span class="token constant">WRAP_CONTENT</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        <span class="token keyword">return</span> <span class="token function">getMaxDisplayLength</span><span class="token punctuation">(</span>view<span class="token punctuation">.</span><span class="token function">getContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="31"></td><td><pre></pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token comment">// 返回 PENDING_SIZE 表示目前的宽高不合适，等待 PreDrawListener 回调</span></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token keyword">return</span> <span class="token constant">PENDING_SIZE</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="34"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>​    <strong>into 后宽高数据的获取逻辑</strong>：</p>
-<ol>
-<li>RequestOptions 存在 overrideWidth, overrideHeight</li>
-<li>params 的宽高是固定值</li>
-<li>viewTarget 的 waitForLayout 是 true，且正打算 layout 布局，则等待 PreDrawListener 回调（waitForLayout 无设置默认值，boolean 默认值是 false）</li>
-<li>view 存在真实的宽高数据</li>
-<li>view 目前没有请求 layout 布局，且宽高是 WRAP_CONTENT，返回屏幕宽高的最大值</li>
-<li>等待 PreDrawListener 回调</li>
-</ol>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>Android</category>
-      </categories>
-      <tags>
-        <tag>Glide</tag>
       </tags>
   </entry>
   <entry>
@@ -2550,6 +2475,70 @@ MyViewGroup-- setOnTouchListener
       </tags>
   </entry>
   <entry>
+    <title>Glide知识点</title>
+    <url>/post/692dc279.html</url>
+    <content><![CDATA[<h1 id="glideokhttp3"><a class="anchor" href="#glideokhttp3">#</a> Glide+OKHTTP3</h1>
+<h2 id="1glide-接入okhttp3"><a class="anchor" href="#1glide-接入okhttp3">#</a> 1.Glide 接入 OKHttp3</h2>
+<figure class="highlight groovy"><figcaption data-lang="groovy"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">api</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">"com.github.bumptech.glide:glide:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token expression">glide_version</span><span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token function">exclude</span><span class="token punctuation">(</span>group<span class="token punctuation">:</span> <span class="token string">'androidx.annotation'</span><span class="token punctuation">,</span> module<span class="token punctuation">:</span> <span class="token string">'annotation'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">implementation</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">"com.github.bumptech.glide:okhttp3-integration:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token expression">glide_version</span><span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    exclude group<span class="token punctuation">:</span> <span class="token interpolation-string"><span class="token string">"com.squareup.okhttp3"</span></span><span class="token punctuation">,</span> module<span class="token punctuation">:</span> <span class="token interpolation-string"><span class="token string">"okhttp"</span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>    exclude group<span class="token punctuation">:</span> <span class="token interpolation-string"><span class="token string">"com.android.support"</span></span></pre></td></tr><tr><td data-num="7"></td><td><pre>    exclude group<span class="token punctuation">:</span> <span class="token interpolation-string"><span class="token string">"com.squareup.okio"</span></span><span class="token punctuation">,</span> module<span class="token punctuation">:</span> <span class="token interpolation-string"><span class="token string">"okio"</span></span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre>api <span class="token interpolation-string"><span class="token string">"com.squareup.okhttp3:okhttp:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token expression">okhttp_version</span><span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">"</span></span></pre></td></tr></table></figure><p><span id="more"></span></p>
+<h2 id="2okhttp3-integration核心代码"><a class="anchor" href="#2okhttp3-integration核心代码">#</a> 2.okhttp3-integration 核心代码</h2>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token annotation punctuation">@GlideModule</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">OkHttpLibraryGlideModule</span> <span class="token keyword">extends</span> <span class="token class-name">LibraryGlideModule</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>  <span class="token annotation punctuation">@Override</span></pre></td></tr><tr><td data-num="4"></td><td><pre>  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">registerComponents</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="5"></td><td><pre>      <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Context</span> context<span class="token punctuation">,</span> <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Glide</span> glide<span class="token punctuation">,</span> <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Registry</span> registry<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    registry<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token class-name">GlideUrl</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token class-name">InputStream</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">OkHttpUrlLoader<span class="token punctuation">.</span>Factory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>  <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h2 id="3替换自定义的okhttpclient"><a class="anchor" href="#3替换自定义的okhttpclient">#</a> 3. 替换自定义的 OKHttpClient</h2>
+<p>第二步可以看出，arr 中使用的是 LibraryGlideModule，项目中使用自定义的 AppGlideModule，就可以比 LibraryGlideModule 更晚执行，从而替代自定义的 OKHttpClient</p>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token annotation punctuation">@GlideModule</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">MyGlideModule</span> <span class="token keyword">extends</span> <span class="token class-name">AppGlideModule</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token annotation punctuation">@Override</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">registerComponents</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Context</span> context<span class="token punctuation">,</span> <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Glide</span> glide<span class="token punctuation">,</span> <span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Registry</span> registry<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token class-name">OkHttpClient<span class="token punctuation">.</span>Builder</span> builder <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OkHttpClient<span class="token punctuation">.</span>Builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token class-name">Call<span class="token punctuation">.</span>Factory</span> factory <span class="token operator">=</span> builder<span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        registry<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token class-name">GlideUrl</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span><span class="token class-name">InputStream</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">OkHttpUrlLoader<span class="token punctuation">.</span>Factory</span><span class="token punctuation">(</span>factory<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h2 id="4glidemodule的registercomponents方法是什么时候被调用的"><a class="anchor" href="#4glidemodule的registercomponents方法是什么时候被调用的">#</a> 4.GlideModule 的 registerComponents 方法是什么时候被调用的？</h2>
+<p><img data-src="https://s3.bmp.ovh/imgs/2023/07/31/c035ed8ed3cd009e.jpg" alt="" /></p>
+<p>可以看出是图片下载被解析时，调用 getRegistry 方法时，如果还未初始化，就会走初始化逻辑，调用 registerComponents</p>
+<h1 id="glideokhttp3-线程池分析"><a class="anchor" href="#glideokhttp3-线程池分析">#</a> Glide+OKHttp3 线程池分析</h1>
+<h2 id="1glide线程池"><a class="anchor" href="#1glide线程池">#</a> 1.Glide 线程池</h2>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//com.bumptech.glide.GlideBuilder</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token class-name">Glide</span> <span class="token function">build</span><span class="token punctuation">(</span><span class="token annotation punctuation">@NonNull</span> <span class="token class-name">Context</span> context<span class="token punctuation">,</span><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">GlideModule</span><span class="token punctuation">></span></span> manifestModules<span class="token punctuation">,</span> <span class="token class-name">AppGlideModule</span> annotationGeneratedGlideModule<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token comment">// 图片下载线程池</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>sourceExecutor <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        sourceExecutor <span class="token operator">=</span> <span class="token class-name">GlideExecutor</span><span class="token punctuation">.</span><span class="token function">newSourceExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>	<span class="token comment">// 硬盘解析线程池</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>diskCacheExecutor <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        diskCacheExecutor <span class="token operator">=</span> <span class="token class-name">GlideExecutor</span><span class="token punctuation">.</span><span class="token function">newDiskCacheExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>	<span class="token comment">// 动画解析线程池</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>animationExecutor <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        animationExecutor <span class="token operator">=</span> <span class="token class-name">GlideExecutor</span><span class="token punctuation">.</span><span class="token function">newAnimationExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p><img data-src="https://s3.bmp.ovh/imgs/2023/08/16/f29dedbeb0a190b2.jpg" alt="" /></p>
+<p>图片下载线程池是个【核心 4 线程，最多 4 线程】的线程池</p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2023/08/16/c4fcc46afe34fc6e.jpg" alt="" /></p>
+<p>硬盘解析线程池是个【核心 1 线程，最多 1 线程】的线程池</p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2023/08/16/9d4c9903a1a4901e.jpg" alt="" /></p>
+<p>动画解析线程池是个【核心 2 线程，最多 2 线程】的线程池</p>
+<ol>
+<li><em><strong>在未接入 OKHttp3 时，Source 线程池用于下载图片，可以看出最多支持 4 个图片同时下载</strong></em></li>
+<li><em><strong>在接入 OKHttp3 时，Source 线程池用于向 OKHttp3 线程池提交下载任务获得 InputStream 基本是瞬间完成提交任务，等 Okhttp3 下载回调，所以下载图片取决于 OKHttp3 配置</strong></em></li>
+</ol>
+<h2 id="2okhttp3线程池"><a class="anchor" href="#2okhttp3线程池">#</a> 2.OkHttp3 线程池</h2>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">val</span> executorService<span class="token operator">:</span> ExecutorService</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>executorServiceOrNull <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        executorServiceOrNull <span class="token operator">=</span> <span class="token function">ThreadPoolExecutor</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> Int<span class="token punctuation">.</span>MAX_VALUE<span class="token punctuation">,</span> <span class="token number">60</span><span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="5"></td><td><pre>                                                   <span class="token function">SynchronousQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">threadFactory</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$</span><span class="token expression">okHttpName</span></span><span class="token string"> Dispatcher"</span></span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">return</span> executorServiceOrNull<span class="token operator">!!</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//okhttp3.Dispatcher</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">private</span> <span class="token keyword">fun</span> <span class="token function">promoteAndExecute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Boolean <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">assertThreadDoesntHoldLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">val</span> executableCalls <span class="token operator">=</span> mutableListOf<span class="token operator">&lt;</span>AsyncCall<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">val</span> isRunning<span class="token operator">:</span> Boolean</pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token function">synchronized</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">val</span> i <span class="token operator">=</span> readyAsyncCalls<span class="token punctuation">.</span><span class="token function">iterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token keyword">while</span> <span class="token punctuation">(</span>i<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>            <span class="token keyword">val</span> asyncCall <span class="token operator">=</span> i<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>runningAsyncCalls<span class="token punctuation">.</span>size <span class="token operator">>=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>maxRequests<span class="token punctuation">)</span> <span class="token keyword">break</span> <span class="token comment">// 最多支持 64 个请求</span></pre></td></tr><tr><td data-num="13"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>asyncCall<span class="token punctuation">.</span>callsPerHost<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>maxRequestsPerHost<span class="token punctuation">)</span> <span class="token keyword">continue</span> <span class="token comment">// 每个 Host 最多支持 5 个请求</span></pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre>            i<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            asyncCall<span class="token punctuation">.</span>callsPerHost<span class="token punctuation">.</span><span class="token function">incrementAndGet</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="17"></td><td><pre>            executableCalls<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>asyncCall<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="18"></td><td><pre>            runningAsyncCalls<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>asyncCall<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        isRunning <span class="token operator">=</span> <span class="token function">runningCallsCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="22"></td><td><pre></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token keyword">in</span> <span class="token number">0</span> until executableCalls<span class="token punctuation">.</span>size<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">val</span> asyncCall <span class="token operator">=</span> executableCalls<span class="token punctuation">[</span>i<span class="token punctuation">]</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        asyncCall<span class="token punctuation">.</span><span class="token function">executeOn</span><span class="token punctuation">(</span>executorService<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="27"></td><td><pre></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token keyword">return</span> isRunning</pre></td></tr><tr><td data-num="29"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>OKhttp3 线程池是无限制的，但最多同时支持 64 个请求，每个 Host 同时最多支持 5 个请求</p>
+<h1 id="glide-into后图片加载时间"><a class="anchor" href="#glide-into后图片加载时间">#</a> Glide into () 后图片加载时间</h1>
+<h2 id="需要有具体的宽高-glide才会加载图片"><a class="anchor" href="#需要有具体的宽高-glide才会加载图片">#</a> <em><strong>需要有具体的宽高， glide 才会加载图片</strong></em></h2>
+<p>如果设置了 RequestOptions 的 override 方法，则直接调用 onSizeReady，否则设置 target 的回调监听</p>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//com.bumptech.glide.request.SingleRequest</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">begin</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name">Util</span><span class="token punctuation">.</span><span class="token function">isValidDimensions</span><span class="token punctuation">(</span>overrideWidth<span class="token punctuation">,</span> overrideHeight<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token function">onSizeReady</span><span class="token punctuation">(</span>overrideWidth<span class="token punctuation">,</span> overrideHeight<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token comment">// 设置回调</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        target<span class="token punctuation">.</span><span class="token function">getSize</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onSizeReady</span><span class="token punctuation">(</span><span class="token keyword">int</span> width<span class="token punctuation">,</span> <span class="token keyword">int</span> height<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    loadStatus <span class="token operator">=</span>engine<span class="token punctuation">.</span><span class="token function">load</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h2 id="viewtarget啥时候会返回合适的宽高"><a class="anchor" href="#viewtarget啥时候会返回合适的宽高">#</a> ViewTarget 啥时候会返回合适的宽高？</h2>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">void</span> <span class="token function">getSize</span><span class="token punctuation">(</span><span class="token annotation punctuation">@NonNull</span> <span class="token class-name">SizeReadyCallback</span> cb<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">int</span> currentWidth <span class="token operator">=</span> <span class="token function">getTargetWidth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">int</span> currentHeight <span class="token operator">=</span> <span class="token function">getTargetHeight</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token comment">// 判断目前是否有合适的宽高，是则直接返回</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isViewStateAndSizeValid</span><span class="token punctuation">(</span>currentWidth<span class="token punctuation">,</span> currentHeight<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        cb<span class="token punctuation">.</span><span class="token function">onSizeReady</span><span class="token punctuation">(</span>currentWidth<span class="token punctuation">,</span> currentHeight<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token keyword">return</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>cbs<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>cb<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        cbs<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>cb<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token comment">// 设置 addOnPreDrawListener，View 绘制前回调</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>layoutListener <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token class-name">ViewTreeObserver</span> observer <span class="token operator">=</span> view<span class="token punctuation">.</span><span class="token function">getViewTreeObserver</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>        layoutListener <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SizeDeterminerLayoutListener</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        observer<span class="token punctuation">.</span><span class="token function">addOnPreDrawListener</span><span class="token punctuation">(</span>layoutListener<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">private</span> <span class="token keyword">int</span> <span class="token function">getTargetHeight</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">int</span> verticalPadding <span class="token operator">=</span> view<span class="token punctuation">.</span><span class="token function">getPaddingTop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> view<span class="token punctuation">.</span><span class="token function">getPaddingBottom</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token class-name">LayoutParams</span> layoutParams <span class="token operator">=</span> view<span class="token punctuation">.</span><span class="token function">getLayoutParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">int</span> layoutParamSize <span class="token operator">=</span> layoutParams <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">?</span> layoutParams<span class="token punctuation">.</span>height <span class="token operator">:</span> <span class="token constant">PENDING_SIZE</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">return</span> <span class="token function">getTargetDimen</span><span class="token punctuation">(</span>view<span class="token punctuation">.</span><span class="token function">getHeight</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> layoutParamSize<span class="token punctuation">,</span> verticalPadding<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token keyword">private</span> <span class="token keyword">int</span> <span class="token function">getTargetDimen</span><span class="token punctuation">(</span><span class="token keyword">int</span> viewSize<span class="token punctuation">,</span> <span class="token keyword">int</span> paramSize<span class="token punctuation">,</span> <span class="token keyword">int</span> paddingSize<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token comment">//params 的宽高是固定值</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">int</span> adjustedParamSize <span class="token operator">=</span> paramSize <span class="token operator">-</span> paddingSize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>adjustedParamSize <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">return</span> adjustedParamSize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token comment">//View 正打算 layout 布局，返回 PENDING_SIZE 表示目前的宽高不合适，等待 PreDrawListener 回调</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>waitForLayout <span class="token operator">&amp;&amp;</span> view<span class="token punctuation">.</span><span class="token function">isLayoutRequested</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">PENDING_SIZE</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token comment">//View 存在宽高数据，因为这个宽高数据可能是脏数据，所以放这么后面</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">int</span> adjustedViewSize <span class="token operator">=</span> viewSize <span class="token operator">-</span> paddingSize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>adjustedViewSize <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">return</span> adjustedViewSize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="25"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="26"></td><td><pre></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token comment">//view 目前没有请求 layout 布局，且宽高是 WRAP_CONTENT，返回屏幕宽高的最大值</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>view<span class="token punctuation">.</span><span class="token function">isLayoutRequested</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> paramSize <span class="token operator">==</span> <span class="token class-name">LayoutParams</span><span class="token punctuation">.</span><span class="token constant">WRAP_CONTENT</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        <span class="token keyword">return</span> <span class="token function">getMaxDisplayLength</span><span class="token punctuation">(</span>view<span class="token punctuation">.</span><span class="token function">getContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="31"></td><td><pre></pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token comment">// 返回 PENDING_SIZE 表示目前的宽高不合适，等待 PreDrawListener 回调</span></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token keyword">return</span> <span class="token constant">PENDING_SIZE</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="34"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>​    <strong>into 后宽高数据的获取逻辑</strong>：</p>
+<ol>
+<li>RequestOptions 存在 overrideWidth, overrideHeight</li>
+<li>params 的宽高是固定值</li>
+<li>viewTarget 的 waitForLayout 是 true，且正打算 layout 布局，则等待 PreDrawListener 回调（waitForLayout 无设置默认值，boolean 默认值是 false）</li>
+<li>view 存在真实的宽高数据</li>
+<li>view 目前没有请求 layout 布局，且宽高是 WRAP_CONTENT，返回屏幕宽高的最大值</li>
+<li>等待 PreDrawListener 回调</li>
+</ol>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>Android</category>
+      </categories>
+      <tags>
+        <tag>Glide</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MAT使用技巧</title>
+    <url>/post/4f06ab99.html</url>
+    <content><![CDATA[<h2 id="1mat打开报错-memoryanalyzer指定jdk版本"><a class="anchor" href="#1mat打开报错-memoryanalyzer指定jdk版本">#</a> 1.MAT 打开报错    <span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2VwaXRvbWl6ZWx1L2FydGljbGUvZGV0YWlscy8xMTgyOTQ0MzI=">MemoryAnalyzer 指定 JDK 版本</span></h2>
+<h2 id="2hprof-转为mat能读取的格式-android-studio导出hprof到mat工具流程"><a class="anchor" href="#2hprof-转为mat能读取的格式-android-studio导出hprof到mat工具流程">#</a> 2.Hprof 转为 MAT 能读取的格式 <span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3RhbmdlZGVndXNoaS9hcnRpY2xlL2RldGFpbHMvODMwMTU2MTI=">Android studio 导出 hprof 到 MAT 工具流程</span></h2>
+<h2 id="3对比多个hprof文件-使用mat比较多个hprof文件"><a class="anchor" href="#3对比多个hprof文件-使用mat比较多个hprof文件">#</a> 3. 对比多个 Hprof 文件 <span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21sZHhzL2FydGljbGUvZGV0YWlscy84OTM0OTA0NA==">使用 MAT 比较多个 hprof 文件</span></h2>
+<p><span id="more"></span></p>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>Android</category>
+      </categories>
+      <tags>
+        <tag>MAT</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Span知识点</title>
     <url>/post/p8hxlm4c.html</url>
     <content><![CDATA[<p><span id="more"></span></p>
@@ -2605,22 +2594,6 @@ MyViewGroup-- setOnTouchListener
       </categories>
       <tags>
         <tag>PopUpWindow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MAT使用技巧</title>
-    <url>/post/4f06ab99.html</url>
-    <content><![CDATA[<h2 id="1mat打开报错-memoryanalyzer指定jdk版本"><a class="anchor" href="#1mat打开报错-memoryanalyzer指定jdk版本">#</a> 1.MAT 打开报错    <span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2VwaXRvbWl6ZWx1L2FydGljbGUvZGV0YWlscy8xMTgyOTQ0MzI=">MemoryAnalyzer 指定 JDK 版本</span></h2>
-<h2 id="2hprof-转为mat能读取的格式-android-studio导出hprof到mat工具流程"><a class="anchor" href="#2hprof-转为mat能读取的格式-android-studio导出hprof到mat工具流程">#</a> 2.Hprof 转为 MAT 能读取的格式 <span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3RhbmdlZGVndXNoaS9hcnRpY2xlL2RldGFpbHMvODMwMTU2MTI=">Android studio 导出 hprof 到 MAT 工具流程</span></h2>
-<h2 id="3对比多个hprof文件-使用mat比较多个hprof文件"><a class="anchor" href="#3对比多个hprof文件-使用mat比较多个hprof文件">#</a> 3. 对比多个 Hprof 文件 <span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21sZHhzL2FydGljbGUvZGV0YWlscy84OTM0OTA0NA==">使用 MAT 比较多个 hprof 文件</span></h2>
-<p><span id="more"></span></p>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>Android</category>
-      </categories>
-      <tags>
-        <tag>MAT</tag>
       </tags>
   </entry>
   <entry>
