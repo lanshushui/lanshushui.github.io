@@ -222,7 +222,7 @@ let placeholderStyleJson = paramsJson["placeholderStyle"] as Record<string, Obje
 
 ## 场景代码
 
-##### Uint8Array转为图片显示
+###### Uint8Array转为图片显示
 
 ```typescript
 @Component
