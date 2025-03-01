@@ -40,6 +40,14 @@ abbrlink: 1cfedf1f
 
 
 
+## 组件知识
+
+#### input
+
+> [Flutter FocusNode输入框焦点控制概述](https://blog.csdn.net/zl18603543572/article/details/106029630)
+
+
+
 
 
 Keep Moving Forward
