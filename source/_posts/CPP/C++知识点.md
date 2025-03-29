@@ -118,7 +118,14 @@ abbrlink: 44bbaae6
 
 > 获得倒数第二个元素：double penultimate = *std::prev(foo.end(), 2)     [来源](https://cloud.tencent.com/developer/ask/sof/89429)
 
+> 反向遍历 [来源](https://articles.oyoung.cc/2020/09/24/C-%E5%B0%8F%E6%8A%80%E5%B7%A7-%E9%9B%86%E5%90%88-vector-list-map-set-%E7%9A%84%E5%8F%8D%E5%90%91%E9%81%8D%E5%8E%86/)
 
+```c
+for(auto it = collection.rbegin(); it != collection.rend(); ++it) {
+ std::cout << *it << std::endl;
+ // std::cout << it->first << ", " << it->second << std::endl;
+}
+```
 
 
 
@@ -145,6 +152,14 @@ abbrlink: 44bbaae6
 > value不能是抽象类，针对这场景需要用到指针或者智能指针shared_ptr
 
 > [一边遍历 map，一边删除](https://parallel101.github.io/cppguidebook/cpp_tricks/#map)
+
+
+
+#### lambda知识
+
+> 隐式捕获可以和显式捕获搭配使用，但不能和同类型的显示捕获一起使用。即隐式值捕获只能搭配显式引用捕获，隐式引用捕获只能搭配显式值捕获。表现形式为："[=,&变量1,&变量2]"或者"[&,变量1,变量2]
+
+
 
 
 
@@ -205,13 +220,67 @@ abbrlink: 44bbaae6
 
 
 
+####  std::optional知识
+
+> 传递时值传递的，所以会造成性能问题和潜在问题 [关于std::optional传递开销的讨论与优化](https://zhuanlan.zhihu.com/p/438821425)
+>
+> 解决方式： std::optional<std::reference_wrapper<const T>>
+
+```c
+#include <iostream>
+#include <functional>
+#include <optional>
+
+class A {
+    public:
+    std::string a;
+
+    A() { a = "1"; }
+};
+
+class MyClass {
+    public:
+    // 默认构造函数
+    MyClass() { this->a = A(); }
+
+    std::optional<A> GetA() { return this->a; }
+
+    std::optional<std::reference_wrapper<A>> GetARef() { return this->a.value(); }
+
+    public:
+    std::optional<A> a;
+};
+
+int main() {
+    MyClass myClass;
+    std::cout << "Test 1"<< std::endl;
+
+    myClass.GetA().value().a = "2";
+    std::cout << myClass.a->a << std::endl;
+
+    std::cout << "-----------" << std::endl;
+    std::cout << "Test 2"<< std::endl;
+
+    myClass.GetARef().value().get().a = "2";
+    std::cout << myClass.a->a<< std::endl;
+
+    return 0;
+}
+//Test 1
+//1
+//-----------
+//Test 2
+//2
+```
+
 
 
 #### 指针知识
 
 ```c
 //基类指针转为子类指针
-if(auto* prt =std::dynamic_cast<XXX>(basePtr)){
+//可能会导致SIGSEGV问题，确保basePtr不是野指针
+if(auto* prt =std::dynamic_cast<XXX>(basePtr不是野指针)){
  
 }
 //基类智能指针转为子类智能指针
@@ -257,6 +326,44 @@ long p = std::reinterpret_cast<Long>(ptr)
 [头文件中使用前向定义，不引入依赖头文件，把依赖头文件写入放入其cpp文件中](https://blog.csdn.net/qq_34018840/article/details/106433498)
 
 
+
+##### 2.dynamic_cast可能导致SIGSEGV异常
+
+```c
+#include <iostream>
+
+class Father {
+    public:
+    virtual void speak() {
+        std::cout << "Father speak";
+    }
+};
+
+class Son : public Father {
+    public:
+    void speak() override {
+        std::cout << "Son speak";
+    }
+};
+
+int main() {
+    Father *base = new Son();
+    delete base;
+    if(base) {
+        if (Son *son = dynamic_cast<Son *>(base)) {
+            son->speak();
+        }
+    }
+    return 0;
+}
+
+```
+
+> delete后指针不是0，还是指向一个被释放的地址，所以if条件判断还是能够进入
+>
+> base指向已经被释放的指针，dynamic_cast会出现SIGSEGV问题
+>
+> if (Son *son = dynamic_cast<Son *>(base))  的用法只能用于base是个没问题指针或者是nullptr
 
 
 
