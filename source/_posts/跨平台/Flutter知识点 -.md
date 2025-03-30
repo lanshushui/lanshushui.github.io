@@ -1,7 +1,7 @@
 ---
 title: Flutter知识点
 categories:
-  - Flutter
+  - 跨平台
 tags:
   - 知识点
 top: 100

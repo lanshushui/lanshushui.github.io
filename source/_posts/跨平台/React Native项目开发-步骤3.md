@@ -1,7 +1,7 @@
 ---
 title: React Native项目开发-步骤3
 categories:
-  - React-Native
+  - 跨平台
 tags:
   - React-Native调试开发
 top: 100

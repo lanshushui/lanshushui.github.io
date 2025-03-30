@@ -1,7 +1,7 @@
 ---
 title: React Native原理
 categories:
-  - React-Native
+  - 跨平台
 tags:
   - 源码分析
 top: 100

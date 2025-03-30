@@ -280,7 +280,7 @@ int main() {
 ```c
 //基类指针转为子类指针
 //可能会导致SIGSEGV问题，确保basePtr不是野指针
-if(auto* prt =std::dynamic_cast<XXX>(basePtr不是野指针)){
+if(auto* prt =std::dynamic_cast<XXX>(basePtr)){
  
 }
 //基类智能指针转为子类智能指针

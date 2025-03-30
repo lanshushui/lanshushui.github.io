@@ -1,7 +1,7 @@
 ---
 title: Flutter module接入流程
 categories:
-  - Flutter
+  - 跨平台
 tags:
   - 知识点
 top: 100

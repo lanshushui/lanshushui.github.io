@@ -1,7 +1,7 @@
 ---
 title: React Native知识点
 categories:
-  - React-Native
+  - 跨平台
 tags:
   - 知识点
 top: 100
