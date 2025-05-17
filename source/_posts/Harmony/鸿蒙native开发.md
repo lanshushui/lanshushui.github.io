@@ -158,6 +158,30 @@ clang++: warning: argument unused during compilation: '--gcc-toolchain=C:/Users/
 
 
 
+
+
+## so库是如何，何时加载的？
+
+so库是在import代码执行后就会加载，不是调用so库暴露的方法才被加载
+
+当然代码中必须有地方使用so库暴露的函数，否则import代码会被标记为 'testNapi' is declared but its value is never read，编译包时把import这一行给删除了。
+
+```typescript
+import testNapi from 'libchange.so';
+//在编译后会变成
+import testNapi from "@normalized:Y&&&libchange.so&";
+```
+
+so库加载时 RegisterEntryModule  入口函数会被调用
+
+![](https://s3.bmp.ovh/imgs/2025/05/17/57649cac7d903b59.png)
+
+
+
+
+
+
+
 ## 小知识点
 
 [暂不支持在c++子线程调用ArkTS接口，当前只能通过callback异步调用或者线程安全的方式进行回调处理](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-8-V5)

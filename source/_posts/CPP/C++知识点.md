@@ -91,13 +91,22 @@ abbrlink: 44bbaae6
 
 #### std::string知识
 
+> 在 C++ 中，任何时候都务必用 string！别用 C 语言老掉牙的 const char *，太危险了。
+>
+> const char * 危险的原因：
+>
+> 1. const char * 的 == 判断的是指针的相等，两个 const char * 只要地址不同，即使实际的字符串相同，也不会被视为同一个元素（如上代码案例所示）。导致 map 里会出现重复的键，以及按键查找可能找不到等。
+> 2. 保存的是弱引用，如果你把局部的 char [] 或 string.c_str() 返回的 const char * 存入 map，等这些局部释放了，map 中的 const char * 就是一个空悬指针了，会造成 segfault。
+
 > <font color="red">switch 不能用std::string  </font>
 
+> string 的 == 运算符是经过重载的，比较的是字符串里面的内容相等，而不是地址相等 
+>
 > std::string 判断字符串相等 可以直接用== ，判空可以用 isEmpty()
 
 > [数值类型和字符串之间的转换: to_string , stoi](https://subingwen.cn/cpp/convert/)
 
-> [使用R“()” 定义原始字面量](https://subingwen.cn/cpp/R/)
+> [使用R“()” 定义原始字面量](https://subingwen.cn/cpp/R/)   字面量中有"的话 可以用[自定义边界符](https://zhuanlan.zhihu.com/p/641890499) 
 
 > 分割版本字符串并转换为整数
 >
@@ -116,6 +125,8 @@ abbrlink: 44bbaae6
 
 #### std::list知识
 
+> 遍历时记得用&引用承接变量  for (const auto& pair : list)
+
 > 获得倒数第二个元素：double penultimate = *std::prev(foo.end(), 2)     [来源](https://cloud.tencent.com/developer/ask/sof/89429)
 
 > 反向遍历 [来源](https://articles.oyoung.cc/2020/09/24/C-%E5%B0%8F%E6%8A%80%E5%B7%A7-%E9%9B%86%E5%90%88-vector-list-map-set-%E7%9A%84%E5%8F%8D%E5%90%91%E9%81%8D%E5%8E%86/)
@@ -131,6 +142,8 @@ for(auto it = collection.rbegin(); it != collection.rend(); ++it) {
 
 #### std::vector知识
 
+> 遍历时记得用&引用承接变量  for (const auto& pair : vector)
+
 > [高效删除单个 vector 元素](https://parallel101.github.io/cppguidebook/cpp_tricks/#vector)
 
 > vector字节怎么转换为string :    std::string str(vec.begin(), vec.end());
@@ -140,6 +153,8 @@ for(auto it = collection.rbegin(); it != collection.rend(); ++it) {
 
 
 #### std::unordered_map知识
+
+> 遍历时记得用&引用承接变量  for (const auto& pair : map)
 
 > unordered_map用 []访问，但key不存在时，访问仍然成功，取得value对象默认构造的值
 
@@ -151,7 +166,11 @@ for(auto it = collection.rbegin(); it != collection.rend(); ++it) {
 
 > value不能是抽象类，针对这场景需要用到指针或者智能指针shared_ptr
 
+> 删除  myMap.erase(1)；
+>
 > [一边遍历 map，一边删除](https://parallel101.github.io/cppguidebook/cpp_tricks/#map)
+
+
 
 
 
@@ -220,6 +239,12 @@ for(auto it = collection.rbegin(); it != collection.rend(); ++it) {
 
 
 
+#### std::call_once 知识
+
+[保证函数在任何情况下只调用一次](https://www.cnblogs.com/moodlxs/p/10111859.html)
+
+
+
 ####  std::optional知识
 
 > 传递时值传递的，所以会造成性能问题和潜在问题 [关于std::optional传递开销的讨论与优化](https://zhuanlan.zhihu.com/p/438821425)
@@ -276,6 +301,8 @@ int main() {
 
 
 #### 指针知识
+
+[enable_shared_from_this 的使用及实现原理](https://blog.guorongfei.com/2017/01/25/enbale-shared-from-this-implementaion/)
 
 ```c
 //基类指针转为子类指针

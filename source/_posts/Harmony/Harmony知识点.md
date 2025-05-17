@@ -47,6 +47,8 @@ abbrlink: 3066680b
 
 
 
+> ets代码编译后ts的文件目录：\entry\build\default\cache\default\default@CompileArkTS\esmodule\debug
+
 <!-- more -->
 
 ## Android 和 鸿蒙对标的配置
