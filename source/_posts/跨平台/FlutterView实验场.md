@@ -16,6 +16,8 @@ abbrlink: d2a32cfc
 
 <!-- more -->
 
+[代码仓库](https://github.com/lanshushui/FlutterHost)
+
 ## FlutterView在不同ViewGroup移动
 
 相比起来FlutterTextureView 更容易实现该功能
@@ -164,6 +166,73 @@ class MainActivity : Activity() {
     }
 }
 
+```
+
+
+
+
+
+## Flutter在surface与texture之间切换展示
+
+> FlutterView内部有convertToImageView方法就有类似的切换效果，主要就是attachToRenderer方法调用，所以直接上代码了
+
+```kotlin
+class MyFlutterView : FlutterView {
+
+    var flutterTextureView: FlutterTextureView? = null
+    var flutterSurfaceView: FlutterSurfaceView? = null
+    private var flutterEngine: FlutterEngine? = null
+
+    constructor(context: Context, flutterTextureView: MyFlutterTextureView) : super(
+        context,
+        flutterTextureView
+    ) {
+        this.flutterTextureView = flutterTextureView
+    }
+
+    constructor(context: Context, flutterSurfaceView: FlutterSurfaceView) : super(
+        context,
+        flutterSurfaceView
+    ) {
+        this.flutterSurfaceView = flutterSurfaceView
+    }
+
+    override fun attachToFlutterEngine(flutterEngine: FlutterEngine) {
+        super.attachToFlutterEngine(flutterEngine)
+        this.flutterEngine = flutterEngine
+    }
+
+    fun switch() {
+        if (getChildAt(0) == flutterSurfaceView && flutterSurfaceView != null) {
+            flutterSurfaceView!!.removeFromParent()
+            if (flutterTextureView == null) {
+                flutterTextureView = MyFlutterTextureView(context)
+            }
+            addView(flutterTextureView)
+            if (flutterEngine != null) {
+                flutterTextureView!!.attachToRenderer(flutterEngine!!.renderer)
+            }
+        } else if (getChildAt(0) == flutterTextureView && flutterTextureView != null) {
+            val old =flutterTextureView!!.surfaceTexture
+            flutterTextureView!!.removeFromParent()
+            flutterTextureView!!.setSurfaceTexture(old!!)
+            if (flutterSurfaceView == null) {
+                flutterSurfaceView = FlutterSurfaceView(context)
+            }
+            addView(flutterSurfaceView)
+            if (flutterEngine != null) {
+                flutterSurfaceView!!.attachToRenderer(flutterEngine!!.renderer)
+            }
+        }
+    }
+}
+
+fun View.removeFromParent() {
+    val parent = parent
+    if (parent != null && parent is ViewGroup) {
+        parent.removeView(this)
+    }
+}
 ```
 
 
