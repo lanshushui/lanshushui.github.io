@@ -32,7 +32,7 @@ abbrlink: d2a32cfc
 
 
 
-![image-20250524003258115](C:\Users\lanshushui\AppData\Roaming\Typora\typora-user-images\image-20250524003258115.png)
+![](https://s3.bmp.ovh/imgs/2025/05/24/87770428a26267ae.png)
 
 上图为addView后的逻辑，绘制流程触发的FlutterTextureView注册的SurfaceTextureListener的onSurfaceTextureAvailable被调用
 
