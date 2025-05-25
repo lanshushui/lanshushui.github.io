@@ -189,6 +189,8 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 [基于反混淆工具混淆后的日志定位](https://developer.huawei.com/consumer/cn/forum/topic/0202157390662286372)
 
+[动态修改hvigor编译配置](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-hvigor-config-ohos-sample)
+
 
 
 ## 问题场景

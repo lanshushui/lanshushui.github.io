@@ -46,6 +46,26 @@ abbrlink: 1cfedf1f
 
 
 
+## 渲染知识
+
+> renderSurface.attachToRenderer 之后flutter就会把UI渲染在FlutterView上。点击操作会触发engine内部的渲染
+>
+> 但要在 flutterEngine.*lifecycleChannel*.appIsResumed() 之后FlutterView才会UI刷新
+>
+> appIsPaused 和 appIsInactive状态下FlutterView也会刷新，appIsDetached后才停止更新渲染
+>
+> 官方demo项目测试：
+>
+> appIsDetached ->appIsPaused   点击按钮仍会触发UI刷新，appIsDetached状态下的操作触发的UI刷新也会一起显现
+>
+> appIsDetached ->appIsInactive  点击按钮仍会触发UI刷新，appIsDetached状态下的操作触发的UI刷新也会一起显现
+>
+> appIsDetached ->appIsResumed点击按钮仍会触发UI刷新，appIsDetached状态下的操作触发的UI刷新也会一起显现
+>
+> **总结：lifecycleChannel只是切断屏幕的渲染，但engine内部的渲染是一直在继续着的**
+
+
+
 
 
 Keep Moving Forward

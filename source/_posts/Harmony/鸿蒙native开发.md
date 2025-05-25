@@ -46,7 +46,7 @@ abbrlink: df80432a
 
 ##### 4.修改entry 模块的oh-package.json5的依赖,和引用so库的est文件
 
-![image-20241123001601426](C:\Users\lanshushui\AppData\Roaming\Typora\typora-user-images\image-20241123001601426.png)
+![](https://s3.bmp.ovh/imgs/2025/05/24/8e43a31ced16f7c8.png)
 
 ![](https://s3.bmp.ovh/imgs/2024/11/23/1c2fab04c909e368.png)
 
@@ -158,6 +158,184 @@ clang++: warning: argument unused during compilation: '--gcc-toolchain=C:/Users/
 
 
 
+## 如何导出C++自定义类，导出后如何在ArkTS侧进行类方法调用？
+
+[文档来源](https://blog.csdn.net/m0_70748845/article/details/147982946)    
+
+C++侧定义类
+
+```c
+// MyDemo.h 定义C++ 类 
+class MyDemo { 
+  public: 
+    MyDemo(std::string m_name); 
+    MyDemo(); 
+    ~MyDemo();   
+    std::string name; 
+    int add(int a, int b); 
+    int sub(int a, int b); 
+};
+
+```
+
+完成ArkTS类与C++侧的映射关系，并将其挂载到export上。
+
+```c
+// ArkTS对象构造函数 
+static napi_value JsConstructor(napi_env env, napi_callback_info info) { 
+    // 创建napi对象 
+    napi_value jDemo = nullptr; 
+    size_t argc = 0; 
+    napi_value args[1] = {0}; 
+    // 获取构造函数入参 
+    napi_get_cb_info(env, info, &argc, args, &jDemo, nullptr); 
+    // args[0] js传入的参数 
+    char name[50]; 
+    size_t result = 0; 
+    napi_get_value_string_utf8(env, args[0], name, sizeof(name) + 1, &result); 
+    // 创建C++对象 
+    MyDemo *cDemo = new MyDemo(name);
+    // 设置js对象name属性 
+    napi_set_named_property(env, jDemo, "name", args[0]); 
+    // 绑定JS对象与C++对象 
+    napi_wrap( 
+        env, jDemo, cDemo, 
+        // 定义js对象回收时回调函数，用来销毁C++对象，防止内存泄漏 
+        [](napi_env env, void *finalize_data, void *finalize_hint) { 
+            MyDemo *cDemo = (MyDemo *)finalize_data; 
+            delete cDemo; 
+            cDemo = nullptr; 
+        }, 
+        nullptr, nullptr); 
+    return jDemo; 
+} 
+// ArkTS对象add函数 
+static napi_value JsAdd(napi_env env, napi_callback_info info) { 
+    size_t argc = 2; 
+    napi_value args[2] = {nullptr}; 
+    napi_value jDemo = nullptr; 
+    napi_get_cb_info(env, info, &argc, args, &jDemo, nullptr); 
+    MyDemo *cDemo = nullptr; 
+    // 将ArkTS对象转为c对象 
+    napi_unwrap(env, jDemo, (void **)&cDemo); 
+    // 获取ArkTS传递的参数 
+    int value0; 
+    napi_get_value_int32(env, args[0], &value0); 
+    int value1; 
+    napi_get_value_int32(env, args[1], &value1); 
+    int cResult = cDemo->add(value0, value1); 
+    napi_value jResult; 
+    napi_create_int32(env, cResult, &jResult); 
+    return jResult; 
+} 
+// ArkTS对象sub函数 
+static napi_value JsSub(napi_env env, napi_callback_info info) { 
+    size_t argc = 2; 
+    napi_value args[2] = {nullptr}; 
+    napi_value jDemo = nullptr; 
+    napi_get_cb_info(env, info, &argc, args, &jDemo, nullptr); 
+    MyDemo *cDemo = nullptr; 
+    // 将ArkTS对象转为c对象 
+    napi_unwrap(env, jDemo, (void **)&cDemo); 
+    // 获取ArkTS传递的参数 
+    int value0; 
+    napi_get_value_int32(env, args[0], &value0); 
+    int value1; 
+    napi_get_value_int32(env, args[1], &value1); 
+    int cResult = cDemo->sub(value0, value1); 
+    napi_value jResult; 
+    napi_create_int32(env, cResult, &jResult); 
+    return jResult; 
+} 
+static napi_value Add(napi_env env, napi_callback_info info) { 
+    size_t requireArgc = 2; 
+    size_t argc = 2; 
+    napi_value args[2] = {nullptr}; 
+    napi_get_cb_info(env, info, &argc, args, nullptr, nullptr); 
+    napi_valuetype valuetype0; 
+    napi_typeof(env, args[0], &valuetype0); 
+    napi_valuetype valuetype1; 
+    napi_typeof(env, args[1], &valuetype1); 
+    int value0; 
+    napi_get_value_int32(env, args[0], &value0); 
+    int value1; 
+    napi_get_value_int32(env, args[1], &value1); 
+    MyDemo *demo = new MyDemo(); 
+    // 调用so中函数进行运算 
+    int result = demo->add(value0, value1); 
+    napi_value sum; 
+    napi_create_int32(env, result, &sum); 
+    delete demo; 
+    return sum; 
+} 
+static napi_value Sub(napi_env env, napi_callback_info info) { 
+    size_t argc = 2; 
+    napi_value args[2] = {nullptr}; 
+    napi_get_cb_info(env, info, &argc, args, nullptr, nullptr); 
+    napi_valuetype valuetype0; 
+    napi_typeof(env, args[0], &valuetype0); 
+    napi_valuetype valuetype1; 
+    napi_typeof(env, args[1], &valuetype1); 
+    int value0; 
+    napi_get_value_int32(env, args[0], &value0); 
+    int value1; 
+    napi_get_value_int32(env, args[1], &value1); 
+    MyDemo *demo = new MyDemo(); 
+    // 调用so中函数进行运算 
+    int result = demo->sub(value0, value1); 
+    napi_value num; 
+    napi_create_int32(env, result, &num); 
+    delete demo; 
+    return num; 
+} 
+
+static napi_value Init(napi_env env, napi_value exports) { 
+    // 定义模块需要对外暴露的方法 
+    napi_property_descriptor desc[] = {{"add", nullptr, Add, nullptr, nullptr, nullptr, napi_default, nullptr}, 
+                                       {"sub", nullptr, Sub, nullptr, nullptr, nullptr, napi_default, nullptr}}; 
+    napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc); 
+    // 通过napi_define_class建立ArkTS类与C++侧的映射关系，然后将对应的对象挂载到export上 
+    napi_property_descriptor classProp[] = {{"add", nullptr, JsAdd, nullptr, nullptr, nullptr, napi_default, nullptr}, 
+                                            {"sub", nullptr, JsSub, nullptr, nullptr, nullptr, napi_default, nullptr}}; 
+    napi_value jDemo = nullptr; 
+    const char *jDemoName = "MyDemo"; 
+    // 建立ArkTS构造函数与C++方法的关联,指定2个prop 
+    napi_define_class(env, jDemoName, sizeof(jDemoName), JsConstructor, nullptr, 
+                      sizeof(classProp) / sizeof(classProp[0]), classProp, &jDemo); 
+    napi_set_named_property(env, exports, jDemoName, jDemo); 
+    return exports; 
+}
+```
+
+index.d.ts文件中定义ArkTS类
+
+```c
+declare namespace testNapi { 
+  const add: (a: number, b: number) => number; 
+  const sub: (a: number, b: number) => number; 
+  // 定义ArkTS接口 
+  class MyDemo { 
+    constructor(name:string) 
+    name: string 
+    add(a: number, b: number): number 
+    sub(a: number, b: number): number 
+  } 
+} 
+export default testNapi;
+
+```
+
+ArkTS侧实现调用
+
+```c
+import testNapi from 'libentry.so'; 
+// ... 
+    new testNapi.MyDemo('abc'); 
+    hilog.info(0x0000, 'testTag', 'Test NAPI 2 + 3 = %{public}d', testNapi.add(2, 3)); 
+    hilog.info(0x0000, 'testTag', 'Test NAPI 2 - 3 = %{public}d', testNapi.sub(2, 3)); 
+// ... 
+```
+
 
 
 ## so库是如何，何时加载的？
@@ -175,6 +353,10 @@ import testNapi from "@normalized:Y&&&libchange.so&";
 so库加载时 RegisterEntryModule  入口函数会被调用
 
 ![](https://s3.bmp.ovh/imgs/2025/05/17/57649cac7d903b59.png)
+
+
+
+
 
 
 
