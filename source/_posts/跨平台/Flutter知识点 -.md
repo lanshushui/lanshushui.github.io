@@ -66,6 +66,12 @@ abbrlink: 1cfedf1f
 
 
 
+##### flutterEngine.*renderer*.isDisplayingFlutterUi 何时为true
+
+![](https://s3.bmp.ovh/imgs/2025/05/28/a2db9c6a10228616.png)
+
+> onFirstFrame回调时设置
+
 
 
 Keep Moving Forward

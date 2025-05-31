@@ -8,6 +8,8 @@ top: 90
 abbrlink: 6de72e62
 ---
 
+> so加载日志关键词：LoadNativeModule
+
 <!-- more -->
 
 ## so库是如何，何时加载的？
@@ -129,6 +131,19 @@ export interface T {
 > import  { B} from './T';  不会导致so库的加载
 
 > import  { T } from './T';  const t:T= { demo: undefined }   不会导致so库的加载
+
+
+
+#### 出现作为自定义Type的其中一个属性
+
+```typescript
+//T.est文件
+import lazy {  MyDemo } from 'libchange.so';
+
+export type  B = MyDemo|string
+```
+
+> import  { B} from './T';  不会导致so库的加载
 
 
 

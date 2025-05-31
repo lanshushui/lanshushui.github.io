@@ -126,9 +126,33 @@ MyViewGroup-- setOnTouchListener
 
 
 
+## removeView测试
 
+疑惑：是马上进行ui变化吗？
 
+*测试方案： removeFromParent*后主线程等待3s，查看期间效果
 
+```kotlin
+fun wait3s(){
+    val count = CountDownLatch(1)
+    Thread({
+        //处理业务1
+        try {
+            TimeUnit.SECONDS.sleep(3)
+            count.countDown()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        } finally {
+            count.countDown() //确保每个任务执行完递减
+        }
+    }, "t1").start()
+    count.await()
+}
+```
+
+> 结论：ui变化是在下一次绘制才发生，即使removeFromParent后又调用requestLayout和invalidate
+>
+> 测试 FlutterSurfaceView 也是如此
 
 
 
