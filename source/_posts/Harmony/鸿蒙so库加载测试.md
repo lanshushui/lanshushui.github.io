@@ -36,7 +36,7 @@ so库加载时 RegisterEntryModule  入口函数会被调用
 
 #### 出现在类的方法参数中
 
-```
+```typescript
 //T.est文件
 import lazy { MyDemo } from 'libchange.so';
 
