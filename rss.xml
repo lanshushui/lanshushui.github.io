@@ -19,7 +19,10 @@
             <category term="Harmony" scheme="http://example.com/categories/Harmony/" />
             <category term="Native" scheme="http://example.com/tags/Native/" />
             <pubDate>Sun, 25 May 2025 20:49:20 +0800</pubDate>
-            <description><![CDATA[ &lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
+            <description><![CDATA[ &lt;blockquote&gt;
+&lt;p&gt;so 加载日志关键词：LoadNativeModule&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;h2 id=&#34;so库是如何何时加载的&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#so库是如何何时加载的&#34;&gt;#&lt;/a&gt; so 库是如何，何时加载的？&lt;/h2&gt;
 &lt;p&gt;so 库是在 import 代码执行后就会加载，不是调用 so 库暴露的方法才被加载&lt;/p&gt;
 &lt;p&gt;当然代码中必须有地方使用 so 库暴露的函数，否则 import 代码会被标记为 &#39;testNapi&#39; is declared but its value is never read，编译包时把 import 这一行给删除了。&lt;/p&gt;
@@ -67,6 +70,10 @@ export class T &amp;#123;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
 &lt;p&gt;import  {T} from &#39;./T&#39;;  const t:T= { demo: undefined }   不会导致 so 库的加载&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;出现作为自定义type的其中一个属性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#出现作为自定义type的其中一个属性&#34;&gt;#&lt;/a&gt; 出现作为自定义 Type 的其中一个属性&lt;/h4&gt;
+&lt;figure class=&#34;highlight typescript&#34;&gt;&lt;figcaption data-lang=&#34;typescript&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;//T.est 文件&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; lazy &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;  MyDemo &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;libchange.so&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;type&lt;/span&gt;  &lt;span class=&#34;token class-name&#34;&gt;&lt;span class=&#34;token constant&#34;&gt;B&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; MyDemo&lt;span class=&#34;token operator&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;token builtin&#34;&gt;string&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;blockquote&gt;
+&lt;p&gt;import  {B} from &#39;./T&#39;;  不会导致 so 库的加载&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h3 id=&#34;c定义方法使用场景&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#c定义方法使用场景&#34;&gt;#&lt;/a&gt; c++ 定义方法使用场景&lt;/h3&gt;
 &lt;p&gt;作为导出变量的一个变量&lt;/p&gt;
@@ -239,8 +246,8 @@ MyClass destruction called&lt;/p&gt;
             <title>编译实操</title>
             <link>http://example.com/post/d5cb24be.html</link>
             <category term="CPP" scheme="http://example.com/categories/CPP/" />
-            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <category term="CPP" scheme="http://example.com/tags/CPP/" />
+            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <pubDate>Wed, 04 Dec 2024 23:26:18 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jbG91ZC50ZW5jZW50LmNvbS9kZXZlbG9wZXIvYXJ0aWNsZS8xNDE0OTg4&#34;&gt;NM 命令详解&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -292,8 +299,8 @@ int main() &amp;#123;
             <title>V8知识点</title>
             <link>http://example.com/post/ea3b9d7a.html</link>
             <category term="H5" scheme="http://example.com/categories/H5/" />
-            <category term="V8" scheme="http://example.com/tags/V8/" />
             <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
+            <category term="V8" scheme="http://example.com/tags/V8/" />
             <pubDate>Sat, 30 Nov 2024 13:47:29 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9tdW5kaS14dS5naXRodWIuaW8vMjAyMS8wNy8yNy9CYXNpY3Mtb2YtQ2hyb21lLVY4LTEv&#34;&gt;V8 基础概念&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ibG9nLmNvZGVyemguY29tLzIwMjEvMDgvMjIvdjgtNC8=&#34;&gt;认识 V8 引擎&lt;/span&gt;&lt;/p&gt;
@@ -492,6 +499,11 @@ int main(int argc, char* argv[]) &amp;#123;
 &lt;p&gt;appIsDetached -&amp;gt;appIsInactive  点击按钮仍会触发 UI 刷新，appIsDetached 状态下的操作触发的 UI 刷新也会一起显现&lt;/p&gt;
 &lt;p&gt;appIsDetached -&amp;gt;appIsResumed 点击按钮仍会触发 UI 刷新，appIsDetached 状态下的操作触发的 UI 刷新也会一起显现&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;总结：lifecycleChannel 只是切断屏幕的渲染，但 engine 内部的渲染是一直在继续着的&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h5 id=&#34;flutterenginerendererisdisplayingflutterui-何时为true&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#flutterenginerendererisdisplayingflutterui-何时为true&#34;&gt;#&lt;/a&gt; flutterEngine.&lt;em&gt;renderer&lt;/em&gt;.isDisplayingFlutterUi 何时为 true&lt;/h5&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://s3.bmp.ovh/imgs/2025/05/28/a2db9c6a10228616.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;onFirstFrame 回调时设置&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Keep Moving Forward&lt;/p&gt;
  ]]></description>
@@ -910,8 +922,8 @@ To learn more, visit https://flutter.dev/to/integrate-android-archive
             <title>左值，右值与引用</title>
             <link>http://example.com/post/be08ec92.html</link>
             <category term="CPP" scheme="http://example.com/categories/CPP/" />
-            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <category term="CPP" scheme="http://example.com/tags/CPP/" />
+            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <pubDate>Sun, 10 Nov 2024 14:57:08 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRjb2RlLmNvbS9naF9taXJyb3JzL215L215Q3BwMTFTdHVkeS9ibG9iL21hc3Rlci9jcHAxMWZlYXR1cmVzL3JpZ2h0X3ZhbHVlX3JlZi9yaWdodF92YWx1ZV9yZWYuY3Bw&#34;&gt;右值引用 study-case&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -1240,8 +1252,8 @@ int main(int argc, char** argv)
             <title>C++知识点</title>
             <link>http://example.com/post/44bbaae6.html</link>
             <category term="CPP" scheme="http://example.com/categories/CPP/" />
-            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <category term="CPP" scheme="http://example.com/tags/CPP/" />
+            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <pubDate>Sat, 28 Sep 2024 10:05:16 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuNTRiZW5uaWFvLmNvbS9jcHAvcnVtZW4vMi8=&#34;&gt;C++ 基础教程&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuYXBpcmVmLmNvbS9jcHAtemgvaW5kZXguaHRtbA==&#34;&gt;C++ 参考手册 API&lt;/span&gt;&lt;/p&gt;
