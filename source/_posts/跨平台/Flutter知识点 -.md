@@ -22,6 +22,8 @@ abbrlink: 1cfedf1f
 
 
 
+> flutter doctor -v 查看Flutter SDK安装路径
+
 <!-- more -->
 
 ## 常见知识

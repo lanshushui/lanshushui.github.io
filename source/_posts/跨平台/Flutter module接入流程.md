@@ -30,6 +30,14 @@ abbrlink: 392219cd
 
 #### 3.执行flutter build aar  命令打包aar ，下面记录过程中遇到的问题
 
+加入-v 参数，可以看到命令最终会变成
+
+> D:\flutter\packages\flutter_tools\gradle\aar_init_script.gradle -Pflutter-root=D:\flutter
+> -Poutput-dir=D:\fluttermodlue\build\host -Pis-plugin=false -PbuildNumber=1.0 --full-stacktrace --info -Pverbose=true -Ptarget=lib\main.dart -Pdart-obfuscation=false -Ptrack-widget-creation=true
+> -Ptree-shake-icons=false -Ptarget-platform=android-arm,android-arm64,android-x64 assembleAarDebug
+
+
+
 > 问题1：
 >
 > Flutter运行时卡在了Running Gradle task ”assembleDebug“解决办法
@@ -122,9 +130,23 @@ To learn more, visit https://flutter.dev/to/integrate-android-archive
 
 ![](https://s3.bmp.ovh/imgs/2024/11/16/46f51785a91fb562.png)
 
-###### 下面为aar pom文件，会传递flutter库相关的依赖，embedding的ui库和arm对应的so库
+提供三个关键产物：
+
+1. pom文件传递依赖 framework层的embedding ui库 
+2. pom文件传递依赖 arm对应的flutter.so库
+3. aar包本身提供的 io.flutter.plugins.GeneratedPluginRegistrant 类，libapp.so 和 资源文件
+
+###### 下面为aar pom文件，会传递flutter库相关的依赖，framework层的embedding ui库和arm对应的flutter.so库
 
 ![](https://s3.bmp.ovh/imgs/2024/11/16/a2756bd5d9e152df.png)
+
+这两个aar都是发布在本地缓存的，以我为例子
+
+C:\Users\username\.gradle\caches\modules-2\files-2.1\io.flutter\flutter_embedding_release\1.0.0-db49896cf25ceabc44096d5f088d86414e05a7aa\9ff06a3e2b6d378066ecec963d00d5d3b288f3
+
+C:\Users\username\.gradle\caches\modules-2\files-2.1\io.flutter\arm64_v8a_release\1.0.0-db49896cf25ceabc44096d5f088d86414e05a7aa\8348ee2deac1be3f2e1aedeae384f576b989eb2
+
+
 
 ## 2.制作Flutter Host
 
