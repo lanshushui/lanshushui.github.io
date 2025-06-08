@@ -146,6 +146,8 @@ C:\Users\username\.gradle\caches\modules-2\files-2.1\io.flutter\flutter_embeddin
 
 C:\Users\username\.gradle\caches\modules-2\files-2.1\io.flutter\arm64_v8a_release\1.0.0-db49896cf25ceabc44096d5f088d86414e05a7aa\8348ee2deac1be3f2e1aedeae384f576b989eb2
 
+> db49896cf25ceabc44096d5f088d86414e05a7aa 是flutter engine的版本，在 flutter_sdk\\bin\internal\engine.version文件可以查看，猜测应该根据engine版本号在线下载对应资源打包成aar发布在本地
+
 
 
 ## 2.制作Flutter Host
