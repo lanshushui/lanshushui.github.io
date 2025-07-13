@@ -74,6 +74,8 @@ abbrlink: dc4ac76f
 >
 > 这行代码的整体含义是：我们正在定义一个类型别名 `AType`，它的值是 `BClass` 对象的所有属性名。
 
+>  [Promise.race() 原理解析及使用指南](https://juejin.cn/post/7004786857389064205)
+
 
 
 ## JSON知识点

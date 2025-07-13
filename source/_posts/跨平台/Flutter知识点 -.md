@@ -8,7 +8,7 @@ top: 100
 abbrlink: 1cfedf1f
 ---
 
-
+[Flutter开发-使用命令创建Flutter App/Module/Plugin/Package](https://juejin.cn/post/6844903843621257224)
 
 [《Flutter实战·第二版》](https://book.flutterchina.club/chapter2/flutter_package_mgr.html#_2-5-1-%E7%AE%80%E4%BB%8B)
 
@@ -23,6 +23,10 @@ abbrlink: 1cfedf1f
 
 
 > flutter doctor -v 查看Flutter SDK安装路径
+
+> dart format . 格式化内容       dart format . -o none --set-exit-if-changed 判断文件是否格式化，否则报错
+
+> flutter analyze 默认会分析整个项目的 Dart 代码。如果你想跳过某些文件或目录的检测. 在 analysis_options.yaml 中排除文件或目录
 
 <!-- more -->
 

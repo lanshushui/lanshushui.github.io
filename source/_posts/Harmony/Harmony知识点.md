@@ -191,6 +191,8 @@ Flex({justifyContent :FlexAlign.Center}) {
 
 [动态修改hvigor编译配置](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-hvigor-config-ohos-sample)
 
+[如何在构建任务中执行shell脚本](https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-compiling-and-building-104-V5)
+
 
 
 ## 问题场景
