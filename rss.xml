@@ -234,8 +234,8 @@
             <title>C++试验场</title>
             <link>http://example.com/post/946195a2.html</link>
             <category term="CPP" scheme="http://example.com/categories/CPP/" />
-            <category term="CPP" scheme="http://example.com/tags/CPP/" />
             <category term="试验场" scheme="http://example.com/tags/%E8%AF%95%E9%AA%8C%E5%9C%BA/" />
+            <category term="CPP" scheme="http://example.com/tags/CPP/" />
             <pubDate>Sun, 26 Jan 2025 15:24:48 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;h2 id=&#34;试验场&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#试验场&#34;&gt;#&lt;/a&gt; 试验场&lt;/h2&gt;
@@ -298,8 +298,8 @@ MyClass destruction called&lt;/p&gt;
             <title>编译实操</title>
             <link>http://example.com/post/d5cb24be.html</link>
             <category term="CPP" scheme="http://example.com/categories/CPP/" />
-            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <category term="CPP" scheme="http://example.com/tags/CPP/" />
+            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <pubDate>Wed, 04 Dec 2024 23:26:18 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jbG91ZC50ZW5jZW50LmNvbS9kZXZlbG9wZXIvYXJ0aWNsZS8xNDE0OTg4&#34;&gt;NM 命令详解&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -1050,8 +1050,8 @@ To learn more, visit https://flutter.dev/to/integrate-android-archive
             <title>左值，右值与引用</title>
             <link>http://example.com/post/be08ec92.html</link>
             <category term="CPP" scheme="http://example.com/categories/CPP/" />
-            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <category term="CPP" scheme="http://example.com/tags/CPP/" />
+            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <pubDate>Sun, 10 Nov 2024 14:57:08 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRjb2RlLmNvbS9naF9taXJyb3JzL215L215Q3BwMTFTdHVkeS9ibG9iL21hc3Rlci9jcHAxMWZlYXR1cmVzL3JpZ2h0X3ZhbHVlX3JlZi9yaWdodF92YWx1ZV9yZWYuY3Bw&#34;&gt;右值引用 study-case&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
