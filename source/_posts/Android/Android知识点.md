@@ -23,6 +23,12 @@ abbrlink: 1733ce00
 
 
 
+#### home键返回桌面再次点击应用图标，重新启动MAIN_action的Activity
+
+[每次启动Intent导致新创建Task的时候，该Task会记录导致其创建的Intent；而如果后续需要有一个新的与创建Intent完全一致（完全一致定位为：启动类，action、category等等全部一样，不可多项也不可缺少），那么该Intent并不会触发Activity的新建启动，而只会将已经存在的对应Task移到前台](https://blog.csdn.net/shangming150/article/details/78343103)
+
+
+
 #### onSaveInstanceState-onStop
 
 下拉状态栏： onSaveInstanceState ，onPause，onStop 都不会调用
