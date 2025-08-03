@@ -89,6 +89,70 @@ class Activity  {
 
 
 
+### suspendCancellableCoroutine
+
+[Kotlin suspendCoroutine 和 suspendCancellableCoroutine 的区别](https://juejin.cn/post/7449942832269017151)
+
+```kotlin
+suspend fun wait3s() {
+    return suspendCancellableCoroutine {
+        Thread {
+            Thread.sleep(3000)
+            Log.i(TAG,"Thread.sleep finish")
+            if (it.isActive) {
+                it.resume(Unit)
+            }
+        }.start()
+    }
+}
+
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+
+    val scope = MainScope()
+    Log.i(TAG,"before start coroutines")
+    scope.launch(Dispatchers.Main, CoroutineStart.UNDISPATCHED) {
+        val job = launch(Dispatchers.Main, CoroutineStart.UNDISPATCHED) {
+            wait3s()
+        }
+        Log.i(TAG,"before cancelAndJoin")
+        job.cancelAndJoin()
+        Log.i(TAG,"after cancelAndJoin")
+    }
+    Log.i(TAG,"after start coroutines")
+}
+```
+
+```java
+2025-08-02 23:26:44.399 28521-28521 CoroutinesTest          com...mple.android.kotlincoroutines  I  before start coroutines
+2025-08-02 23:26:44.403 28521-28521 CoroutinesTest          com...mple.android.kotlincoroutines  I  before cancelAndJoin
+2025-08-02 23:26:44.404 28521-28521 CoroutinesTest          com...mple.android.kotlincoroutines  I  after start coroutines
+2025-08-02 23:26:44.663 28521-28521 CoroutinesTest          com...mple.android.kotlincoroutines  I  after cancelAndJoin
+2025-08-02 23:26:47.404 28521-30752 CoroutinesTest          com...mple.android.kotlincoroutines  I  Thread.sleep finish
+```
+
+- cancelAndJoin是个挂起函数，一定延迟协程执行
+- suspendCancellableCoroutine 被cancel后即使没有挂起点也一定会很快退出，内部的代码没有中断执行，但不会等待内部代码执行完毕后再通知cancel成功
+
+
+
+### suspendCoroutine
+
+将上面suspendCancellableCoroutine的用例改为suspendCoroutine
+
+```java
+2025-08-02 23:45:46.511 30833-30833 CoroutinesTest          com...mple.android.kotlincoroutines  I  before start coroutines
+2025-08-02 23:45:46.516 30833-30833 CoroutinesTest          com...mple.android.kotlincoroutines  I  before cancelAndJoin
+2025-08-02 23:45:46.517 30833-30833 CoroutinesTest          com...mple.android.kotlincoroutines  I  after start coroutines
+2025-08-02 23:45:49.517 30833-4133  CoroutinesTest          com...mple.android.kotlincoroutines  I  Thread.sleep finish
+2025-08-02 23:45:49.518 30833-30833 CoroutinesTest          com...mple.android.kotlincoroutines  I  after cancelAndJoin
+```
+
+**挂起函数无法被取消**
+
+
+
 ## Flow 
 
 [【Kotlin Flow】 一眼看全——Flow操作符大全](https://juejin.cn/post/6989536876096913439)
@@ -116,7 +180,7 @@ mainScope.launch {
 
 下面为 **SharedFlowImpl** 的代码
 
-```
+```kotlin
 override suspend fun collect(collector: FlowCollector<T>): Nothing {
     val slot = allocateSlot()
     try {
