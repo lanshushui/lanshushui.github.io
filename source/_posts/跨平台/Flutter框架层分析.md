@@ -53,7 +53,7 @@ static jlong AttachJNI(JNIEnv* env, jclass clazz, jobject flutterJNI) {
 
 再利用ThreadHost 提供的taskRunner创建 task_runners ， 调用 **Shell::Create** 创建std::unique_ptr< Shell >，传入on_create_platform_view  lambda函数 等待创建PlatformViewAndroid  [代码](https://github.com/flutter/engine/blob/main/shell/platform/android/android_shell_holder.cc#L85)
 
-4.Shell::Create 调用Shell::CreateWithSnapshot方法创建Shell
+4.Shell::Create 调用Shell::CreateWithSnapshot方法创建Shell [代码](https://github.com/flutter/engine/blob/main/shell/common/shell.cc#L361)
 
 ```c
 std::unique_ptr<Shell> Shell::CreateShellOnPlatformThread(
@@ -344,13 +344,17 @@ static jobject SpawnJNI(JNIEnv* env,
 }
 ```
 
-4.AndroidShellHolder::Spawn  [代码](https://github.com/flutter/engine/blob/main/shell/platform/android/android_shell_holder.cc#L218)    这里把原本的thread_host_传递进新AndroidShellHolder的构造函数中，复用了thread_host_，创建新的 std::unique_ptr< AndroidShellHolder >
+4.AndroidShellHolder::Spawn  这里把原本的thread_host_传递进新AndroidShellHolder的构造函数中，复用了thread_host_，创建新的 std::unique_ptr< AndroidShellHolder >  [代码](https://github.com/flutter/engine/blob/main/shell/platform/android/android_shell_holder.cc#L218)   
 
-5.Shell::Spawn  [代码](https://github.com/flutter/engine/blob/main/shell/common/shell.cc#L572)       把原本的task_runners_传递进CreateWithSnapshot 方法中复用
+5.Shell::Spawn    把原本的task_runners_传递进CreateWithSnapshot 方法中复用   [代码](https://github.com/flutter/engine/blob/main/shell/common/shell.cc#L572)  
 
 6.Shell::CreateWithSnapshot [代码](https://github.com/flutter/engine/blob/main/shell/common/shell.cc#L361)   
 
-7.Shell::CreateShellOnPlatformThread [代码 ](https://github.com/flutter/engine/blob/main/shell/common/shell.cc#L205)  创建std::unique_ptr< Shell >
+7.Shell::CreateShellOnPlatformThread  创建std::unique_ptr< Shell > [代码 ](https://github.com/flutter/engine/blob/main/shell/common/shell.cc#L205) 
+
+
+
+> 注意：我发现c++层的engine也有Spawn方法，但是并没有找到调用链接，我们java层 spawn 一个engine时也是把CreateEngine方法 传入CreateWithSnapshot的参数中，最终调用 std::make_unique< Engine >方法  [代码](https://github.com/flutter/engine/blob/main/shell/common/shell.cc#L55)
 
 
 
@@ -375,7 +379,7 @@ AndroidShellHolder::~AndroidShellHolder() {
 }
 ```
 
-3.调用shell_的析构函数  [代码](https://github.com/flutter/engine/blob/main/shell/common/shell.cc#L508) 主要是向各个TaskRunner抛任务
+3.调用shell_的析构函数  主要是向各个TaskRunner抛任务 [代码](https://github.com/flutter/engine/blob/main/shell/common/shell.cc#L508) 
 
 ```c
 Shell::~Shell() {
