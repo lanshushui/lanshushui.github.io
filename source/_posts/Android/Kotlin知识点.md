@@ -9,6 +9,10 @@ abbrlink: a442dbbf
 
 <!-- more -->
 
+## 提升开发效率
+
+[kotlin 注解 @Parcelize 使用](https://blog.csdn.net/HongHuaZu/article/details/139772177)
+
 
 
 ## 协程

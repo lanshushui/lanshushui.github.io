@@ -16,6 +16,8 @@ abbrlink: b619670f
 
 > flutter analyze 默认会分析整个项目的 Dart 代码。如果你想跳过某些文件或目录的检测. 在 analysis_options.yaml 中排除文件或目录
 
+> [PlatformView的原理](http://guoshuyu.cn:9528/home/wx/Flutter-P3.html)
+
 <!-- more -->
 
 

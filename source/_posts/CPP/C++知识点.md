@@ -304,6 +304,8 @@ int main() {
 
 [enable_shared_from_this 的使用及实现原理](https://blog.guorongfei.com/2017/01/25/enbale-shared-from-this-implementaion/)
 
+[shared_ptr在多线程下的安全性问题](https://blog.csdn.net/www_dong/article/details/114418454)
+
 ```c
 //基类指针转为子类指针
 //可能会导致SIGSEGV问题，确保basePtr不是野指针
@@ -317,6 +319,12 @@ if(auto* prt =std::dynamic_pointer_cast<XXX>(basePtr)){
 //指针转为long类型
 long p = std::reinterpret_cast<Long>(ptr)
 ```
+
+
+
+#### 线程知识
+
+[pthread_key_t和pthread_key_create()详解](https://blog.csdn.net/qq_34888036/article/details/133960234)
 
 
 
@@ -391,6 +399,14 @@ int main() {
 > base指向已经被释放的指针，dynamic_cast会出现SIGSEGV问题
 >
 > if (Son *son = dynamic_cast<Son *>(base))  的用法只能用于base是个没问题指针或者是nullptr
+
+
+
+
+
+## Cmake知识
+
+[Cmake踩坑(option 设置不生效)](https://blog.csdn.net/qq_36383272/article/details/118157815)
 
 
 

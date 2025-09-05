@@ -9,7 +9,9 @@ abbrlink: 1733ce00
 
 
 
+[读取APP所有的进程](https://blog.51cto.com/u_16213448/7925925)
 
+[多进程情况下判断应用是否处于前台或者后台](https://blog.csdn.net/weixin_40347412/article/details/141040175)
 
 <!-- more -->
 
@@ -71,7 +73,9 @@ private void callActivityOnStop(ActivityClientRecord r, boolean saveState, Strin
 
 
 
+### Broadcast
 
+[Android 14 之 动态注册Broadcast必须声明exported属性](https://juejin.cn/post/7313048140277596197)
 
 
 
