@@ -8,7 +8,19 @@ top: 100
 abbrlink: d2a32cfc
 ---
 
-> FlutterView 内部默认是 **FlutterSurfaceView** 展示 。在需要将FlutterView在不同ViewGroup移动的场景中，会因为remove，add操作出现短暂黑屏
+> FlutterView 内部默认是 **FlutterSurfaceView** 展示 。在需要将FlutterView在不同ViewGroup移动的场景中，会因为remove，add操作出现短暂黑屏（可以通过remove前将宽高变成1，add后post恢复宽高降低黑屏概率，但因为surface的摧毁重建还是会有闪烁的问题出现，黑屏问题还是会偶现）
+
+```kotlin
+flutterView.layoutParams.width=1;
+flutterView.layoutParams.height=1;
+findViewById<ViewGroup>(R.id.container).removeView(flutterView)
+findViewById<ViewGroup>(R.id.container).addView(flutterView,0)
+flutterView.post {
+    flutterView.layoutParams.width=ViewGroup.LayoutParams.MATCH_PARENT;
+    flutterView.layoutParams.height=ViewGroup.LayoutParams.MATCH_PARENT;
+    flutterView.requestLayout()
+}
+```
 
 
 
@@ -20,7 +32,7 @@ abbrlink: d2a32cfc
 
 ## FlutterView在不同ViewGroup移动
 
-相比起来FlutterTextureView 更容易实现该功能
+FlutterTextureView 更容易实现该功能,FlutterSurfaceView未想到实现方式
 
 
 

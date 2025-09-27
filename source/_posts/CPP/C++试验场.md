@@ -10,6 +10,8 @@ abbrlink: 946195a2
 
 
 
+[【C++】空指针调用成员函数及访问成员变量](https://blog.csdn.net/qq_38410730/article/details/112003512	)
+
 
 
 <!-- more -->
@@ -355,7 +357,36 @@ addFunImp(addFun);//这行编译失败
 
 
 
+## 空指针研究
 
+```c
+#include <iostream>
+
+class A {
+  public:
+    A() { a_ = 1; }
+    ~A() { }
+
+    int GetValueA() {
+      std::cout << "GetValueA()" << std::endl;
+      return a_;
+    }
+    void fun() {
+      std::cout << "fun()" << std::endl;
+    }
+
+    int a_;
+};
+
+int main() {
+  A *a = nullptr;
+  a->fun();  //没有发生异常，正常打印 fun()
+
+
+  return 0;
+}
+
+```
 
 
 

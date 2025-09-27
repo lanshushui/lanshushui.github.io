@@ -19,6 +19,34 @@ abbrlink: 1733ce00
 
 ### Activity
 
+#### 快速找到是哪个View消费了点击事件
+
+```kotlin
+//Activity   
+override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+    val re = super.dispatchTouchEvent(ev)
+    val decView = (window.decorView as ViewGroup)
+    val mFirstTouchTargetF = ViewGroup::class.java.getDeclaredField("mFirstTouchTarget")
+    mFirstTouchTargetF.isAccessible = true
+    var first = mFirstTouchTargetF.get(decView)
+    var consumeView: View = decView
+    while (first != null) {
+        val viewF = first::class.java.getDeclaredField("child")
+        viewF.isAccessible = true
+        consumeView = viewF.get(first) as View
+        first = if (consumeView is ViewGroup) {
+            mFirstTouchTargetF.get(consumeView)
+        } else {
+            null
+        }
+    }
+    MLog.info(TAG, "consumeView is $consumeView")
+    return re
+}
+```
+
+
+
 #### 调用startActivityForResult后直接产生onActivityResult回调问题
 
 [Intent.FLAG_ACTIVITY_NEW_TASK 会导致onActivityResult马上返回](https://blog.csdn.net/ALee_130158/article/details/103971765)
@@ -82,34 +110,6 @@ private void callActivityOnStop(ActivityClientRecord r, boolean saveState, Strin
 ## 重点组件
 
 ### View
-
-#### 快速找到是哪个View消费了点击事件
-
-```kotlin
-//Activity   
-override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-    val re = super.dispatchTouchEvent(ev)
-    val decView = (window.decorView as ViewGroup)
-    val mFirstTouchTargetF = ViewGroup::class.java.getDeclaredField("mFirstTouchTarget")
-    mFirstTouchTargetF.isAccessible = true
-    var first = mFirstTouchTargetF.get(decView)
-    var consumeView: View = decView
-    while (first != null) {
-        val viewF = first::class.java.getDeclaredField("child")
-        viewF.isAccessible = true
-        consumeView = viewF.get(first) as View
-        first = if (consumeView is ViewGroup) {
-            mFirstTouchTargetF.get(consumeView)
-        } else {
-            null
-        }
-    }
-    MLog.info(TAG, "consumeView is $consumeView")
-    return re
-}
-```
-
-
 
 1. RelativeLayout的wrap_content会导致layout_marginBottom属性失效 [RelativeLayout的layout_marginBottom属性失效问题](https://blog.csdn.net/w958796636/article/details/52921584)
 
@@ -219,6 +219,63 @@ fun wait3s(){
 > 结论：ui变化是在下一次绘制才发生，即使removeFromParent后又调用requestLayout和invalidate
 >
 > 测试 FlutterSurfaceView 也是如此
+
+
+
+### SurfaceView
+
+#### `bringToFront()` 对 SurfaceView **无效** 
+
+案例场景：先add SurfaceViewA，再add SurfaceViewB，这时候想通过bringToFront()展示SurfaceViewA，
+
+虽然view被移动上来了，但视觉上是没有效果的
+
+原因： **SurfaceView 的 Z-order 一旦随 View 树确定后，就不会再随 View 树顺序变化而重新排序**
+
+具体逻辑：
+
+1. 入口：attachedToWindow → 立即算一次 z-order
+2. updateSurface() → 把“View 树序号”转成 z 值 这个 **z 值一次性写进 `mDrawingState.z`**，之后 **不再随 View 树变化而更新**。
+3. SurfaceFlinger 侧：只认 z 值，不再看 View 树
+
+> 解决方案：可以通过remove，add重新重新updateSurface方法，更新z值
+
+```kotlin
+private fun bringAToFront() {
+    if (mSvA != null) {
+        mSvA!!.bringToFront()
+        val parent = mSvA!!.parent as ViewGroup
+        val index =parent.indexOfChild(mSvA)
+        //之前认为removeView后 需要post一下addView调用，后面发现并不需要
+        //因为surfaceDestroy方法在removeView后会马上调用了
+        parent.removeView(mSvA)
+        parent.addView(mSvA,index)
+
+    }
+}
+```
+
+还有不懂的场景：`bringToFront()` 对 SurfaceView **无效** ，我认为是两个SurfaceView 的z值没有更新导致的，那么mSvA!!.bringToFront()后，不管是刷新SurfaceViewA的z值还是SurfaceViewB的z值，都能修复问题。但上面的解决方案，如果换成SurfaceViewB 进行 remove，add操作，问题还是没有解决。必须触发SurfaceViewA的surface重建，不知道为什么？？？
+
+
+
+#### 生命周期
+
+> surfaceCreated 
+>
+>   在performTraversals draw绘制流程中触发
+
+![](https://s3.bmp.ovh/imgs/2025/09/27/4e6d4af0a99336c1.png)
+
+
+
+> surfaceDestroyed 
+>
+> 在removeView 或者 Activity onStop中都会直接触发
+
+![](https://s3.bmp.ovh/imgs/2025/09/27/017253d978b3dddb.png)
+
+![](https://s3.bmp.ovh/imgs/2025/09/27/b3be1e99908211c9.png)
 
 
 
