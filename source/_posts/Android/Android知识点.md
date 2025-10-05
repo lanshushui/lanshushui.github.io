@@ -224,6 +224,39 @@ fun wait3s(){
 
 ### SurfaceView
 
+#### SurfaceView会挖洞显示
+
+“挖洞”是早期（Android ≤ 6.0）对 **SurfaceView 默认行为** 的形象说法：
+
+1. SurfaceView 的独立 Surface **默认放在 Window 下面**（z 更小）
+2. 系统必须在 **宿主 Window 的绘图表面上“抠掉”一块矩形区域**（设为透明），否则用户只能看到 Window 内容，看不到 Surface
+3. 这个“抠透明矩形”的过程就是 **requestTransparentRegion → ViewRootImpl → WindowManagerService** 的联动逻辑，被叫成“挖洞”
+
+##### 挖洞的具体步骤（源码级）
+
+1. `onAttachedToWindow()` 里调用
+   `mParent.requestTransparentRegion(this)`
+   → 把 **SurfaceView 所占矩形** 登记为“要透明”
+2. 每次 `performTraversals()` 收集所有透明区
+   `ViewGroup.gatherTransparentRegion()`
+   → 从根区域 **减去** 所有子 View 的非透明部分，**剩余就是洞**
+3. WMS 把最终透明区写进 **SurfaceFlinger 的 Layer 属性**
+   → 宿主 Window 的像素 **alpha=0**，**后面 SurfaceView 的 Layer 就透出来**
+
+------
+
+##### 为什么后来“挖洞”说法少了
+
+- **Android 7.0 开始默认改用“同层合成”**（BufferQueueLayer 与 Window 同一 LayerStack）
+  **不再在 Window 上抠洞**，而是 **直接按 z 序合成**，所以 **“洞”概念消失**
+- Android 7.0 开始框架把 SurfaceView 的 BufferQueue **attach 到 Window 的同一 LayerStack**
+  → **不再挖洞**，**层级随 View 树变化**，**动画/透明度/圆角一并支持**
+  于是社区把这种“跟 Window 一起合成”的方案叫 **“同层合成”**。
+- 只有你 **主动 `setZOrderOnTop(true)`** 才会回到 **旧独立 Layer** 模式，**此时仍需洞**，但 **视觉上你已感知不到**（它盖在最上，不需要 Window 透明）
+
+> Android 7.0 后普通View也可以在SurfaceView 上正常展示
+>
+
 #### `bringToFront()` 对 SurfaceView **无效** 
 
 案例场景：先add SurfaceViewA，再add SurfaceViewB，这时候想通过bringToFront()展示SurfaceViewA，
@@ -255,7 +288,9 @@ private fun bringAToFront() {
 }
 ```
 
-还有不懂的场景：`bringToFront()` 对 SurfaceView **无效** ，我认为是两个SurfaceView 的z值没有更新导致的，那么mSvA!!.bringToFront()后，不管是刷新SurfaceViewA的z值还是SurfaceViewB的z值，都能修复问题。但上面的解决方案，如果换成SurfaceViewB 进行 remove，add操作，问题还是没有解决。必须触发SurfaceViewA的surface重建，不知道为什么？？？
+如果换成SurfaceViewB 进行 remove，add操作，问题还是没有解决。必须触发SurfaceViewA的surface重建
+
+个人分析觉得是SurfaceViewA的z值是最低的，例如1。mSvA!!.bringToFront()后，SurfaceViewB 进行 remove，add操作后它的z值也变成最低的1，但因为是remove，add操作，SurfaceViewB 是后更新的，所以它还是处于上层显示
 
 
 
