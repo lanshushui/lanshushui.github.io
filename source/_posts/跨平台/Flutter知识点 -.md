@@ -54,25 +54,74 @@ abbrlink: 1cfedf1f
 
 ## 渲染知识
 
+#### lifecycleChannel
+
 > renderSurface.attachToRenderer 之后flutter就会把UI渲染在FlutterView上。点击操作会触发engine内部的渲染
 >
 > 但要在 flutterEngine.*lifecycleChannel*.appIsResumed() 之后FlutterView才会UI刷新
 >
-> appIsPaused 和 appIsInactive状态下FlutterView也会刷新，appIsDetached后才停止更新渲染
+> ```java
+> public void onStart() {
+>     //appIsInactive状态下FlutterView会刷新
+>     lifecycleChannel.appIsInactive();
+> }
+> 
+> public void onPostResume() {
+>     for (ActivityLifecycleListener listener : mActivityLifecycleListeners) {
+>         listener.onPostResume();
+>     }
+>     lifecycleChannel.appIsResumed();
+> }
+> 
+> public void onPause() {
+>     //appIsInactive状态下FlutterView会刷新
+>     lifecycleChannel.appIsInactive();
+> }
+> 
+> public void onStop() {
+>     //appIsPaused 状态下FlutterView不会刷新
+>     lifecycleChannel.appIsPaused();
+> }
+> ```
 >
-> 官方demo项目测试：
+> **总结：lifecycleChannel只是切断屏幕的渲染，但engine内部的渲染是一直在继续着的,appIsResumed后会一起刷新显示**
+
+#### FlutterRenderer
+
+```kotlin
+//测试代码如下
+var i=0
+findViewById<Button>(R.id.btn).setOnClickListener {
+    if(i%2==0){
+        flutterEngine.renderer.stopRenderingToSurface()
+    }else{
+        flutterView.flutterSurfaceView!!.attachToRenderer(flutterEngine.renderer)
+    }
+    i++
+}
+```
+
+> stopRenderingToSurface暂停渲染，不会让Surface的显示变空，只是停留在最后渲染的一帧 ，同时engine内部的渲染是一直在继续着的，点击FlutterView会继续响应并更新engine内部的渲染内容
 >
-> appIsDetached ->appIsPaused   点击按钮仍会触发UI刷新，appIsDetached状态下的操作触发的UI刷新也会一起显现
+> attachToRenderer后一起刷新显示
 >
-> appIsDetached ->appIsInactive  点击按钮仍会触发UI刷新，appIsDetached状态下的操作触发的UI刷新也会一起显现
->
-> appIsDetached ->appIsResumed点击按钮仍会触发UI刷新，appIsDetached状态下的操作触发的UI刷新也会一起显现
->
-> **总结：lifecycleChannel只是切断屏幕的渲染，但engine内部的渲染是一直在继续着的**
+> 视觉上的感觉就是appIsPaused和appIsResumed的切换
 
 
 
-##### flutterEngine.*renderer*.isDisplayingFlutterUi 何时为true
+> 基于上面的测试，觉得实现SurfaceView和TextureView的切换很简单，调用attachToRenderer到新的Surface，同时改变宽高。
+>
+> 结果发现会出现闪屏，而且有时候不会渲染到新的Surface的问题，代码在 [这里](https://github.com/lanshushui/FlutterHost)
+>
+> 
+>
+> 切到到新的Surface渲染，onFlutterUiDisplayed一定会被调用
+>
+> 新发现：改成先扩大surface，再切换渲染好像不会出现没有渲染的问题了，但闪屏的问题还是出现
+
+
+
+#### flutterEngine.*renderer*.isDisplayingFlutterUi 何时为true
 
 ![](https://s3.bmp.ovh/imgs/2025/05/28/a2db9c6a10228616.png)
 

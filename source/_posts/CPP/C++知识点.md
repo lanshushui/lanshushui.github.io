@@ -37,6 +37,8 @@ abbrlink: 44bbaae6
 > this并不是一个常规变量, 而是一个 **右值**, 所以不能取得`this`的地址.(不能`&this`, 左值右值的区别就在于是否可以取地址)
 
 > c++实现多态条件：virtual方法+父类指针指向子类对象 **必须是指针
+>
+> [虚函数表原理](https://cloud.tencent.com/developer/article/1599283)   从这篇文章也能看出为什么实现多态必须是指针或者引用
 
 > ```c
 > People p ;
@@ -50,6 +52,8 @@ abbrlink: 44bbaae6
 > ```
 
 > [C++类定义中，数据成员不能被指定为自身类型，但可以是指向自身类型的指针或引用？为什么在类体内可以定义将静态成员声明为其所属类的类型呢 ?](https://www.cnblogs.com/guxuanqing/p/5876768.html)
+
+> [空指针调用不一定会出现崩溃](https://blog.csdn.net/qq_38410730/article/details/112003512)
 
 
 
