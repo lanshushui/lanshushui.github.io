@@ -195,7 +195,7 @@ private void callActivityOnStop(ActivityClientRecord r, boolean saveState, Strin
 
 > 1.View正在消费事件时被remove，会触发cancel 事件
 >
-> ![微信图片_20251220114710_16_7](C:\Users\lanshushui\Desktop\微信图片_20251220114710_16_7.png)
+> ![](https://s3.bmp.ovh/imgs/2025/12/20/7127cce3c2851494.png)
 
 
 
