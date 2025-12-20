@@ -117,6 +117,10 @@ private void callActivityOnStop(ActivityClientRecord r, boolean saveState, Strin
 
 #### View事件传递
 
+[ViewGroup事件分发总结-TouchTarget](https://juejin.cn/post/6844904065613201421)
+
+[深入理解事件分发 ViewGroup.mFirstTouchTarget的设计](https://www.jianshu.com/p/5951ebdd2a7e)
+
 [Android中onTouch，onTouchEvent，onClick优先级](https://blog.csdn.net/libinbin147256369/article/details/79911276)
 
 > 当ViewGroup设置了 setOnClickListener，setOnTouchListener返回false （View也是一样的逻辑）
@@ -171,20 +175,35 @@ private void callActivityOnStop(ActivityClientRecord r, boolean saveState, Strin
 
 
 
+> 当ViewGroup setOnTouchListener返回false
+>
+> 当View  setOnTouchListener返回false
+>
+> ```
+> MyViewGroup-- dispatchTouchEvent
+> MyView-- dispatchTouchEvent
+> MyView-- setOnTouchListener
+> MyView-- onTouchEvent--ACTION_DOWN--false
+> MyViewGroup-- setOnTouchListener
+> MyViewGroup-- onTouchEvent--ACTION_DOWN--false
+> ```
+>
 
 
-当ViewGroup setOnTouchListener返回false
 
-当View  setOnTouchListener返回false
+#### removeView对事件传递的影响
 
-```
-MyViewGroup-- dispatchTouchEvent
-MyView-- dispatchTouchEvent
-MyView-- setOnTouchListener
-MyView-- onTouchEvent--ACTION_DOWN--false
-MyViewGroup-- setOnTouchListener
- MyViewGroup-- onTouchEvent--ACTION_DOWN--false
-```
+> 1.View正在消费事件时被remove，会触发cancel 事件
+>
+> ![微信图片_20251220114710_16_7](C:\Users\lanshushui\Desktop\微信图片_20251220114710_16_7.png)
+
+
+
+> 2.正在消费的View A被remove后，父View的 dispatchTouchEvent还会继续收到同一序列的事件，但会交给自己的onTouchEvent进行处理
+>
+> 3.正在消费的View A被remove后，即使父View中还有一个(onTouchEvent返回true，一定会消费事件) 的View B，也不会交给它处理同一序列的事件，一定是由父View处理该序列的事件，下次down事件才会分配给子View B处理
+>
+> ![](https://s3.bmp.ovh/imgs/2025/12/20/0609ad533b590cb2.png)
 
 
 

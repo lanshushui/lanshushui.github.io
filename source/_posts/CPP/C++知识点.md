@@ -55,7 +55,8 @@ abbrlink: 44bbaae6
 
 > [空指针调用不一定会出现崩溃](https://blog.csdn.net/qq_38410730/article/details/112003512)
 
-
+> vector的begin 得到数组头的指针，end 得到数组的最后一个单元+1的指针，不是指向最后一个元素，要使用rbegin
+>
 
 
 
