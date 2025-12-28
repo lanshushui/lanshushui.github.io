@@ -55,9 +55,11 @@ abbrlink: 3066680b
 
 > match_parent  ==  width("100%")    wrap_content ==  height('auto')
 
-> weight 1 ==  flexGrow(1)
+> weight 1 ==  flexGrow(1) == layoutWeight(1)
 
-> 宽是1dp的空白View  ==  Blank().width(1).height("100%")
+> Blank组件具有自动填充容器空余部分的能力 [来源](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ts-basic-components-blank)
+>
+> 宽是1dp的空白View  ==  Blank().width(1).height("100%")  
 
 > FrameLayout ==  Stack组件
 

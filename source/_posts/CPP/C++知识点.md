@@ -66,6 +66,53 @@ abbrlink: 44bbaae6
 
 
 
+### 基础知识
+
+#### 1.malloc和new申请的内存都是虚拟内存
+
+- **虚拟内存层面：**`virtual memory` = `clean memory` + `dirty memory.`
+
+- **物理内存层面：**`resident memory`= `dirty memory`+`clean memory that loaded in physical memory`
+- **总结**`virtual memory` == (`clean memory` + `dirty memory`) > `resident memory` >`dirty memory`
+
+```c
+// clean memory
+char *buf = malloc(100*1024*1024)
+
+// dirty memory
+for(int i=0; i < 3*1024*1024; ++i){
+    buf[i] = rand()
+}
+/**
+首先申请了100兆的虚拟内存，操作系统很懒的，你申请了，但是你只要不用，我就不会给你分配物理内存。后来for循环中，我们进行读写，操作系统就会分配3兆的物理内存，而其他97兆是在虚拟内存。
+**/
+```
+
+
+
+#### 2.构造和析构函数顺序
+
+##### 1.属性比类先构造，先声明的属性先构造
+
+```c
+class C{
+  D d;
+  E e;  
+};
+/**
+D()
+E()
+C()
+~C()
+~E()
+~D()
+**/
+```
+
+
+
+
+
 ### 基础语法：
 
 > if(auto xxx = fun()){} ，可以这样子判空
@@ -406,6 +453,19 @@ int main() {
 > if (Son *son = dynamic_cast<Son *>(base))  的用法只能用于base是个没问题指针或者是nullptr
 
 
+
+##### 3.空指针问题可能导致SEGV_MAPERR
+
+```c
+v8::Isolate* __isolate = reinterpret_cast<v8::Isolate*>((engine)); 
+v8::Isolate::Scope __isolate_scope(__isolate); 
+//如果engine指针是0 则会触发
+//Reason:Signal:SIGSEGV(SEGV_MAPERR)@0x000000000000ca18 
+//#00 pc 0000000000bd497c /data/storage/el1/bundle/libs/arm64/libmmv8.so(v8::internal::Isolate::Enter()+164)
+//(8c44e81ca123b2797f85f3d16cfea9aec6c4e148)
+```
+
+> 这是因为c++的空指针不一定会出现NPE，但调用对象的某个方法时，会因为踩到(0+偏移地址)导致 访问无法访问的内核地址
 
 
 

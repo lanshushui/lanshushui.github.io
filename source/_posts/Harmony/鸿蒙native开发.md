@@ -22,6 +22,22 @@ abbrlink: df80432a
 
 <!-- more -->
 
+## 基本知识
+
+> [内存基础知识](https://developer.huawei.com/consumer/cn/doc/best-practices/bpta-memory-basic-knowledge)   [官方分析native内存 ](https://developer.huawei.com/consumer/cn/doc/best-practices/bpta-native-memory-analysis)  Filter Size得改成0，才能最正确找到内存泄漏
+
+> [C++堆栈解析原理](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-exception-stack-parsing-principle-V5#section147714466283) 
+>
+> 解析so堆栈   /Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/llvm/bin/llvm-addr2line -e libxwebcore.so 9e3eac8  -f –C
+
+> [release编译带debug信息的so](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-exception-stack-parsing-principle-V5#section5147812132)
+
+> entry/build/default/intermediates/libs 中有 没有被strip的so
+
+
+
+
+
 ## 目录结构
 
 ![](https://s3.bmp.ovh/imgs/2024/11/22/c5d1207d4e2ea7b9.png)
