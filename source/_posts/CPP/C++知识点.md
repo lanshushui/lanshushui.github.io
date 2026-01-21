@@ -5,8 +5,10 @@ categories:
 tags:
   - 知识点
   - CPP
-abbrlink: 44bbaae6
+abbrlink: 44bbaae
 ---
+
+[C++最权威教程](https://cntransgroup.github.io/EffectiveModernCppChinese/3.MovingToModernCpp/item17.html)
 
 
 
@@ -57,6 +59,12 @@ abbrlink: 44bbaae6
 
 > vector的begin 得到数组头的指针，end 得到数组的最后一个单元+1的指针，不是指向最后一个元素，要使用rbegin
 >
+
+> 所以仅当下面条件成立时才会生成移动操作（当需要时）[来源](https://cntransgroup.github.io/EffectiveModernCppChinese/3.MovingToModernCpp/item17.html)
+>
+> - 类中没有拷贝操作
+> - 类中没有移动操作
+> - 类中没有用户定义的析构
 
 
 

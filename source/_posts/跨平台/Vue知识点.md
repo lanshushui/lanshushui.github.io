@@ -1,7 +1,7 @@
 ---
 title: Vue知识点
 categories:
-  - H5
+  - 跨平台
 tags:
   - Vue
 abbrlink: 7abbf13b

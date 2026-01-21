@@ -1,7 +1,7 @@
 ---
 title: JS，TS 知识点
 categories:
-  - H5
+  - 跨平台
 tags:
   - JS
   - 知识点

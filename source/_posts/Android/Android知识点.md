@@ -111,9 +111,15 @@ private void callActivityOnStop(ActivityClientRecord r, boolean saveState, Strin
 
 ### View
 
-1. RelativeLayout的wrap_content会导致layout_marginBottom属性失效 [RelativeLayout的layout_marginBottom属性失效问题](https://blog.csdn.net/w958796636/article/details/52921584)
+> RelativeLayout的wrap_content会导致layout_marginBottom属性失效 [RelativeLayout的layout_marginBottom属性失效问题](https://blog.csdn.net/w958796636/article/details/52921584)
 
-2. 外层LinearLayout的宽是wrap_content情况下，内层LinearLayout的宽是match_parent不能铺满屏幕，只能达到wrap_content的效果。为了达到铺满屏幕的效果，内层使用宽是match_parent的RelateLayout控件
+> 外层LinearLayout的宽是wrap_content情况下，内层LinearLayout的宽是match_parent不能铺满屏幕，只能达到wrap_content的效果。为了达到铺满屏幕的效果，内层使用宽是match_parent的RelateLayout控件
+
+> 想要异步但在绘制之前进行操作的方法：使用 postOnAnimation 
+>
+> 比起post 消息队列轮到才执行，可能延迟任意帧，postOnAnimation 下一帧 VSync 必达。且在Choreographe中CALLBACK_ANIMATION 排第二，CALLBACK_TRAVERSAL排第4，比绘制更早触发
+
+
 
 #### View事件传递
 
