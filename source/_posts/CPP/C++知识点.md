@@ -60,12 +60,6 @@ abbrlink: 44bbaae
 > vector的begin 得到数组头的指针，end 得到数组的最后一个单元+1的指针，不是指向最后一个元素，要使用rbegin
 >
 
-> 所以仅当下面条件成立时才会生成移动操作（当需要时）[来源](https://cntransgroup.github.io/EffectiveModernCppChinese/3.MovingToModernCpp/item17.html)
->
-> - 类中没有拷贝操作
-> - 类中没有移动操作
-> - 类中没有用户定义的析构
-
 
 
 ## 基础开发特点
@@ -140,6 +134,14 @@ C()
 > `typedef int (*FUNC_P)(int, int)`, 定义了一个函数指针类型，可以使用`FUNC_P`去定义指向函数的指针
 >
 > [typedef函数知识来源](https://blog.51cto.com/u_15295315/2999214)
+
+> 所以仅当下面条件成立时才会生成移动操作（当需要时）[来源](https://cntransgroup.github.io/EffectiveModernCppChinese/3.MovingToModernCpp/item17.html)
+>
+> - 类中没有拷贝操作
+> - 类中没有移动操作
+> - 类中没有用户定义的析构
+>
+> 自定义移动赋值函数时记得加上noexcept关键词  [来源](https://www.bilibili.com/video/BV16NiSBfEUZ/?spm_id_from=333.1391.0.0&vd_source=f02f9d2b6ca3710611c51219432586fa)
 
 
 
