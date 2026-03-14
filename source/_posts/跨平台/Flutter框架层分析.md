@@ -8,7 +8,7 @@ top: 100
 abbrlink: b619670f
 ---
 
-
+> [Flutter源码](https://github.com/flutter/engine/blob/main/lib/ui/window/platform_configuration.cc#L371)
 
 > flutter doctor -v 查看Flutter SDK安装路径
 
@@ -459,6 +459,44 @@ std::unique_ptr<fml::Thread> io_thread;
 std::unique_ptr<fml::Thread> profiler_thread;
 //成员按声明顺序（上 → 下）构造，按析构逆序（下 → 上）销毁,所以是 io -- raster -- ui 先后停止
 ```
+
+
+
+## dart组件build刷新流程
+
+> dart组件的build刷新入口是 flutter C++层调用dart的_drawFrame函数入口
+
+![微信图片_2026-03-14_213040_547.jpg](https://s3.bmp.ovh/2026/03/14/CycvfERX.jpg)
+
+> flutter_private/engine/src/flutter/shell/common/animator.cc:297 Animator::RequestFrame会请求屏幕刷新
+
+> dart的_drawFrame是通过C++的PlatformConfiguration::BeginFrame触发的 [代码](https://github.com/flutter/engine/blob/main/lib/ui/window/platform_configuration.cc#L371) 
+>
+> ![微信图片_2026-03-14_221724_114.png](https://s3.bmp.ovh/2026/03/14/59TnPyhs.png)
+>
+> ```dart
+> void PlatformConfiguration::BeginFrame(fml::TimePoint frameTime,
+>                                        uint64_t frame_number) {
+>     int64_t microseconds = (frameTime - fml::TimePoint()).ToMicroseconds();
+> 
+>     // 1. 调用 Dart _beginFrame（传递时间戳和帧号）
+>     tonic::LogIfError(
+>         tonic::DartInvoke(begin_frame_.Get(), {
+>             Dart_NewInteger(microseconds),
+>             Dart_NewInteger(frame_number),
+>         }));
+> 
+>     // 2. 执行 Microtask 队列
+>     UIDartState::Current()->FlushMicrotasksNow();
+> 
+>     // 3. 调用 Dart _drawFrame（无参数）
+>     tonic::LogIfError(tonic::DartInvokeVoid(draw_frame_.Get()));
+> }
+> ```
+
+> AI解析PlatformConfiguration::BeginFrame作用：
+>
+> ![image.png](https://s3.bmp.ovh/2026/03/14/ZsBUOaJE.png)
 
 
 

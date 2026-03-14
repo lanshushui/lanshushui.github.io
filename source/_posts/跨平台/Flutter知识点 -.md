@@ -42,6 +42,46 @@ abbrlink: 1cfedf1f
 >
 > Flutter Engine层：用C++编写，用于高质量移动应用的轻量级运行时环境，实现了Flutter的核心库，包括Dart虚拟机、动画和图形、文字渲染、通信通道、事件通知、插件架构等。引擎渲染采用的是2D图形渲染库Skia，虚拟机采用的是面向对象语言Dart VM，并将它们托管到Flutter的嵌入层。shell实现了平台相关的代码，比如跟屏幕键盘IME和系统应用生命周期事件的交互。不同平台有不同的shell，比如Android和iOS的shell。
 
+```dart
+//打印堆栈
+void _printFilteredStackTrace() {
+    final stackTrace = StackTrace.current.toString();
+    final lines = stackTrace.split('\n');
+
+    // 保留前3行和最后3行
+    const int headLines = 3;
+    const int tailLines = 3;
+
+    if (lines.length <= headLines + tailLines) {
+        // 如果堆栈不长，直接全部打印
+        print('Full StackTrace:');
+        for (final line in lines) {
+            print(line);
+        }
+    } else {
+        // 保留头尾，过滤中间
+        final head = lines.take(headLines).toList();
+        final tail = lines.skip(lines.length - tailLines).take(tailLines).toList();
+        final omittedCount = lines.length - headLines - tailLines;
+
+        print('Filtered StackTrace (omitted $omittedCount lines):');
+
+        // 打印头部
+        for (final line in head) {
+            print(line);
+        }
+
+        // 显示省略信息
+        print('... ($omittedCount lines omitted) ...');
+
+        // 打印尾部
+        for (final line in tail) {
+            print(line);
+        }
+    }
+} 
+```
+
 
 
 ## 组件知识
@@ -126,6 +166,10 @@ findViewById<Button>(R.id.btn).setOnClickListener {
 ![](https://s3.bmp.ovh/imgs/2025/05/28/a2db9c6a10228616.png)
 
 > onFirstFrame回调时设置
+
+
+
+
 
 
 
