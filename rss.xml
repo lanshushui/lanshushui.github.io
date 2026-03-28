@@ -653,8 +653,8 @@ v8::Isolate* isolate = v8::Isolate::New(/* 参数 */);
             <title>C++试验场</title>
             <link>http://example.com/post/946195a2.html</link>
             <category term="CPP" scheme="http://example.com/categories/CPP/" />
-            <category term="CPP" scheme="http://example.com/tags/CPP/" />
             <category term="试验场" scheme="http://example.com/tags/%E8%AF%95%E9%AA%8C%E5%9C%BA/" />
+            <category term="CPP" scheme="http://example.com/tags/CPP/" />
             <pubDate>Sun, 26 Jan 2025 15:24:48 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4NDEwNzMwL2FydGljbGUvZGV0YWlscy8xMTIwMDM1MTI=&#34;&gt;【C++】空指针调用成员函数及访问成员变量&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -719,8 +719,8 @@ MyClass destruction called&lt;/p&gt;
             <title>编译实操</title>
             <link>http://example.com/post/d5cb24be.html</link>
             <category term="CPP" scheme="http://example.com/categories/CPP/" />
-            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <category term="CPP" scheme="http://example.com/tags/CPP/" />
+            <category term="知识点" scheme="http://example.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" />
             <pubDate>Wed, 04 Dec 2024 23:26:18 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jbG91ZC50ZW5jZW50LmNvbS9kZXZlbG9wZXIvYXJ0aWNsZS8xNDE0OTg4&#34;&gt;NM 命令详解&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span id=&#34;more&#34;&gt;&lt;/span&gt;&lt;/p&gt;
