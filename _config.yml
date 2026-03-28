@@ -173,7 +173,7 @@ minify:
     exclude:
       - '**/*.min.css'
   js:
-    enable: true
+    enable: false
     mangle:
       toplevel: true
     output:
