@@ -147,6 +147,18 @@ C()
 
 ### std标准库
 
+#### 基础类型
+
+| 特性         | `long`                                     | `long long`        | `int64_t`                         |
+| ------------ | ------------------------------------------ | ------------------ | --------------------------------- |
+| **C++标准**  | 传统类型 (C++98)                           | C++11 起正式引入   | C++11 起引入 (头文件 `<cstdint>`) |
+| **最小位数** | **至少 32 位**                             | **至少 64 位**     | **精确 64 位**                    |
+| **典型位数** | 32 位 (Windows/Linux64) 或 64 位 (Linux64) | 64 位              | 64 位                             |
+| **取值范围** | 平台相关                                   | 至少 ±9×10¹⁸       | 精确 ±9.22×10¹⁸                   |
+| **可移植性** | ❌ 差（位数不固定）                         | ⚠️ 中等（至少64位） | ✅ 最好（固定位数）                |
+
+
+
 #### char知识
 
 [判断某个字符型是否为数字: isdigit()函数](https://blog.csdn.net/qq_36736330/article/details/81448324)
@@ -387,6 +399,8 @@ long p = std::reinterpret_cast<Long>(ptr)
 #### 线程知识
 
 [pthread_key_t和pthread_key_create()详解](https://blog.csdn.net/qq_34888036/article/details/133960234)
+
+> 局部变量的thread_local会自动添加static 关键词，所以 thread_local int V; 和 static thread_local int V;是完全等量的 [来源](https://stackoverflow.com/questions/22794382/are-c11-thread-local-variables-automatically-static)
 
 
 
