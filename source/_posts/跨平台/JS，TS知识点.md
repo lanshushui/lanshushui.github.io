@@ -30,7 +30,70 @@ abbrlink: dc4ac76f
 
 > 使用encodeURIComponent代替encodeURI 。encodeURIComponent函数则更为严格，它会对URL中的所有特殊字符进行编码 
 
+>  Object.assign 无法复制 原型链上的方法 以及 不可枚举的方法
+>
+> ```javascript
+> // 示例：原型链上的方法
+> function Parent() {}
+> Parent.prototype.on = function() { console.log('原型上的on方法'); };
+> 
+> const child = new Parent();
+> child.invoke = function() { console.log('自身的invoke方法'); };
+> 
+> // Object.assign 测试
+> const copied = Object.assign({}, child, { 
+>     invoke: function() { console.log('新的invoke'); } 
+> });
+> 
+> console.log('原对象有on方法:', 'on' in child); // true ✅
+> console.log('复制后有on方法:', 'on' in copied); // false ❌
+> console.log('复制后on:', copied.on); // undefined ❌
+> 
+> 
+> // 示例： 不可枚举的 on 方法
+> onst bridge2 = {
+>   invoke: function() { console.log("原始的 invoke 方法"); },
+>   someData: "hello"
+> };
+> 
+> // 以不可枚举的方式添加 on 方法
+> Object.defineProperty(bridge2, 'on', {
+>   value: function() { console.log("原始的 on 方法"); },
+>   enumerable: false // 关键！设置为不可枚举
+> });
+> 
+> const newInvoke2 = function() { console.log("新的 invoke 方法"); };
+> 
+> // 复制
+> var _WeixinJSBridge2 = Object.assign({}, bridge2, { invoke: newInvoke2 });
+> 
+> console.log("原始对象 bridge2 有 on 方法吗?", 'on' in bridge2); // 应该为 true
+> console.log("复制后的对象包含 on 方法吗?", 'on' in _WeixinJSBridge2); // 可能为 false！
+> 
+> // 检查属性枚举性
+> const descriptor = Object.getOwnPropertyDescriptor(bridge2, 'on');
+> console.log("bridge2 的 on 方法是可枚举的吗?", descriptor.enumerable);
+> 
+> // 列出所有键 (不可枚举的属性不会出现)
+> console.log("bridge2 的键 (仅可枚举):", Object.keys(bridge2));
+> console.log("_WeixinJSBridge2 的键 (仅可枚举):", Object.keys(_WeixinJSBridge2));
+> 
+> // 获取所有属性名 (包括不可枚举的)
+> console.log("bridge2 的所有属性名:", Object.getOwnPropertyNames(bridge2));
+> console.log("_WeixinJSBridge2 的所有属性名:", Object.getOwnPropertyNames(_WeixinJSBridge2));
+> ```
 
+> 一个js对象 不能直接等于 一个注入JS原生对象的方法 ，然后调用，会出现this上下文丢失
+>
+> ```javascript
+> const fun = jsBridge.on;
+> fun(); // 非法调用 ❌
+> 
+> const fun = jsBridge.on.bind(jsBridge)
+> fun(); // 合法调用 ✅
+> ```
+>
+> 
 
 ## 语法基础知识点
 

@@ -113,8 +113,6 @@ C()
 
 
 
-
-
 ### 基础语法：
 
 > if(auto xxx = fun()){} ，可以这样子判空
@@ -142,6 +140,8 @@ C()
 > - 类中没有用户定义的析构
 >
 > 自定义移动赋值函数时记得加上noexcept关键词  [来源](https://www.bilibili.com/video/BV16NiSBfEUZ/?spm_id_from=333.1391.0.0&vd_source=f02f9d2b6ca3710611c51219432586fa)
+
+
 
 
 
@@ -194,6 +194,12 @@ C()
 >     ++index;
 > }
 > ```
+
+> start_with 方法   1.str.find("Hello") == 0     2. absl::StartsWith(str, "Hello")
+>
+> end_with 方法 :  1.str.rfind(suffix) == (str.length() - suffix.length())      2. absl::EndsWith(str, "World")     
+>
+> str.back() == 'X'
 
 
 
@@ -371,6 +377,26 @@ int main() {
 //Test 2
 //2
 ```
+
+
+
+#### 模板知识
+
+###### **"模板实例化时编译所有分支"** 即使 `if` 条件在编译期就能确定为 `false`，编译器仍会尝试编译所有分支
+
+```c
+template<typename T>
+void func(T t) {
+    if (std::is_integral_v<T>) {
+        // 即使 T 是 string，这里也会编译失败！
+        std::cout << t + 1;  
+    } else {
+        std::cout << t.length();  // 即使 T 是 int，这里也会编译失败！
+    }
+}
+```
+
+> 方案 ： if 改成 **if constexpr**
 
 
 
