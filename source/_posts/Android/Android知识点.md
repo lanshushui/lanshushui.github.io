@@ -19,11 +19,17 @@ abbrlink: 1733ce00
 
 ### Activity
 
+#### taskaffinity只有在FLAG_ACTIVITY_NEW_TASK标记下才会有作用，没有则会忽略taskaffinity，放入启动Activity的任务栈中
+
+> 当调用startActivity()方法来启动一个Activity时，默认是将它放入到当前的任务当中。但是，如果在Intent中加入了FLAG_ACTIVITY_NEW_TASK flag的话，情况就会变的复杂起来。首先，系统会去检查这个Activity的affinity是否与当前Task的affinity相同。如果相同的话就会把它放入到当前Task当中，如果不同则会先去检查是否已经有一个名字与该Activity的affinity相同的Task,如果有，这个Task将被调到前台，同时这个Activity将显示在这个Task的顶端；如果没有的话，系统将会尝试为这个Activity创建一个新的Task。需要注意的是，如果一个Activity在manifest文件中声明的启动模式是”singleTask”，那么他被启动的时候，行为模式会和前面提到的指定FLAG_ACTIVITY_NEW_TASK一样
+
+
+
 #### 快速找到是哪个View消费了点击事件
 
 ```kotlin
 //Activity   
-override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+override fun dicaihuispatchTouchEvent(ev: MotionEvent?): Boolean {
     val re = super.dispatchTouchEvent(ev)
     val decView = (window.decorView as ViewGroup)
     val mFirstTouchTargetF = ViewGroup::class.java.getDeclaredField("mFirstTouchTarget")
