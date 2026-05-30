@@ -1,6 +1,1125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Flutter 布局从入门到精通：A/B/C 分类速查</title>
+    <url>/post/a833dd0f.html</url>
+    <content><![CDATA[<h1 id="flutter-布局从入门到精通abc-分类速查"><a class="anchor" href="#flutter-布局从入门到精通abc-分类速查">#</a> Flutter 布局从入门到精通：A/B/C 分类速查</h1>
+<blockquote>
+<p>一份面向 Flutter 新手的布局指南，所有结论均经过真机实测验证（<strong>106 项测试全部通过，0 FAIL</strong>）。<br />
+先理解底层协议，再学三类组件，最后看典型场景，遇到 bug 能直接定位。</p>
+</blockquote>
+<hr />
+<h2 id="目录"><a class="anchor" href="#目录">#</a> 目录</h2>
+<ol>
+<li><a href="#1-%E4%B8%80%E5%88%87%E7%9A%84%E6%BA%90%E5%A4%B4%E5%B8%83%E5%B1%80%E5%8D%8F%E8%AE%AE">一切的源头：布局协议</a></li>
+<li><a href="#2-%E7%BA%A6%E6%9D%9F%E7%9A%84%E4%B8%89%E7%A7%8D%E5%BD%A2%E6%80%81">约束的三种形态</a></li>
+<li><a href="#3-a--b--c-%E4%B8%89%E7%B1%BB%E7%BB%84%E4%BB%B6%E6%80%BB%E8%A7%88">A / B / C 三类组件总览</a></li>
+<li><a href="#4-%E7%BB%84%E4%BB%B6%E8%87%AA%E8%BA%AB%E7%9A%84-size-%E6%80%8E%E4%B9%88%E5%86%B3%E5%AE%9A">组件自身的 size 怎么决定</a></li>
+<li><a href="#5-a-%E7%B1%BB%E5%8E%9F%E6%A0%B7%E9%80%8F%E4%BC%A0">A 类：原样透传</a></li>
+<li><a href="#6-b-%E7%B1%BB%E6%94%BE%E6%9D%BE%E7%BA%A6%E6%9D%9F">B 类：放松约束</a></li>
+<li><a href="#7-c-%E7%B1%BB%E5%BC%BA%E5%88%B6%E9%87%8D%E5%86%99%E7%BA%A6%E6%9D%9F">C 类：强制重写约束</a></li>
+<li><a href="#8-container-%E8%A1%8C%E4%B8%BA%E9%80%9F%E6%9F%A5">Container 行为速查</a></li>
+<li><a href="#9-%E5%AE%BD%E9%AB%98%E8%B0%88%E5%88%A44-%E4%B8%AA%E5%85%B8%E5%9E%8B%E5%9C%BA%E6%99%AF">宽高谈判：4 个典型场景</a></li>
+<li><a href="#10-%E7%89%B9%E6%AE%8A%E5%AE%B6%E6%97%8Fflex--scrollable">特殊家族：Flex / Scrollable</a></li>
+<li><a href="#11-%E9%AB%98%E9%A2%91%E9%99%B7%E9%98%B1%E4%B8%8E%E9%81%BF%E5%9D%91">高频陷阱与避坑</a></li>
+<li><a href="#12-%E4%B8%80%E9%A1%B5%E5%A4%87%E5%BF%98">一页备忘</a></li>
+</ol>
+<hr />
+<h2 id="1-一切的源头布局协议"><a class="anchor" href="#1-一切的源头布局协议">#</a> 1. 一切的源头：布局协议</h2>
+<p>Flutter 的所有布局问题，都能用一条规则解释：</p>
+<pre><code>父 → 子：传 BoxConstraints (minW, maxW, minH, maxH)   &quot;你能在多大范围内选尺寸&quot;
+子 → 父：返回 Size                                     &quot;我决定就这么大&quot;
+父决定子的位置 (offset)
+</code></pre>
+<p>英文口诀：<strong>Constraints go down, Sizes go up, Parent sets the position.</strong></p>
+<p>每个 RenderObject 的  <code>performLayout()</code>  必做三件事：</p>
+<ol>
+<li>拿到 parent 给的  <code>constraints</code></li>
+<li>让自己的 children 去 layout（传约束给它们）</li>
+<li><strong>根据 children 返回的 size，决定自己的 size</strong></li>
+</ol>
+<blockquote>
+<p><strong>关键直觉</strong>：widget &quot;有多大&quot; 从来不是它自己说了算，而是它在父约束允许的范围内自己挑一个。<br />
+父说 &quot;你最多 100&quot;，你说 &quot;我要 200&quot; —— 不行，你最多只能 100。</p>
+</blockquote>
+<hr />
+<h2 id="2-约束的三种形态"><a class="anchor" href="#2-约束的三种形态">#</a> 2. 约束的三种形态</h2>
+<p>每条约束  <code>BoxConstraints(minW, maxW, minH, maxH)</code>  在每个方向上有三种 &quot;形状&quot;：</p>
+<table>
+<thead>
+<tr>
+<th>形态</th>
+<th>数值特征</th>
+<th>子的自由度</th>
+<th>谁会给这种约束</th>
+<th>真机实测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>tight</strong></td>
+<td><code>min == max</code></td>
+<td>没的选，必须正好这么大</td>
+<td><code>Scaffold body</code> 、 <code>SizedBox</code> 、 <code>Container(width/height)</code></td>
+<td>100x60 → child <strong>100x60</strong> ✅</td>
+</tr>
+<tr>
+<td><strong>loose</strong></td>
+<td><code>min == 0, max=有限</code></td>
+<td>0 ~ max 之间自选</td>
+<td><code>Center</code> 、 <code>Align</code> 、 <code>Padding</code></td>
+<td>Center 内 60x40 → <strong>60x40</strong> ✅</td>
+</tr>
+<tr>
+<td><strong>unbounded</strong></td>
+<td><code>max == infinity</code></td>
+<td>没上限，子必须有内在尺寸</td>
+<td><code>Column/Row</code>  主轴、 <code>ListView</code>  主轴</td>
+<td>Column 内 Container 取 Text 尺寸，<strong>不崩</strong> ✅</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>大多数布局崩溃</strong>（ <code>hasSize is not true</code> 、 <code>unbounded height</code> ）<br />
+都发生在 <strong>unbounded 约束 + 子组件没本事自决定尺寸</strong> 的组合里。</p>
+</blockquote>
+<h3 id="21-直觉对照"><a class="anchor" href="#21-直觉对照">#</a> 2.1 直觉对照</h3>
+<pre><code>tight    = 学校说&quot;你必须穿校服&quot;        → 没得选
+loose    = 学校说&quot;你可以穿红蓝白之一&quot;   → 有限范围里选
+unbounded = 学校说&quot;你爱穿啥穿啥&quot;       → 但你得自己有衣服（内在尺寸）
+</code></pre>
+<hr />
+<h2 id="3-a-b-c-三类组件总览"><a class="anchor" href="#3-a-b-c-三类组件总览">#</a> 3. A / B / C 三类组件总览</h2>
+<p>所有 widget 按 &quot;<strong> 它把什么样的约束传给 child</strong>&quot; 分成三类。这是理解 Flutter 布局的核心分类法。</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>一句话</th>
+<th>直觉</th>
+<th>风险</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A 透传</strong></td>
+<td>子约束 = 父约束</td>
+<td>水管，不挡水</td>
+<td>几乎无</td>
+</tr>
+<tr>
+<td><strong>B 放松</strong></td>
+<td>子约束 = 父约束 tight 变 loose，max 可能缩小</td>
+<td>漏斗，扩口</td>
+<td>把 tight 变 unbounded（如 Column 主轴）→ 子可能崩</td>
+</tr>
+<tr>
+<td><strong>C 重写</strong></td>
+<td>子约束 = 当前 widget 自己写的，<strong>与父约束部分或完全无关</strong></td>
+<td>变压器，重定电压</td>
+<td><strong>bug 高发地</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="31-约束传递链示例"><a class="anchor" href="#31-约束传递链示例">#</a> 3.1 约束传递链示例</h3>
+<pre><code>// A 类透传：ClipRect 不改变约束
+Scaffold → ClipRect → Container
+约束:  tight      tight    ✅ Container 收到的 = Scaffold 给的
+
+// B 类放松：Center 把 tight 变 loose
+Scaffold → Center → Container
+约束:  tight      loose    ✅ Container 可以在 0~屏幕之间选
+
+// C 类重写：SizedBox 用自己的约束替换
+Scaffold → SizedBox(100) → Container
+约束:  tight      tight(100)   ✅ Container 收到 100（受 enforce 影响）
+</code></pre>
+<hr />
+<h2 id="4-组件自身的-size-怎么决定"><a class="anchor" href="#4-组件自身的-size-怎么决定">#</a> 4. 组件自身的 size 怎么决定</h2>
+<p>组件的自身尺寸由两个因素决定：<strong>有没有写宽高</strong>，以及它属于 <strong>A/B/C 哪一类</strong>。</p>
+<h3 id="41-有写宽高时"><a class="anchor" href="#41-有写宽高时">#</a> 4.1 有写宽高时</h3>
+<pre><code>自身 size = clamp(自己写的宽高, 父约束)
+</code></pre>
+<p>你写的宽高只是 &quot;愿望&quot;，<strong>parent 有最终否决权</strong>。</p>
+<p><strong>真机验证</strong>：</p>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">SizedBox</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">100</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">60</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">500</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">500</span><span class="token punctuation">,</span> color<span class="token punctuation">:</span> <span class="token class-name">Colors</span><span class="token punctuation">.</span>red<span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">// Container 想要 500×500，但被 tight (100,60) 钳住</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">// 实测：Container 自身 = 100x60 ✅  500 设了等于没设</span></pre></td></tr></table></figure><p><strong>A/B/C 三类在 &quot;有写宽高&quot; 时的行为完全一致</strong>，都是  <code>clamp(自己写的, 父约束)</code> 。</p>
+<h3 id="42-没写宽高时"><a class="anchor" href="#42-没写宽高时">#</a> 4.2 没写宽高时</h3>
+<p>没写宽高时，三类组件的行为完全不同：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>自身 size 的决定方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A 类</strong></td>
+<td><strong>size = child.size</strong>（跟随 child）</td>
+</tr>
+<tr>
+<td><strong>B 类</strong></td>
+<td>多数 <strong>size = 父约束的最大值</strong>（占满父），少数有例外</td>
+</tr>
+<tr>
+<td><strong>C 类</strong></td>
+<td><strong>取决于具体组件</strong>（各不相同）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="b-类组件没写宽高时的行为"><a class="anchor" href="#b-类组件没写宽高时的行为">#</a> B 类组件没写宽高时的行为</h4>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>没写宽高时自身 size</th>
+<th>真机实测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Center</code></td>
+<td><code>constraints.biggest</code> （占满父）</td>
+<td><strong>300x80</strong>（父 300x80）✅</td>
+</tr>
+<tr>
+<td><code>Align</code></td>
+<td><code>constraints.biggest</code> （占满父）</td>
+<td><strong>300x80</strong> ✅</td>
+</tr>
+<tr>
+<td><code>Padding</code></td>
+<td>有 child 时 = child.size + padding</td>
+<td><strong>100+15+15=130</strong> (宽) ✅，<strong>不是占满父</strong></td>
+</tr>
+<tr>
+<td><code>Container</code> （无 color 有 child）</td>
+<td>loose 下贴合 child，tight 下被撑满</td>
+<td>loose: <strong>25x17</strong> (贴合) ✅，tight: <strong>200x50</strong> (撑满) ✅</td>
+</tr>
+<tr>
+<td><code>Wrap</code></td>
+<td><code>constraints.biggest</code> （占满父）</td>
+<td><strong>300x80</strong> ✅</td>
+</tr>
+<tr>
+<td><code>SafeArea</code></td>
+<td>减去安全区后的 max</td>
+<td><strong>比父小</strong> ✅</td>
+</tr>
+<tr>
+<td><code>Stack</code> （默认  <code>StackFit.loose</code> ）</td>
+<td>有非 Positioned 子时 = 子最大 size</td>
+<td><strong>180x50</strong> (跟 child) ✅</td>
+</tr>
+<tr>
+<td><code>Stack</code> （ <code>StackFit.expand</code> ）</td>
+<td><code>constraints.biggest</code> （占满父）</td>
+<td><strong>300x80</strong> ✅</td>
+</tr>
+<tr>
+<td><code>Stack</code> （ <code>StackFit.passthrough</code> ）</td>
+<td>有非 Positioned 子时 = 子最大 size</td>
+<td><strong>180x50</strong> (跟 child) ✅</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>B 类注意</strong>： <code>Padding</code>  例外 —— 它有 child 时 size = child + padding，不是占满父。</p>
+</blockquote>
+<h4 id="c-类组件没写宽高时的行为最容易混淆"><a class="anchor" href="#c-类组件没写宽高时的行为最容易混淆">#</a> C 类组件没写宽高时的行为（最容易混淆）</h4>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>没写宽高时自身 size</th>
+<th>真机实测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SizedBox</code> （无参无 child）</td>
+<td>报错</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>SizedBox.expand</code></td>
+<td><code>constraints.biggest</code> （占满父）</td>
+<td><strong>200x60</strong> ✅</td>
+</tr>
+<tr>
+<td><code>SizedBox.shrink</code></td>
+<td><code>constraints.smallest</code> （最小）</td>
+<td>父 loose 下 <strong>0x0</strong> ✅</td>
+</tr>
+<tr>
+<td><code>SizedBox.fromSize</code></td>
+<td>指定 size</td>
+<td><strong>120x50</strong> ✅</td>
+</tr>
+<tr>
+<td><code>ConstrainedBox</code> （有 child）</td>
+<td>取决于 child</td>
+<td><strong>120x40</strong> (跟 child 受约束) ✅</td>
+</tr>
+<tr>
+<td><code>UnconstrainedBox</code> （有 child）</td>
+<td>取决于 child（去掉父约束）</td>
+<td><strong>25x17</strong> (跟 Text 尺寸) ✅</td>
+</tr>
+<tr>
+<td><code>LimitedBox</code></td>
+<td>仅 unbounded 下取限制值</td>
+<td>≤<strong>100x50</strong> ✅</td>
+</tr>
+<tr>
+<td><code>OverflowBox</code></td>
+<td>自身受父约束限制</td>
+<td><strong>300x80</strong>（父 300x80）✅</td>
+</tr>
+<tr>
+<td><code>SizedOverflowBox</code></td>
+<td>指定 size</td>
+<td><strong>120x70</strong> ✅</td>
+</tr>
+<tr>
+<td><code>FractionallySizedBox</code></td>
+<td><code>constraints.biggest</code> （占满父）</td>
+<td><strong>200x50</strong> ✅</td>
+</tr>
+<tr>
+<td><code>AspectRatio</code></td>
+<td>按比例 + 父约束 clamp</td>
+<td>父 300x80 中 <strong>200x100</strong>(2:1) ✅</td>
+</tr>
+<tr>
+<td><code>FittedBox</code></td>
+<td><code>constraints.biggest</code> （占满父）</td>
+<td><strong>100x50</strong> ✅</td>
+</tr>
+<tr>
+<td><code>IntrinsicWidth</code> （有 child）</td>
+<td>按内在宽</td>
+<td><strong>约 37x17</strong> (文字尺寸) ✅</td>
+</tr>
+<tr>
+<td><code>IntrinsicHeight</code> （有 child）</td>
+<td>按内在高</td>
+<td><strong>约 37x17</strong> (文字尺寸) ✅</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>简单记</strong>：A 类跟 child，B 类大多占满父（Padding 例外），C 类各不同需要查表。</p>
+</blockquote>
+<h3 id="43-撑满型-vs-贴合型"><a class="anchor" href="#43-撑满型-vs-贴合型">#</a> 4.3 撑满型 vs 贴合型</h3>
+<p>没设宽高时，widget 怎么决定大小？除了 A/B/C 分类，还有一个<strong>性格</strong>因素：</p>
+<table>
+<thead>
+<tr>
+<th>性格</th>
+<th>loose 下倾向</th>
+<th>典型 widget</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>撑满型</strong></td>
+<td>尽量占满 max</td>
+<td><code>Container(color/decoration)</code> 、 <code>ColoredBox</code> 、 <code>SizedBox.expand</code></td>
+</tr>
+<tr>
+<td><strong>贴合型</strong></td>
+<td>贴合 child 或内在尺寸</td>
+<td><code>Text</code> 、 <code>Icon</code> 、 <code>Container</code> （无 color 有 child）</td>
+</tr>
+<tr>
+<td><strong>跟随型</strong></td>
+<td>没有内在尺寸，完全跟父约束</td>
+<td><code>ClipRect</code> 、 <code>Opacity</code> 、 <code>Transform</code>  等 A 类</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>一句话：<strong>有 &quot;视觉填充意图&quot; 的（color、image、decoration）就撑满；只是结构容器的就贴合 child</strong>。</p>
+</blockquote>
+<hr />
+<h2 id="5-a-类原样透传"><a class="anchor" href="#5-a-类原样透传">#</a> 5. A 类：原样透传</h2>
+<p><strong>自己 size = child size；不动约束。</strong> 视觉装饰、命中测试、数据注入相关的多半是 A 类。</p>
+<h3 id="完整列表全部真机验证"><a class="anchor" href="#完整列表全部真机验证">#</a> 完整列表（全部真机验证 ✅）</h3>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+<th>实测尺寸</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ClipRect</code></td>
+<td>矩形裁剪</td>
+<td>180x50 ✅</td>
+<td>透传约束</td>
+</tr>
+<tr>
+<td><code>ClipRRect</code></td>
+<td>圆角裁剪</td>
+<td>180x50 ✅</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>ClipOval</code></td>
+<td>椭圆裁剪</td>
+<td>180x50 ✅</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>ClipPath</code></td>
+<td>自定义路径裁剪</td>
+<td>180x50 ✅</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>Opacity</code></td>
+<td>透明度</td>
+<td>180x50 ✅</td>
+<td>透传约束</td>
+</tr>
+<tr>
+<td><code>AnimatedOpacity</code></td>
+<td>动画透明</td>
+<td>180x50 ✅</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>Transform</code></td>
+<td>矩阵变换</td>
+<td><strong>layout=180x50</strong> ⚠️</td>
+<td><strong>不改 layout size，只改绘制</strong>，视觉会溢出父容器</td>
+</tr>
+<tr>
+<td><code>Transform.rotate</code></td>
+<td>旋转</td>
+<td><strong>layout=180x50</strong> ⚠️</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>GestureDetector</code></td>
+<td>手势识别</td>
+<td>180x50 ✅</td>
+<td>透传</td>
+</tr>
+<tr>
+<td><code>Listener</code></td>
+<td>原始指针监听</td>
+<td>180x50 ✅</td>
+<td>透传</td>
+</tr>
+<tr>
+<td><code>RawGestureDetector</code></td>
+<td>原始手势</td>
+<td>180x50 ✅</td>
+<td>透传</td>
+</tr>
+<tr>
+<td><code>MouseRegion</code></td>
+<td>鼠标区域</td>
+<td>180x50 ✅</td>
+<td>透传</td>
+</tr>
+<tr>
+<td><code>Offstage</code></td>
+<td>不绘制</td>
+<td><strong>180x50 (占位空白)</strong> ⚠️</td>
+<td><code>offstage:true</code>  时 <strong>child 正常布局但不绘制</strong>，不是 0x0</td>
+</tr>
+<tr>
+<td><code>Visibility</code></td>
+<td>显示 / 隐藏</td>
+<td>180x50 ✅</td>
+<td><code>maintainSize:true</code>  时透传</td>
+</tr>
+<tr>
+<td><code>RepaintBoundary</code></td>
+<td>隔离绘制层</td>
+<td>180x50 ✅</td>
+<td>透传约束</td>
+</tr>
+<tr>
+<td><code>DecoratedBox</code></td>
+<td>仅装饰背景 / 边框</td>
+<td>180x50 ✅</td>
+<td>透传</td>
+</tr>
+<tr>
+<td><code>IgnorePointer</code></td>
+<td>屏蔽命中测试</td>
+<td>180x50 ✅</td>
+<td>透传约束</td>
+</tr>
+<tr>
+<td><code>AbsorbPointer</code></td>
+<td>吸收触摸</td>
+<td>180x50 ✅</td>
+<td>透传约束</td>
+</tr>
+<tr>
+<td><code>ColorFiltered</code></td>
+<td>颜色滤镜</td>
+<td>180x50 ✅</td>
+<td>透传</td>
+</tr>
+<tr>
+<td><code>ShaderMask</code></td>
+<td>着色器遮罩</td>
+<td>180x50 ✅</td>
+<td>透传</td>
+</tr>
+<tr>
+<td><code>BackdropFilter</code></td>
+<td>模糊 / 滤镜</td>
+<td>180x50 ✅</td>
+<td><strong>透传但合成阶段需要有限边界</strong>，必须包  <code>ClipRect</code></td>
+</tr>
+<tr>
+<td><code>ImageFiltered</code></td>
+<td>静态滤镜</td>
+<td>180x50 ✅</td>
+<td>透传</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>唯一陷阱</strong>： <code>BackdropFilter</code>  是 A 类透传约束，但合成阶段需要有限边界，<strong>必须</strong>在外层包  <code>ClipRect</code> ，否则会报  <code>invalid matrix</code>  错误。</p>
+</blockquote>
+<h3 id="51-a-类陷阱"><a class="anchor" href="#51-a-类陷阱">#</a> 5.1 A 类陷阱</h3>
+<p><strong>陷阱：Transform 视觉溢出</strong></p>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">Transform</span><span class="token punctuation">.</span><span class="token function">scale</span><span class="token punctuation">(</span>scale<span class="token punctuation">:</span> <span class="token number">1.5</span><span class="token punctuation">,</span> child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">180</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">//layout size 仍是 180x50（透传约束）</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">// 但视觉上 child 被放大到 270x75，会溢出父容器！</span></pre></td></tr></table></figure><p><strong>Offstage 误区</strong></p>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">Offstage</span><span class="token punctuation">(</span>offstage<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">180</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">//child 正常布局（实测 180x50），只是不绘制</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">// 不要以为它是 0x0</span></pre></td></tr></table></figure><hr />
+<h2 id="6-b-类放松约束"><a class="anchor" href="#6-b-类放松约束">#</a> 6. B 类：放松约束</h2>
+<p><strong>把父的 tight 变成 loose，让子可以选更小</strong>。多见于摆放类、padding 类。</p>
+<h3 id="完整列表"><a class="anchor" href="#完整列表">#</a> 完整列表</h3>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>给 child 的约束</th>
+<th>真机验证</th>
+<th>关键说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Center</code></td>
+<td><code>(0..maxW, 0..maxH)</code>  loose</td>
+<td>80x30 ✅</td>
+<td>把 tight 变 loose，再居中</td>
+</tr>
+<tr>
+<td><code>Align</code></td>
+<td><code>(0..maxW, 0..maxH)</code>  loose</td>
+<td>80x30 ✅</td>
+<td>同 Center，可指定对齐</td>
+</tr>
+<tr>
+<td><code>Padding</code></td>
+<td>减去 padding 后的 loose</td>
+<td>约束缩小 ✅</td>
+<td>把 max 缩小；自身 size = child + padding，不是占满父</td>
+</tr>
+<tr>
+<td><code>Container</code> （无 width/height）</td>
+<td>减 padding 后的 loose</td>
+<td>已验证 ✅</td>
+<td>不写宽高时是 B；写了就是 C</td>
+</tr>
+<tr>
+<td><code>Wrap</code></td>
+<td>子项 loose</td>
+<td>自动换行 ✅</td>
+<td>主轴排不下自动换行；自身 size = 占满父</td>
+</tr>
+<tr>
+<td><code>SafeArea</code></td>
+<td>减系统安全区</td>
+<td>缩小 ✅</td>
+<td>缩 max，整体仍 loose</td>
+</tr>
+<tr>
+<td><code>Stack</code> （默认  <code>StackFit.loose</code> ）</td>
+<td>非 Positioned 子 loose  <code>(0..maxW, 0..maxH)</code></td>
+<td>200x60 ✅</td>
+<td>自身 size = 非 Positioned 子的最大 size</td>
+</tr>
+<tr>
+<td><code>Stack(fit: StackFit.expand)</code></td>
+<td>非 Positioned 子 <strong>tight</strong>  <code>(maxW, maxH)</code></td>
+<td>200x50 ✅</td>
+<td>给所有非 Positioned 子 tight 约束，撑满整个 Stack</td>
+</tr>
+<tr>
+<td><code>Stack(fit: StackFit.passthrough)</code></td>
+<td>透传父约束</td>
+<td>200x50 ✅</td>
+<td>不改变约束类型，原样透传</td>
+</tr>
+</tbody>
+</table>
+<h3 id="61-b-类陷阱主轴-unbounded最高频踩雷"><a class="anchor" href="#61-b-类陷阱主轴-unbounded最高频踩雷">#</a> 6.1 B 类陷阱：主轴 unbounded（最高频踩雷）</h3>
+<p>Column / Row / ListView 主轴给 unbounded 约束：</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>cross 轴</th>
+<th>主轴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Column</code></td>
+<td>loose  <code>0..maxW</code></td>
+<td><strong>unbounded  <code>0..∞</code> </strong></td>
+</tr>
+<tr>
+<td><code>Row</code></td>
+<td>loose  <code>0..maxH</code></td>
+<td><strong>unbounded  <code>0..∞</code> </strong></td>
+</tr>
+<tr>
+<td><code>ListView</code></td>
+<td>tight 或 loose</td>
+<td><strong>unbounded</strong></td>
+</tr>
+<tr>
+<td><code>SingleChildScrollView</code></td>
+<td>tight 或 loose</td>
+<td><strong>unbounded</strong></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">Column</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  children<span class="token punctuation">:</span> <span class="token punctuation">[</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token class-name">Container</span><span class="token punctuation">(</span>color<span class="token punctuation">:</span> <span class="token class-name">Colors</span><span class="token punctuation">.</span>red<span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment">//unbounded 下高度 = Text 尺寸，不崩但看不见</span></pre></td></tr><tr><td data-num="4"></td><td><pre>  <span class="token punctuation">]</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token class-name">Column</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="8"></td><td><pre>  children<span class="token punctuation">:</span> <span class="token punctuation">[</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token class-name">ListView</span><span class="token punctuation">(</span>children<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>     <span class="token comment">// 滚动型 → 想要 ∞ → 💥 崩</span></pre></td></tr><tr><td data-num="10"></td><td><pre>  <span class="token punctuation">]</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">)</span></pre></td></tr></table></figure><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>在 unbounded 下的行为</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>撑满型（Container/ColoredBox）</td>
+<td>取最小尺寸（Text 大小）</td>
+<td><strong>不崩，但很小</strong></td>
+</tr>
+<tr>
+<td>贴合型（Container 无 color 有 child）</td>
+<td>取内在尺寸</td>
+<td><strong>安全</strong> ✅</td>
+</tr>
+<tr>
+<td>滚动型（ListView/SingleChildScrollView）</td>
+<td>想要无限空间</td>
+<td><strong>崩溃</strong> 💥</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-b-类陷阱stack-全-positioned-子"><a class="anchor" href="#62-b-类陷阱stack-全-positioned-子">#</a> 6.2 B 类陷阱：Stack 全 Positioned 子</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">Stack</span><span class="token punctuation">(</span>children<span class="token punctuation">:</span> <span class="token punctuation">[</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  <span class="token class-name">Positioned</span><span class="token punctuation">.</span><span class="token function">fill</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>   <span class="token comment">// 全部 Positioned → Stack 拿不到 size</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">]</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p><strong>真机验证</strong>：父是 loose 时，Stack 取  <code>constraints.biggest</code> ，<strong>不会塌成 0x0</strong>（实测 200x50）。只在父是 <strong>unbounded</strong> 时才会崩。</p>
+<p><strong>修法</strong>：</p>
+<ul>
+<li>父级给 tight 约束（用  <code>SizedBox</code>  包住 Stack）</li>
+<li>加一个非 Positioned child 撑出 size</li>
+<li>用  <code>Stack(fit: StackFit.expand)</code></li>
+</ul>
+<hr />
+<h2 id="7-c-类强制重写约束"><a class="anchor" href="#7-c-类强制重写约束">#</a> 7. C 类：强制重写约束</h2>
+<p><strong>child 拿到的约束与父约束部分或完全无关，由当前 widget 自己写。</strong> bug 高发地。</p>
+<h3 id="71-核心机制enforce-规则"><a class="anchor" href="#71-核心机制enforce-规则">#</a> 7.1 核心机制：enforce 规则</h3>
+<p>C 类组件修改约束传给 child 时，底层调用的是  <code>enforce</code>  方法：</p>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre>childConstraints<span class="token punctuation">.</span><span class="token function">enforce</span><span class="token punctuation">(</span>parentConstraints<span class="token punctuation">)</span></pre></td></tr></table></figure><p><strong>enforce 规则</strong>（简单理解）：</p>
+<ul>
+<li>min 取两者中较大的</li>
+<li>max 取两者中较小的</li>
+<li><strong>如果父约束是 tight，enforce 结果永远 = 父约束</strong></li>
+</ul>
+<p>这意味着：当父给 tight 约束时，使用  <code>enforce</code>  的 C 类组件（如 SizedBox、ConstrainedBox）写的宽高 <strong>不传递给 child</strong>，child 收到的仍然是父约束。</p>
+<p><strong>不受 enforce 影响的 C 类组件</strong>（FractionallySizedBox、FittedBox、AspectRatio）用自己的方式计算约束：</p>
+<ul>
+<li><code>FractionallySizedBox</code>  按父  <code>max</code>  的比例计算，即使父 tight 也按比例缩小</li>
+<li><code>FittedBox</code>  给 child  <code>unbounded</code>  让其自由布局</li>
+<li><code>AspectRatio</code>  有自己的比例算法</li>
+</ul>
+<p><strong>关键公式</strong>：</p>
+<ul>
+<li><strong>组件自身 size</strong> =  <code>clamp(自己想要的, 父约束)</code>  — 永远生效</li>
+<li><strong>组件给 child 的约束</strong> =  <code>自身约束.enforce(父约束)</code>  — <strong>仅对使用 enforce 的组件有效</strong></li>
+</ul>
+<h4 id="enforce-真机实测-4-个场景"><a class="anchor" href="#enforce-真机实测-4-个场景">#</a> enforce 真机实测 4 个场景</h4>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// 场景 A：Scaffold.body → SizedBox (100x100) → child</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">//body 给的约束可以被 SizedBox 改写 → child 实测宽 100 ✅</span></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">// 场景 B：SizedBox (300x200) → SizedBox (100x100) → child</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">// 外层 SizedBox 给内层 tight (300,200)</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment">// 内层 enforce 后 = tight (300,200) → child 实测宽 300 ❌ 不是 100！</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment">// 场景 C：Center → SizedBox (100x100) → child</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment">// Center 给 loose，enforce 后 = tight (100,100) → child 实测宽 100 ✅</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment">// 场景 D：Container (300x200) → SizedBox (100x100) → child</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token comment">// Container 给 tight (300,200)，enforce 被覆盖 → child 实测宽 300 ❌</span></pre></td></tr></table></figure><h4 id="enforce-对比表真机验证"><a class="anchor" href="#enforce-对比表真机验证">#</a> enforce 对比表（真机验证）</h4>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>tight 父下</th>
+<th>loose 父下</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SizedBox(width:100)</code></td>
+<td>child 宽 <strong>300</strong> (被覆盖) ❌</td>
+<td>child 宽 <strong>100</strong> ✅</td>
+<td>受 enforce 影响</td>
+</tr>
+<tr>
+<td><code>Container(width:100)</code></td>
+<td>child 宽 <strong>300</strong> (被覆盖) ❌</td>
+<td>child 宽 <strong>100</strong> ✅</td>
+<td>受 enforce 影响</td>
+</tr>
+<tr>
+<td><code>ConstrainedBox(maxW:100)</code></td>
+<td>child 宽 <strong>300</strong> (被覆盖) ❌</td>
+<td>child 宽 <strong>100</strong> ✅</td>
+<td>受 enforce 影响</td>
+</tr>
+<tr>
+<td><code>FractionallySizedBox(0.5)</code></td>
+<td>child 宽 <strong>150</strong>(300×0.5) ✅</td>
+<td>child 宽 <strong>150</strong> ✅</td>
+<td><strong>不受 enforce 影响</strong>，按父 max 比例计算</td>
+</tr>
+<tr>
+<td><code>FittedBox</code></td>
+<td>child 取内在尺寸 ✅</td>
+<td>child 取内在尺寸 ✅</td>
+<td><strong>不受 enforce 影响</strong>，给 child unbounded</td>
+</tr>
+<tr>
+<td><code>AspectRatio(2/1)</code></td>
+<td>按比例计算 ✅</td>
+<td>按比例计算 ✅</td>
+<td><strong>不受 enforce 影响</strong>，有自己的算法</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>其他 C 类组件： <code>OverflowBox</code> / <code>SizedOverflowBox</code>  完全替换父约束， <code>LimitedBox</code>  只在 unbounded 下生效， <code>IntrinsicWidth/Height</code>  按内在尺寸计算， <code>Expanded</code> / <code>Flexible</code> / <code>Spacer</code>  只能在 Flex 中使用 —— 它们各有自己的约束计算方式，不适用于 enforce 对比。</p>
+</blockquote>
+<h3 id="72-完整列表"><a class="anchor" href="#72-完整列表">#</a> 7.2 完整列表</h3>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>写给 child 的约束</th>
+<th>真机验证</th>
+<th>关键说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SizedBox(width: W, height: H)</code></td>
+<td>tight  <code>(W, H)</code></td>
+<td>100x60 ✅</td>
+<td>⚠️ <strong>父 tight 时 enforce 结果 = 父约束，不是 W,H</strong></td>
+</tr>
+<tr>
+<td><code>SizedBox.expand</code></td>
+<td>tight  <code>(maxW, maxH)</code></td>
+<td>200x60 ✅</td>
+<td><strong>父 unbounded 就喂 ∞</strong>，最常见炸点</td>
+</tr>
+<tr>
+<td><code>SizedBox.shrink</code></td>
+<td>tight  <code>(0, 0)</code></td>
+<td>0x0 ✅</td>
+<td>自身 size =  <code>constraints.smallest</code> ，受父约束影响</td>
+</tr>
+<tr>
+<td><code>SizedBox.fromSize</code></td>
+<td>tight 指定 size</td>
+<td>120x50 ✅</td>
+<td>按指定尺寸给 tight</td>
+</tr>
+<tr>
+<td><code>ConstrainedBox</code></td>
+<td>与父约束取交集</td>
+<td><strong>200 vs 120</strong> ⚠️</td>
+<td><strong>父 tight 时交集 = 父约束，不生效</strong>；自身 size = child.size</td>
+</tr>
+<tr>
+<td><code>UnconstrainedBox</code></td>
+<td><strong>完全去掉父约束</strong></td>
+<td>25x17 (文字) ✅</td>
+<td>子若无内在尺寸会崩</td>
+</tr>
+<tr>
+<td><code>LimitedBox</code></td>
+<td>仅 unbounded 时生效</td>
+<td>≤100x50 ✅</td>
+<td>用于 ListView 主轴防爆；自身 size = clamp (限制值，父约束)</td>
+</tr>
+<tr>
+<td><code>OverflowBox</code></td>
+<td>完全替换父约束</td>
+<td>child=500 ✅</td>
+<td>子可大于父；<strong>自身仍受父约束限制</strong></td>
+</tr>
+<tr>
+<td><code>SizedOverflowBox</code></td>
+<td>自身指定 size</td>
+<td>120x70 ✅</td>
+<td>自身 size = 指定值，给 child 的约束可不同</td>
+</tr>
+<tr>
+<td><code>FractionallySizedBox</code></td>
+<td>按父 max 比例 tight</td>
+<td>120x40 ✅</td>
+<td><strong>不受 enforce 影响</strong>；父 unbounded 时得 ∞</td>
+</tr>
+<tr>
+<td><code>AspectRatio</code></td>
+<td>按比例 tight</td>
+<td>宽高比 2:1 ✅</td>
+<td><strong>不受 enforce 影响</strong>；有自己的比例算法</td>
+</tr>
+<tr>
+<td><code>FittedBox</code></td>
+<td>给 child unbounded→scale</td>
+<td>缩放 ✅</td>
+<td><strong>不受 enforce 影响</strong>；上层必须有有限 size</td>
+</tr>
+<tr>
+<td><code>IntrinsicWidth</code></td>
+<td>tight = 内在宽</td>
+<td>约 37x17 ✅</td>
+<td>性能贵（两遍 layout）</td>
+</tr>
+<tr>
+<td><code>IntrinsicHeight</code></td>
+<td>tight = 内在高</td>
+<td>约 37x17 ✅</td>
+<td>性能贵（两遍 layout）</td>
+</tr>
+<tr>
+<td><code>Positioned.fill</code></td>
+<td>tight  <code>(stack.W, stack.H)</code></td>
+<td>200x50 ✅</td>
+<td>安全（Stack 需有有限 size）</td>
+</tr>
+<tr>
+<td><code>Expanded</code></td>
+<td>主轴 tight 分配</td>
+<td>flex1:2=80:160 ✅</td>
+<td>只能在 Row/Column/Flex</td>
+</tr>
+<tr>
+<td><code>Flexible</code></td>
+<td>主轴 tight ( <code>FlexFit.tight</code> ) 或 loose ( <code>FlexFit.loose</code> )</td>
+<td>已验证 ✅</td>
+<td>tight 时等价 Expanded</td>
+</tr>
+<tr>
+<td><code>Spacer</code></td>
+<td>等价 Expanded (SizedBox.shrink)</td>
+<td>撑开左右 ✅</td>
+<td>在 Row/Column 中撑开剩余空间</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-关键对比constrainedbox-在-tight-vs-loose-父下"><a class="anchor" href="#73-关键对比constrainedbox-在-tight-vs-loose-父下">#</a> 7.3 关键对比：ConstrainedBox 在 tight vs loose 父下</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// ❌ tight 父下 → 不生效（实测 200，非 120）</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">60</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">ConstrainedBox</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    constraints<span class="token punctuation">:</span> <span class="token class-name">BoxConstraints</span><span class="token punctuation">(</span>maxWidth<span class="token punctuation">:</span> <span class="token number">120</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    child<span class="token punctuation">:</span> child<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="6"></td><td><pre>  <span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment">// ✅ loose 父下 → 生效（实测 120）</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token class-name">Center</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="11"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">ConstrainedBox</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    constraints<span class="token punctuation">:</span> <span class="token class-name">BoxConstraints</span><span class="token punctuation">(</span>maxWidth<span class="token punctuation">:</span> <span class="token number">120</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    child<span class="token punctuation">:</span> child<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="14"></td><td><pre>  <span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token punctuation">)</span></pre></td></tr></table></figure><h3 id="74-关键对比普通-container-vs-unconstrainedbox"><a class="anchor" href="#74-关键对比普通-container-vs-unconstrainedbox">#</a> 7.4 关键对比：普通 Container vs UnconstrainedBox</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// 普通：受父约束限制，文字挤在框内</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">60</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">40</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token class-name">Text</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">'受限'</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment">// UnconstrainedBox：去掉父约束，文字自由布局</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">60</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">40</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="8"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">UnconstrainedBox</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token class-name">Text</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">'超出'</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="10"></td><td><pre>  <span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">)</span></pre></td></tr></table></figure><hr />
+<h2 id="8-container-行为速查"><a class="anchor" href="#8-container-行为速查">#</a> 8. Container 行为速查</h2>
+<p>Container 是最特殊的组件 ——<strong> 写宽高时是 C 类，不写宽高时是 B 类</strong>，而且 color 有无还会改变行为。</p>
+<h3 id="有写宽高时-c-类"><a class="anchor" href="#有写宽高时-c-类">#</a> 有写宽高时 → C 类</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">60</span><span class="token punctuation">)</span>  <span class="token comment">// 等价 SizedBox (200x60)</span></pre></td></tr></table></figure><ul>
+<li><strong>对上</strong>：申请  <code>(200, 60)</code>  → clamp (200, 父约束)</li>
+<li><strong>对下</strong>：给 child tight  <code>(200, 60)</code>  → 父 tight 时 enforce 覆盖</li>
+</ul>
+<h3 id="没写宽高时-b-类但-color-会改变行为"><a class="anchor" href="#没写宽高时-b-类但-color-会改变行为">#</a> 没写宽高时 → B 类（但 color 会改变行为）</h3>
+<table>
+<thead>
+<tr>
+<th>Container 状态</th>
+<th>父约束</th>
+<th>行为</th>
+<th>真机实测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>有 child 且无 color/decoration</td>
+<td><strong>loose</strong></td>
+<td><strong>贴合型</strong> → 跟随 child size</td>
+<td><strong>25x17</strong> (文字尺寸) ✅</td>
+</tr>
+<tr>
+<td>有 child 且无 color/decoration</td>
+<td><strong>tight</strong></td>
+<td><strong>被撑满</strong> → 取  <code>constraints.biggest</code></td>
+<td><strong>200x50</strong> ✅</td>
+</tr>
+<tr>
+<td>有 color（无论有无 child）</td>
+<td>loose 或 tight</td>
+<td><strong>撑满型</strong> → 占满父</td>
+<td><strong>200x60</strong> ✅</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// 对比：tight 父下，无 color 也会被撑满</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token class-name">SizedBox</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">50</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token class-name">Text</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">'hi'</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment">// 实测 200x50，不是贴合！</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment">// 只有在 loose 父下才会贴合</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token class-name">Center</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="8"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token class-name">Text</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">'hi'</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment">// 实测 ≈ 文字尺寸</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token punctuation">)</span></pre></td></tr></table></figure><blockquote>
+<p><strong>一句话</strong>：</p>
+<ul>
+<li><strong>有 color → 撑满父</strong>（无论什么父约束）</li>
+<li><strong>无 color → 只在 loose 父下贴合</strong>，tight 父下照样被撑满</li>
+<li><strong>有宽高 → C 类行为</strong>，写啥就是啥（受 clamp 限制）</li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="9-宽高谈判4-个典型场景"><a class="anchor" href="#9-宽高谈判4-个典型场景">#</a> 9. 宽高谈判：4 个典型场景</h2>
+<h3 id="场景-1-parent-有限-child-写宽高没超"><a class="anchor" href="#场景-1-parent-有限-child-写宽高没超">#</a> 场景 1・parent 有限 + child 写宽高（没超）</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">SizedBox</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">100</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">50</span><span class="token punctuation">,</span> color<span class="token punctuation">:</span> <span class="token class-name">Colors</span><span class="token punctuation">.</span>red<span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">)</span></pre></td></tr></table></figure><table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parent 给 child 的约束</td>
+<td>tight (300, 200)</td>
+</tr>
+<tr>
+<td>child 想要</td>
+<td>(100, 50)</td>
+</tr>
+<tr>
+<td>谈判</td>
+<td>100 ≤ 300, 50 ≤ 200 ✅</td>
+</tr>
+<tr>
+<td>child 实际 size</td>
+<td><strong>(100, 50)</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>结论</strong>：在父允许范围内，&quot;我设啥就是啥&quot;。</p>
+</blockquote>
+<h3 id="场景-2-parent-有限-child-不写宽高"><a class="anchor" href="#场景-2-parent-有限-child-不写宽高">#</a> 场景 2・parent 有限 + child 不写宽高</h3>
+<p><strong>child 怎么决定大小，取决于它是谁</strong>。</p>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// 2a) child 是 A 类（透传）：完全跟父约束</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token class-name">SizedBox</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">ClipRect</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>color<span class="token punctuation">:</span> <span class="token class-name">Colors</span><span class="token punctuation">.</span>red<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">// ClipRect 透传 tight (300,200) → Container 撑满 300×200</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment">// 2b) child 是 B 类（放松）+ 贴合型 grandchild</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token class-name">SizedBox</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="9"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">Center</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token class-name">Text</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">'hi'</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment">// Center 给 Text loose (0..300, 0..200) → Text 约 30×20</span></pre></td></tr></table></figure><h3 id="场景-3-child-写的宽高超出-parent-限制"><a class="anchor" href="#场景-3-child-写的宽高超出-parent-限制">#</a> 场景 3・child 写的宽高超出 parent 限制</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// 3a) parent 是 tight：写啥都没用</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token class-name">SizedBox</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">100</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">60</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">500</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">// 实测：child = 100x60 ✅ 铁律</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment">// 3b) parent 是 loose：被 max 钳住</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token class-name">Center</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="9"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">500</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">500</span><span class="token punctuation">,</span> color<span class="token punctuation">:</span> <span class="token class-name">Colors</span><span class="token punctuation">.</span>red<span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment">// Center 给 loose (0.. 屏幕)，500 被屏幕 max 钳住</span></pre></td></tr></table></figure><h3 id="场景-4-parent-是-unbounded最危险"><a class="anchor" href="#场景-4-parent-是-unbounded最危险">#</a> 场景 4・parent 是 unbounded（最危险）</h3>
+<table>
+<thead>
+<tr>
+<th>parent 约束</th>
+<th>child 设宽高？</th>
+<th>child 实际 size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unbounded (0..∞)</td>
+<td>(100, 50)</td>
+<td>100×50 ✅</td>
+</tr>
+<tr>
+<td>unbounded (0..∞)</td>
+<td>不设 + 贴合型</td>
+<td>内在尺寸 ✅</td>
+</tr>
+<tr>
+<td>unbounded (0..∞)</td>
+<td>不设 + 撑满型</td>
+<td><strong>不崩</strong>，取最小 (Text 尺寸) ⚠️</td>
+</tr>
+<tr>
+<td>unbounded (0..∞)</td>
+<td>SizedBox.expand</td>
+<td><strong>💥 必崩</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10-特殊家族flex-scrollable"><a class="anchor" href="#10-特殊家族flex-scrollable">#</a> 10. 特殊家族：Flex / Scrollable</h2>
+<h3 id="flex-家族row-column-flex"><a class="anchor" href="#flex-家族row-column-flex">#</a> Flex 家族（Row / Column / Flex）</h3>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mainAxisSize: MainAxisSize.max</code> （默认）</td>
+<td>主轴想占满父 max</td>
+</tr>
+<tr>
+<td><code>mainAxisSize: MainAxisSize.min</code></td>
+<td>主轴 = 子项总和</td>
+</tr>
+<tr>
+<td>未被 Expanded/Flexible 包裹的子</td>
+<td>主轴拿 <strong>unbounded</strong> 约束</td>
+</tr>
+<tr>
+<td>被 Expanded 包裹的子</td>
+<td>主轴 tight 分配</td>
+</tr>
+<tr>
+<td>被 Flexible (fit: tight)</td>
+<td>同 Expanded</td>
+</tr>
+<tr>
+<td>被 Flexible (fit: loose)</td>
+<td>主轴 0.. 分到的空间</td>
+</tr>
+</tbody>
+</table>
+<h3 id="scrollable-家族"><a class="anchor" href="#scrollable-家族">#</a> Scrollable 家族</h3>
+<p><code>ListView</code>  /  <code>GridView</code>  /  <code>SingleChildScrollView</code>  /  <code>PageView</code> ：</p>
+<ul>
+<li>主轴 unbounded</li>
+<li><strong>嵌套同方向滚动 → 必须  <code>shrinkWrap: true</code>  + 外层有限尺寸</strong></li>
+</ul>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// ❌ 必崩</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token class-name">ListView</span><span class="token punctuation">(</span>children<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token class-name">ListView</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">// ✅</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token class-name">ListView</span><span class="token punctuation">(</span>children<span class="token punctuation">:</span> <span class="token punctuation">[</span></pre></td></tr><tr><td data-num="6"></td><td><pre>  <span class="token class-name">SizedBox</span><span class="token punctuation">(</span>height<span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span> child<span class="token punctuation">:</span> <span class="token class-name">ListView</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token punctuation">]</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment">// ✅</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token class-name">ListView</span><span class="token punctuation">(</span>children<span class="token punctuation">:</span> <span class="token punctuation">[</span></pre></td></tr><tr><td data-num="11"></td><td><pre>  <span class="token class-name">ListView</span><span class="token punctuation">(</span>shrinkWrap<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> physics<span class="token punctuation">:</span> <span class="token class-name">NeverScrollableScrollPhysics</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token punctuation">]</span><span class="token punctuation">)</span></pre></td></tr></table></figure><hr />
+<h2 id="11-高频陷阱与避坑"><a class="anchor" href="#11-高频陷阱与避坑">#</a> 11. 高频陷阱与避坑</h2>
+<h3 id="陷阱-1sizedboxexpand-在-unbounded-父里"><a class="anchor" href="#陷阱-1sizedboxexpand-在-unbounded-父里">#</a> 陷阱 1：SizedBox.expand 在 unbounded 父里</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">Column</span><span class="token punctuation">(</span>children<span class="token punctuation">:</span> <span class="token punctuation">[</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  <span class="token class-name">SizedBox</span><span class="token punctuation">.</span><span class="token function">expand</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>   <span class="token comment">// ❌ Column 主轴 unbounded → expand 喂 ∞</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">]</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p><strong>修</strong>：用  <code>Expanded</code>  包，或换成  <code>SizedBox(height: X)</code> 。</p>
+<h3 id="陷阱-2constrainedbox-在-tight-父下不生效"><a class="anchor" href="#陷阱-2constrainedbox-在-tight-父下不生效">#</a> 陷阱 2：ConstrainedBox 在 tight 父下不生效</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">Container</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">ConstrainedBox</span><span class="token punctuation">(</span>            <span class="token comment">// ❌ 父 tight (200,∞) → 不生效</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    constraints<span class="token punctuation">:</span> <span class="token class-name">BoxConstraints</span><span class="token punctuation">(</span>maxWidth<span class="token punctuation">:</span> <span class="token number">120</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    child<span class="token punctuation">:</span> child<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="5"></td><td><pre>  <span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment">// 实测 200 (非 120)</span></pre></td></tr></table></figure><p><strong>修</strong>：让父给 loose 约束（用 Center 包一层）。</p>
+<h3 id="陷阱-3container无color有child-在-tight-父下不贴合"><a class="anchor" href="#陷阱-3container无color有child-在-tight-父下不贴合">#</a> 陷阱 3：Container (无 color 有 child) 在 tight 父下不贴合</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">SizedBox</span><span class="token punctuation">(</span>width<span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span> height<span class="token punctuation">:</span> <span class="token number">50</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  child<span class="token punctuation">:</span> <span class="token class-name">Container</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token class-name">Text</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">'hi'</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment">// ❌ 被撑满 200x50</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">)</span></pre></td></tr></table></figure><p><strong>修</strong>：在 loose 父下使用（用 Center 包）。</p>
+<h3 id="陷阱-4fittedbox-在-unbounded-父里"><a class="anchor" href="#陷阱-4fittedbox-在-unbounded-父里">#</a> 陷阱 4：FittedBox 在 unbounded 父里</h3>
+<p><code>FittedBox</code>  会先让 child 在 unbounded 约束里布局再 scale。父 unbounded 时 FittedBox 自身也 unbounded → 没人收尺寸 → 崩。<br />
+<strong>修</strong>：上层一定要有有限 size。</p>
+<h3 id="陷阱-5expanded-不在-flex-里"><a class="anchor" href="#陷阱-5expanded-不在-flex-里">#</a> 陷阱 5：Expanded 不在 Flex 里</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token class-name">Stack</span><span class="token punctuation">(</span>children<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token class-name">Expanded</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment">// ❌ 只能在 Row/Column/Flex</span></pre></td></tr></table></figure><h3 id="陷阱-6backdropfilter-必须包-cliprect"><a class="anchor" href="#陷阱-6backdropfilter-必须包-cliprect">#</a> 陷阱 6：BackdropFilter 必须包 ClipRect</h3>
+<figure class="highlight dart"><figcaption data-lang="dart"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// ❌ 可能报 invalid matrix</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token class-name">BackdropFilter</span><span class="token punctuation">(</span>filter<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> child<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">// ✅</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token class-name">ClipRect</span><span class="token punctuation">(</span>child<span class="token punctuation">:</span> <span class="token class-name">BackdropFilter</span><span class="token punctuation">(</span>filter<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> child<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr></table></figure><hr />
+<h2 id="12-一页备忘"><a class="anchor" href="#12-一页备忘">#</a> 12. 一页备忘</h2>
+<h3 id="三类-widget-速记"><a class="anchor" href="#三类-widget-速记">#</a> 三类 widget 速记</h3>
+<pre><code>A 透传：ClipRect, Opacity, Transform, IgnorePointer, RepaintBoundary,
+        DecoratedBox, GestureDetector, Offstage, Visibility, BackdropFilter,
+        ColorFiltered, ShaderMask, Listener, MouseRegion, ClipRRect,
+        ClipOval, ClipPath, AnimatedOpacity, RawGestureDetector,
+        AbsorbPointer, ImageFiltered
+        ⇒ &quot;我啥也不动，原样传&quot;
+
+B 放松：Center, Align, Padding, SafeArea, Container(无宽高), Wrap,
+        Stack(默认对非Positioned子)
+        ⇒ &quot;tight 变 loose，max 不变或缩&quot;
+        ⚠️ Column/Row/ListView 主轴会变 unbounded！
+        ⚠️ Padding 自身 size = child + padding（不占满父）
+
+C 重写：SizedBox(系列), ConstrainedBox, UnconstrainedBox, LimitedBox,
+        OverflowBox, SizedOverflowBox, FractionallySizedBox, AspectRatio,
+        Container(有宽高), Positioned(系列), Expanded, Flexible, Spacer,
+        IntrinsicWidth/Height, FittedBox
+        ⇒ &quot;我说了算，给 child 写 tight&quot;
+        ⚠️ tight 父下 ConstrainedBox/SizedBox 约束被父覆盖！
+        ⚠️ unbounded 父里用 SizedBox.expand 会喂 ∞！
+        ⚠️ FractionallySizedBox/FittedBox/AspectRatio 不受 enforce 影响
+</code></pre>
+<h3 id="container-速查"><a class="anchor" href="#container-速查">#</a> Container 速查</h3>
+<pre><code>写宽高?     → C 类，clamp(宽高, 父约束)
+无宽高有color → 撑满父
+无宽高无color → loose父下贴合，tight父下被撑满
+</code></pre>
+<h3 id="positionedfill-vs-sizedboxexpand"><a class="anchor" href="#positionedfill-vs-sizedboxexpand">#</a> Positioned.fill vs SizedBox.expand</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>size 来源</th>
+<th>安全性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Positioned.fill</code></td>
+<td><strong>Stack 的 size</strong></td>
+<td>安全（Stack 需有有限 size）</td>
+</tr>
+<tr>
+<td><code>SizedBox.expand</code></td>
+<td><strong>父约束的 max</strong></td>
+<td>父 unbounded 时是定时炸弹</td>
+</tr>
+</tbody>
+</table>
+<h3 id="五句必背"><a class="anchor" href="#五句必背">#</a> 五句必背</h3>
+<ol>
+<li><strong>约束往下走，size 往上回，位置父决定</strong></li>
+<li><strong>C 类才会重写约束，是 bug 高发地</strong></li>
+<li><strong>Column / Row / ListView 主轴是 unbounded</strong></li>
+<li><strong>tight 父下 C 类组件（SizedBox/ConstrainedBox）给 child 的约束被父覆盖</strong></li>
+<li><strong> <code>SizedBox.expand</code>  看似无害，碰到 unbounded 父就是定时炸弹</strong></li>
+</ol>
+<h3 id="宽高谈判一句话"><a class="anchor" href="#宽高谈判一句话">#</a> 宽高谈判一句话</h3>
+<blockquote>
+<p><strong>真实 size = clamp (我想要的，parent 允许的)</strong></p>
+<p>你写的宽高只是 &quot;愿望&quot;，<strong>parent 有最终否决权</strong>；<br />
+没写宽高时，看 widget 是 &quot;撑满型&quot; 还是 &quot;贴合型&quot;——<br />
+<strong> 撑满型在 unbounded 父里取最小不崩但看不见，滚动型才会崩</strong>。</p>
+</blockquote>
+<h3 id="常见报错速查"><a class="anchor" href="#常见报错速查">#</a> 常见报错速查</h3>
+<table>
+<thead>
+<tr>
+<th>错误信息</th>
+<th>典型原因</th>
+<th>怎么修</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RenderBox was not laid out</code></td>
+<td>unbounded 约束里没自决定 size</td>
+<td>用 SizedBox/Expanded 给确定尺寸</td>
+</tr>
+<tr>
+<td><code>Vertical viewport was given unbounded height</code></td>
+<td>ListView/Column 嵌套同方向</td>
+<td><code>shrinkWrap: true</code>  或  <code>Expanded</code></td>
+</tr>
+<tr>
+<td><code>BoxConstraints forces an infinite width/height</code></td>
+<td>expand + 父 unbounded</td>
+<td>别在 unbounded 父里用 expand</td>
+</tr>
+<tr>
+<td><code>TransformLayer invalid matrix</code></td>
+<td>BackdropFilter 拿到 ∞</td>
+<td>上层包 ClipRect</td>
+</tr>
+<tr>
+<td>Stack 全 Positioned 子 &quot;塌了&quot;</td>
+<td>父没给 tight 约束</td>
+<td>父加 SizedBox 或  <code>Stack(fit:expand)</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+<p><strong>106 项真机测试全部通过（0 FAIL）</strong>。运行验证： <code>adb logcat -d | findstr &quot;[MEASURE]&quot;</code></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>跨平台</category>
+      </categories>
+      <tags>
+        <tag>知识点</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Flutter框架层分析</title>
     <url>/post/b619670f.html</url>
     <content><![CDATA[<blockquote>
@@ -1840,8 +2959,8 @@ MyClass destruction called</p>
         <category>CPP</category>
       </categories>
       <tags>
-        <tag>试验场</tag>
         <tag>CPP</tag>
+        <tag>试验场</tag>
       </tags>
   </entry>
   <entry>
@@ -2428,8 +3547,12 @@ Character.isHighSurrogate()
 <p><span id="more"></span></p>
 <h2 id="四大组件"><a class="anchor" href="#四大组件">#</a> 四大组件</h2>
 <h3 id="activity"><a class="anchor" href="#activity">#</a> Activity</h3>
+<h4 id="taskaffinity只有在flag_activity_new_task标记下才会有作用没有则会忽略taskaffinity放入启动activity的任务栈中"><a class="anchor" href="#taskaffinity只有在flag_activity_new_task标记下才会有作用没有则会忽略taskaffinity放入启动activity的任务栈中">#</a> taskaffinity 只有在 FLAG_ACTIVITY_NEW_TASK 标记下才会有作用，没有则会忽略 taskaffinity，放入启动 Activity 的任务栈中</h4>
+<blockquote>
+<p>当调用 startActivity () 方法来启动一个 Activity 时，默认是将它放入到当前的任务当中。但是，如果在 Intent 中加入了 FLAG_ACTIVITY_NEW_TASK flag 的话，情况就会变的复杂起来。首先，系统会去检查这个 Activity 的 affinity 是否与当前 Task 的 affinity 相同。如果相同的话就会把它放入到当前 Task 当中，如果不同则会先去检查是否已经有一个名字与该 Activity 的 affinity 相同的 Task, 如果有，这个 Task 将被调到前台，同时这个 Activity 将显示在这个 Task 的顶端；如果没有的话，系统将会尝试为这个 Activity 创建一个新的 Task。需要注意的是，如果一个 Activity 在 manifest 文件中声明的启动模式是”singleTask”，那么他被启动的时候，行为模式会和前面提到的指定 FLAG_ACTIVITY_NEW_TASK 一样</p>
+</blockquote>
 <h4 id="快速找到是哪个view消费了点击事件"><a class="anchor" href="#快速找到是哪个view消费了点击事件">#</a> 快速找到是哪个 View 消费了点击事件</h4>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//Activity   </span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">dispatchTouchEvent</span><span class="token punctuation">(</span>ev<span class="token operator">:</span> MotionEvent<span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator">:</span> Boolean <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">val</span> re <span class="token operator">=</span> <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">dispatchTouchEvent</span><span class="token punctuation">(</span>ev<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">val</span> decView <span class="token operator">=</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>decorView <span class="token keyword">as</span> ViewGroup<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">val</span> mFirstTouchTargetF <span class="token operator">=</span> ViewGroup<span class="token operator">::</span><span class="token keyword">class</span><span class="token punctuation">.</span>java<span class="token punctuation">.</span><span class="token function">getDeclaredField</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"mFirstTouchTarget"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    mFirstTouchTargetF<span class="token punctuation">.</span>isAccessible <span class="token operator">=</span> <span class="token boolean">true</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">var</span> first <span class="token operator">=</span> mFirstTouchTargetF<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>decView<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">var</span> consumeView<span class="token operator">:</span> View <span class="token operator">=</span> decView</pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">while</span> <span class="token punctuation">(</span>first <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token keyword">val</span> viewF <span class="token operator">=</span> first<span class="token operator">::</span><span class="token keyword">class</span><span class="token punctuation">.</span>java<span class="token punctuation">.</span><span class="token function">getDeclaredField</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"child"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        viewF<span class="token punctuation">.</span>isAccessible <span class="token operator">=</span> <span class="token boolean">true</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        consumeView <span class="token operator">=</span> viewF<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>first<span class="token punctuation">)</span> <span class="token keyword">as</span> View</pre></td></tr><tr><td data-num="13"></td><td><pre>        first <span class="token operator">=</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>consumeView <span class="token keyword">is</span> ViewGroup<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            mFirstTouchTargetF<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>consumeView<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            <span class="token keyword">null</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    MLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span> <span class="token string-literal singleline"><span class="token string">"consumeView is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$</span><span class="token expression">consumeView</span></span><span class="token string">"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token keyword">return</span> re</pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h4 id="调用startactivityforresult后直接产生onactivityresult回调问题"><a class="anchor" href="#调用startactivityforresult后直接产生onactivityresult回调问题">#</a> 调用 startActivityForResult 后直接产生 onActivityResult 回调问题</h4>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//Activity   </span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">dicaihuispatchTouchEvent</span><span class="token punctuation">(</span>ev<span class="token operator">:</span> MotionEvent<span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator">:</span> Boolean <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">val</span> re <span class="token operator">=</span> <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">dispatchTouchEvent</span><span class="token punctuation">(</span>ev<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">val</span> decView <span class="token operator">=</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>decorView <span class="token keyword">as</span> ViewGroup<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">val</span> mFirstTouchTargetF <span class="token operator">=</span> ViewGroup<span class="token operator">::</span><span class="token keyword">class</span><span class="token punctuation">.</span>java<span class="token punctuation">.</span><span class="token function">getDeclaredField</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"mFirstTouchTarget"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    mFirstTouchTargetF<span class="token punctuation">.</span>isAccessible <span class="token operator">=</span> <span class="token boolean">true</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">var</span> first <span class="token operator">=</span> mFirstTouchTargetF<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>decView<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">var</span> consumeView<span class="token operator">:</span> View <span class="token operator">=</span> decView</pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">while</span> <span class="token punctuation">(</span>first <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token keyword">val</span> viewF <span class="token operator">=</span> first<span class="token operator">::</span><span class="token keyword">class</span><span class="token punctuation">.</span>java<span class="token punctuation">.</span><span class="token function">getDeclaredField</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"child"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        viewF<span class="token punctuation">.</span>isAccessible <span class="token operator">=</span> <span class="token boolean">true</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        consumeView <span class="token operator">=</span> viewF<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>first<span class="token punctuation">)</span> <span class="token keyword">as</span> View</pre></td></tr><tr><td data-num="13"></td><td><pre>        first <span class="token operator">=</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>consumeView <span class="token keyword">is</span> ViewGroup<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            mFirstTouchTargetF<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>consumeView<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            <span class="token keyword">null</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    MLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span> <span class="token string-literal singleline"><span class="token string">"consumeView is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$</span><span class="token expression">consumeView</span></span><span class="token string">"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token keyword">return</span> re</pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h4 id="调用startactivityforresult后直接产生onactivityresult回调问题"><a class="anchor" href="#调用startactivityforresult后直接产生onactivityresult回调问题">#</a> 调用 startActivityForResult 后直接产生 onActivityResult 回调问题</h4>
 <p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0FMZWVfMTMwMTU4L2FydGljbGUvZGV0YWlscy8xMDM5NzE3NjU=">Intent.FLAG_ACTIVITY_NEW_TASK 会导致 onActivityResult 马上返回</span></p>
 <h4 id="home键返回桌面再次点击应用图标重新启动main_action的activity"><a class="anchor" href="#home键返回桌面再次点击应用图标重新启动main_action的activity">#</a> home 键返回桌面再次点击应用图标，重新启动 MAIN_action 的 Activity</h4>
 <p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NoYW5nbWluZzE1MC9hcnRpY2xlL2RldGFpbHMvNzgzNDMxMDM=">每次启动 Intent 导致新创建 Task 的时候，该 Task 会记录导致其创建的 Intent；而如果后续需要有一个新的与创建 Intent 完全一致（完全一致定位为：启动类，action、category 等等全部一样，不可多项也不可缺少），那么该 Intent 并不会触发 Activity 的新建启动，而只会将已经存在的对应 Task 移到前台</span></p>
@@ -2745,83 +3868,6 @@ MyViewGroup-- onTouchEvent--ACTION_DOWN--false
       </tags>
   </entry>
   <entry>
-    <title>Kotlin知识点</title>
-    <url>/post/a442dbbf.html</url>
-    <content><![CDATA[<p><span id="more"></span></p>
-<h2 id="提升开发效率"><a class="anchor" href="#提升开发效率">#</a> 提升开发效率</h2>
-<p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hvbmdIdWFadS9hcnRpY2xlL2RldGFpbHMvMTM5NzcyMTc3">kotlin 注解 @Parcelize 使用</span></p>
-<h2 id="协程"><a class="anchor" href="#协程">#</a> 协程</h2>
-<h3 id="取消机制"><a class="anchor" href="#取消机制">#</a> 取消机制</h3>
-<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC83MTU4MDA4OTI4OTMwOTA2MTQ4I2hlYWRpbmctMA==">Kotlin 协程的取消机制超详细解读</span></p>
-<p><em>协程被 cancel 后，只有在【运行前】或者【跑到挂起点】才会退出</em></p>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">val</span> job<span class="token operator">=</span> <span class="token function">CoroutineScope</span><span class="token punctuation">(</span>Dispatchers<span class="token punctuation">.</span>Default <span class="token operator">+</span> <span class="token function">SupervisorJob</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    MLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"协程测试"</span></span><span class="token punctuation">,</span> <span class="token string-literal singleline"><span class="token string">"开始"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">5000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    MLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"协程测试"</span></span><span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"协程是否被cancel </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token expression"><span class="token operator">!</span>isActive</span><span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    MLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"协程测试"</span></span><span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"协程还在跑"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token function">delay</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    MLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"协程测试"</span></span><span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"协程跑完了"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>viewModelScope<span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token function">delay</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    job<span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>对应的日志内容</p>
-<pre><code>2023-07-03 10:45:21.397 12710-12776 协程测试                    com.sodo.live                        I  协程是否被cancel true
-2023-07-03 10:45:21.398 12710-12776 协程测试                    com.sodo.live                        I  协程还在跑
-</code></pre>
-<p>代码的目的是在协程运行在 Thread.sleep (5000) 时，cancel 掉协程</p>
-<p>看日志可以看出，协程虽然被 cancel 了，但还在跑，直到运行到挂起点，才退出协程</p>
-<p>看参考文档可以知道，此时运行到 delay 代码时，抛出了 CancellationException 异常，导致协程结束</p>
-<p>协程的调度线程和 cancel 代码执行线程是同一个时，一般不用太关注这一点，因为符合时序，调用 cancel 时，协程一定处于被调度前或者运行在挂起点。</p>
-<p>但不在同一线程时，可能会出现协程运行在某一行时，调用 cancel 的场景，但协程此时并不会停止执行，会继续运行到挂起点，这可能就会出现问题</p>
-<p>例如资源找不到，View 找不到</p>
-<p>错误代码样例：</p>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> Activity  <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">var</span> job<span class="token operator">:</span>Job<span class="token operator">?</span><span class="token operator">=</span><span class="token keyword">null</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token operator">:</span> Bundle<span class="token operator">?</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        job<span class="token operator">=</span> <span class="token function">CoroutineScope</span><span class="token punctuation">(</span>Dispatchers<span class="token punctuation">.</span>Default <span class="token operator">+</span> <span class="token function">SupervisorJob</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>            <span class="token keyword">val</span> subView <span class="token operator">=</span>view<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span>R<span class="token punctuation">.</span>id<span class="token punctuation">.</span>test<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            <span class="token function">delay</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            subView<span class="token punctuation">.</span><span class="token function">gone</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="14"></td><td><pre>        job<span class="token operator">?</span><span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>概率不大，但也有可能出现崩溃。findViewById 过程中，Activity 被 Destroy 了，找不到 View 出现崩溃</p>
-<p>虽然 onDestroy 方法中协程被 cancel 了，但协程还是会继续执行 delay 之前的代码</p>
-<h3 id="suspendcancellablecoroutine"><a class="anchor" href="#suspendcancellablecoroutine">#</a> suspendCancellableCoroutine</h3>
-<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC83NDQ5OTQyODMyMjY5MDE3MTUx">Kotlin suspendCoroutine 和 suspendCancellableCoroutine 的区别</span></p>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">suspend</span> <span class="token keyword">fun</span> <span class="token function">wait3s</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">return</span> suspendCancellableCoroutine <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        Thread <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>            Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>            Log<span class="token punctuation">.</span><span class="token function">i</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"Thread.sleep finish"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>it<span class="token punctuation">.</span>isActive<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>                it<span class="token punctuation">.</span><span class="token function">resume</span><span class="token punctuation">(</span>Unit<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token punctuation">&#125;</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token operator">:</span> Bundle<span class="token operator">?</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token keyword">val</span> scope <span class="token operator">=</span> <span class="token function">MainScope</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    Log<span class="token punctuation">.</span><span class="token function">i</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"before start coroutines"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    scope<span class="token punctuation">.</span><span class="token function">launch</span><span class="token punctuation">(</span>Dispatchers<span class="token punctuation">.</span>Main<span class="token punctuation">,</span> CoroutineStart<span class="token punctuation">.</span>UNDISPATCHED<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token keyword">val</span> job <span class="token operator">=</span> <span class="token function">launch</span><span class="token punctuation">(</span>Dispatchers<span class="token punctuation">.</span>Main<span class="token punctuation">,</span> CoroutineStart<span class="token punctuation">.</span>UNDISPATCHED<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>            <span class="token function">wait3s</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        Log<span class="token punctuation">.</span><span class="token function">i</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"before cancelAndJoin"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        job<span class="token punctuation">.</span><span class="token function">cancelAndJoin</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        Log<span class="token punctuation">.</span><span class="token function">i</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"after cancelAndJoin"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    Log<span class="token punctuation">.</span><span class="token function">i</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"after start coroutines"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="28"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">26</span><span class="token operator">:</span><span class="token number">44.399</span> <span class="token number">28521</span><span class="token operator">-</span><span class="token number">28521</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  before start coroutines</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">26</span><span class="token operator">:</span><span class="token number">44.403</span> <span class="token number">28521</span><span class="token operator">-</span><span class="token number">28521</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  before cancelAndJoin</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">26</span><span class="token operator">:</span><span class="token number">44.404</span> <span class="token number">28521</span><span class="token operator">-</span><span class="token number">28521</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  after start coroutines</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">26</span><span class="token operator">:</span><span class="token number">44.663</span> <span class="token number">28521</span><span class="token operator">-</span><span class="token number">28521</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  after cancelAndJoin</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">26</span><span class="token operator">:</span><span class="token number">47.404</span> <span class="token number">28521</span><span class="token operator">-</span><span class="token number">30752</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  <span class="token class-name">Thread</span><span class="token punctuation">.</span>sleep finish</pre></td></tr></table></figure><ul>
-<li>cancelAndJoin 是个挂起函数，一定延迟协程执行</li>
-<li>suspendCancellableCoroutine 被 cancel 后即使没有挂起点也一定会很快退出，内部的代码没有中断执行，但不会等待内部代码执行完毕后再通知 cancel 成功</li>
-</ul>
-<h3 id="suspendcoroutine"><a class="anchor" href="#suspendcoroutine">#</a> suspendCoroutine</h3>
-<p>将上面 suspendCancellableCoroutine 的用例改为 suspendCoroutine</p>
-<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">45</span><span class="token operator">:</span><span class="token number">46.511</span> <span class="token number">30833</span><span class="token operator">-</span><span class="token number">30833</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  before start coroutines</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">45</span><span class="token operator">:</span><span class="token number">46.516</span> <span class="token number">30833</span><span class="token operator">-</span><span class="token number">30833</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  before cancelAndJoin</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">45</span><span class="token operator">:</span><span class="token number">46.517</span> <span class="token number">30833</span><span class="token operator">-</span><span class="token number">30833</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  after start coroutines</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">45</span><span class="token operator">:</span><span class="token number">49.517</span> <span class="token number">30833</span><span class="token operator">-</span><span class="token number">4133</span>  <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  <span class="token class-name">Thread</span><span class="token punctuation">.</span>sleep finish</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">45</span><span class="token operator">:</span><span class="token number">49.518</span> <span class="token number">30833</span><span class="token operator">-</span><span class="token number">30833</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  after cancelAndJoin</pre></td></tr></table></figure><p><strong>挂起函数无法被取消</strong></p>
-<h2 id="flow"><a class="anchor" href="#flow">#</a> Flow</h2>
-<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC82OTg5NTM2ODc2MDk2OTEzNDM5">【Kotlin Flow】 一眼看全 ——Flow 操作符大全</span></p>
-<h3 id="flow-的collect的正常用法"><a class="anchor" href="#flow-的collect的正常用法">#</a> Flow 的 collect 的正常用法</h3>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre>mainScope<span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    flow<span class="token punctuation">.</span><span class="token function">collect</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        <span class="token comment">//do something</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>mainScope<span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    flow2<span class="token punctuation">.</span><span class="token function">collect</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token comment">//do something</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>flow 的 collect 是个 suspend 函数，内部逻辑是个 while (true) 死循环，所以不能在 collect 之后写任何代码，因为执行不到</p>
-<p>下面为 <strong>SharedFlowImpl</strong> 的代码</p>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">override</span> <span class="token keyword">suspend</span> <span class="token keyword">fun</span> <span class="token function">collect</span><span class="token punctuation">(</span>collector<span class="token operator">:</span> FlowCollector<span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">)</span><span class="token operator">:</span> Nothing <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">val</span> slot <span class="token operator">=</span> <span class="token function">allocateSlot</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>collector <span class="token keyword">is</span> SubscribedFlowCollector<span class="token punctuation">)</span> collector<span class="token punctuation">.</span><span class="token function">onSubscription</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token keyword">val</span> collectorJob <span class="token operator">=</span> <span class="token function">currentCoroutineContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span>Job<span class="token punctuation">]</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            <span class="token keyword">var</span> newValue<span class="token operator">:</span> Any<span class="token operator">?</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>                newValue <span class="token operator">=</span> <span class="token function">tryTakeValue</span><span class="token punctuation">(</span>slot<span class="token punctuation">)</span> <span class="token comment">// attempt no-suspend fast path first</span></pre></td></tr><tr><td data-num="10"></td><td><pre>                <span class="token keyword">if</span> <span class="token punctuation">(</span>newValue <span class="token operator">!==</span> NO_VALUE<span class="token punctuation">)</span> <span class="token keyword">break</span></pre></td></tr><tr><td data-num="11"></td><td><pre>                <span class="token function">awaitValue</span><span class="token punctuation">(</span>slot<span class="token punctuation">)</span> <span class="token comment">// await signal that the new value is available</span></pre></td></tr><tr><td data-num="12"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>            collectorJob<span class="token operator">?</span><span class="token punctuation">.</span><span class="token function">ensureActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            collector<span class="token punctuation">.</span><span class="token function">emit</span><span class="token punctuation">(</span>newValue <span class="token keyword">as</span> T<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token punctuation">&#125;</span> <span class="token keyword">finally</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token function">freeSlot</span><span class="token punctuation">(</span>slot<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>&lt;font color='red'&gt; 如果需要 collect 一个 flow，需要单独起一个协程，该协程内只能 collect 一个 flow，不能在 collect 函数后面加任何代码 &lt;/font&gt;</p>
-<h3 id="zip操作符和combine操作符区别"><a class="anchor" href="#zip操作符和combine操作符区别">#</a> <em>zip</em> 操作符和<em> combine</em> 操作符区别</h3>
-<ol>
-<li>
-<p>zip 要求 ：两个流发送数据的次数必须一致，1+1 合并成新的数据</p>
-<p>​     如果 A 流发两个数据，B 流发一个数据，则 A 流的第二个数据因为找不到 B 流的对应数据，不会触发 zip 流的合并发送</p>
-</li>
-<li>
-<p>combine 要求：没啥要求，两个流任意一个流的数据刷新，combine 流都会取两个流的最新值进行合并</p>
-</li>
-</ol>
-<h3 id="tryemit方法"><a class="anchor" href="#tryemit方法">#</a> tryEmit 方法</h3>
-<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">/**</pre></td></tr><tr><td data-num="2"></td><td><pre>     * Tries to emit a [value] to this shared flow without suspending. It returns `true` if the value was</pre></td></tr><tr><td data-num="3"></td><td><pre>     * emitted successfully (see below). When this function returns `false`, it means that a call to a plain [emit]</pre></td></tr><tr><td data-num="4"></td><td><pre>     * function would suspend until there is buffer space available.</pre></td></tr><tr><td data-num="5"></td><td><pre>     *</pre></td></tr><tr><td data-num="6"></td><td><pre>     * This call can return `false` only when the [BufferOverflow] strategy is</pre></td></tr><tr><td data-num="7"></td><td><pre>     * [SUSPEND][BufferOverflow.SUSPEND] **and** there are subscribers collecting this shared flow.</pre></td></tr><tr><td data-num="8"></td><td><pre>     *</pre></td></tr><tr><td data-num="9"></td><td><pre>     * If there are no subscribers, the buffer is not used.</pre></td></tr><tr><td data-num="10"></td><td><pre>     * Instead, the most recently emitted value is simply stored into</pre></td></tr><tr><td data-num="11"></td><td><pre>     * the replay cache if one was configured, displacing the older elements there,</pre></td></tr><tr><td data-num="12"></td><td><pre>     * or dropped if no replay cache was configured. In any case, `tryEmit` returns `true`.</pre></td></tr><tr><td data-num="13"></td><td><pre>     *</pre></td></tr><tr><td data-num="14"></td><td><pre>     * This method is **thread-safe** and can be safely invoked from concurrent coroutines without</pre></td></tr><tr><td data-num="15"></td><td><pre>     * external synchronization.</pre></td></tr><tr><td data-num="16"></td><td><pre>     */</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">fun</span> <span class="token function">tryEmit</span><span class="token punctuation">(</span>value<span class="token operator">:</span> T<span class="token punctuation">)</span><span class="token operator">:</span> Boolean</pre></td></tr></table></figure><p><strong>慎用 tryEmit，看备注可知，当 strategy 是 BufferOverflow.SUSPEND 时（默认策略），且有 subscribers 时 就会发送失败，返回 false</strong></p>
-<h3 id="stateflow-data-class-的问题"><a class="anchor" href="#stateflow-data-class-的问题">#</a> StateFlow + data class 的问题</h3>
-<p>data class 重写了 equal，判断每个属性是否相等，而不是判断内存地址</p>
-<p>而 StateFlow 发现 新旧数据 equal 时则不会发送新数据</p>
-<h3 id="livedata和stateflow-优缺点"><a class="anchor" href="#livedata和stateflow-优缺点">#</a> LiveData 和 StateFlow 优缺点</h3>
-<ul>
-<li>
-<p><code>StateFlow</code>  需要将初始状态传递给构造函数，而  <code>LiveData</code>  不需要</p>
-</li>
-<li>
-<p>LiveData 观察者的回调永远发生在主线程；value 是 nullable 的； <code>LiveData</code>  是不防抖的； <code>LiveData</code>  的  <code>transformation</code>  工作在主线程</p>
-</li>
-<li>
-<p>Flow 属于 Kotlin 协程的一部分，仅 Kotlin 使用；value 空安全；防抖；提供很多操作符支持切换线程</p>
-</li>
-<li>
-<p>当 View 进入  <code>STOPPED</code>  状态时， <code>LiveData.observe()</code>  会自动取消注册使用方，而从  <code>StateFlow</code>  或任何其他数据流收集数据的操作并不会自动停止。如需实现相同的行为，您需要从  <code>Lifecycle.repeatOnLifecycle</code>  块收集数据流。</p>
-</li>
-</ul>
-<p>Keep Moving Forward</p>
-]]></content>
-      <categories>
-        <category>Android</category>
-      </categories>
-      <tags>
-        <tag>协程</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Glide知识点</title>
     <url>/post/692dc279.html</url>
     <content><![CDATA[<h1 id="glideokhttp3"><a class="anchor" href="#glideokhttp3">#</a> Glide+OKHTTP3</h1>
@@ -3050,6 +4096,83 @@ MeasureSpec.UNSPECIFIED  0
       <tags>
         <tag>MAT</tag>
         <tag>Systrace</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kotlin知识点</title>
+    <url>/post/a442dbbf.html</url>
+    <content><![CDATA[<p><span id="more"></span></p>
+<h2 id="提升开发效率"><a class="anchor" href="#提升开发效率">#</a> 提升开发效率</h2>
+<p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hvbmdIdWFadS9hcnRpY2xlL2RldGFpbHMvMTM5NzcyMTc3">kotlin 注解 @Parcelize 使用</span></p>
+<h2 id="协程"><a class="anchor" href="#协程">#</a> 协程</h2>
+<h3 id="取消机制"><a class="anchor" href="#取消机制">#</a> 取消机制</h3>
+<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC83MTU4MDA4OTI4OTMwOTA2MTQ4I2hlYWRpbmctMA==">Kotlin 协程的取消机制超详细解读</span></p>
+<p><em>协程被 cancel 后，只有在【运行前】或者【跑到挂起点】才会退出</em></p>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">val</span> job<span class="token operator">=</span> <span class="token function">CoroutineScope</span><span class="token punctuation">(</span>Dispatchers<span class="token punctuation">.</span>Default <span class="token operator">+</span> <span class="token function">SupervisorJob</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    MLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"协程测试"</span></span><span class="token punctuation">,</span> <span class="token string-literal singleline"><span class="token string">"开始"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">5000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    MLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"协程测试"</span></span><span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"协程是否被cancel </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token expression"><span class="token operator">!</span>isActive</span><span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    MLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"协程测试"</span></span><span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"协程还在跑"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token function">delay</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    MLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string-literal singleline"><span class="token string">"协程测试"</span></span><span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"协程跑完了"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>viewModelScope<span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token function">delay</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    job<span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>对应的日志内容</p>
+<pre><code>2023-07-03 10:45:21.397 12710-12776 协程测试                    com.sodo.live                        I  协程是否被cancel true
+2023-07-03 10:45:21.398 12710-12776 协程测试                    com.sodo.live                        I  协程还在跑
+</code></pre>
+<p>代码的目的是在协程运行在 Thread.sleep (5000) 时，cancel 掉协程</p>
+<p>看日志可以看出，协程虽然被 cancel 了，但还在跑，直到运行到挂起点，才退出协程</p>
+<p>看参考文档可以知道，此时运行到 delay 代码时，抛出了 CancellationException 异常，导致协程结束</p>
+<p>协程的调度线程和 cancel 代码执行线程是同一个时，一般不用太关注这一点，因为符合时序，调用 cancel 时，协程一定处于被调度前或者运行在挂起点。</p>
+<p>但不在同一线程时，可能会出现协程运行在某一行时，调用 cancel 的场景，但协程此时并不会停止执行，会继续运行到挂起点，这可能就会出现问题</p>
+<p>例如资源找不到，View 找不到</p>
+<p>错误代码样例：</p>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> Activity  <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">var</span> job<span class="token operator">:</span>Job<span class="token operator">?</span><span class="token operator">=</span><span class="token keyword">null</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token operator">:</span> Bundle<span class="token operator">?</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        job<span class="token operator">=</span> <span class="token function">CoroutineScope</span><span class="token punctuation">(</span>Dispatchers<span class="token punctuation">.</span>Default <span class="token operator">+</span> <span class="token function">SupervisorJob</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>            <span class="token keyword">val</span> subView <span class="token operator">=</span>view<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span>R<span class="token punctuation">.</span>id<span class="token punctuation">.</span>test<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            <span class="token function">delay</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            subView<span class="token punctuation">.</span><span class="token function">gone</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="14"></td><td><pre>        job<span class="token operator">?</span><span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>概率不大，但也有可能出现崩溃。findViewById 过程中，Activity 被 Destroy 了，找不到 View 出现崩溃</p>
+<p>虽然 onDestroy 方法中协程被 cancel 了，但协程还是会继续执行 delay 之前的代码</p>
+<h3 id="suspendcancellablecoroutine"><a class="anchor" href="#suspendcancellablecoroutine">#</a> suspendCancellableCoroutine</h3>
+<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC83NDQ5OTQyODMyMjY5MDE3MTUx">Kotlin suspendCoroutine 和 suspendCancellableCoroutine 的区别</span></p>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">suspend</span> <span class="token keyword">fun</span> <span class="token function">wait3s</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">return</span> suspendCancellableCoroutine <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        Thread <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>            Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>            Log<span class="token punctuation">.</span><span class="token function">i</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"Thread.sleep finish"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>it<span class="token punctuation">.</span>isActive<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>                it<span class="token punctuation">.</span><span class="token function">resume</span><span class="token punctuation">(</span>Unit<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token punctuation">&#125;</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token operator">:</span> Bundle<span class="token operator">?</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token keyword">val</span> scope <span class="token operator">=</span> <span class="token function">MainScope</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    Log<span class="token punctuation">.</span><span class="token function">i</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"before start coroutines"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    scope<span class="token punctuation">.</span><span class="token function">launch</span><span class="token punctuation">(</span>Dispatchers<span class="token punctuation">.</span>Main<span class="token punctuation">,</span> CoroutineStart<span class="token punctuation">.</span>UNDISPATCHED<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token keyword">val</span> job <span class="token operator">=</span> <span class="token function">launch</span><span class="token punctuation">(</span>Dispatchers<span class="token punctuation">.</span>Main<span class="token punctuation">,</span> CoroutineStart<span class="token punctuation">.</span>UNDISPATCHED<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>            <span class="token function">wait3s</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        Log<span class="token punctuation">.</span><span class="token function">i</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"before cancelAndJoin"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        job<span class="token punctuation">.</span><span class="token function">cancelAndJoin</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        Log<span class="token punctuation">.</span><span class="token function">i</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"after cancelAndJoin"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    Log<span class="token punctuation">.</span><span class="token function">i</span><span class="token punctuation">(</span>TAG<span class="token punctuation">,</span><span class="token string-literal singleline"><span class="token string">"after start coroutines"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="28"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">26</span><span class="token operator">:</span><span class="token number">44.399</span> <span class="token number">28521</span><span class="token operator">-</span><span class="token number">28521</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  before start coroutines</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">26</span><span class="token operator">:</span><span class="token number">44.403</span> <span class="token number">28521</span><span class="token operator">-</span><span class="token number">28521</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  before cancelAndJoin</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">26</span><span class="token operator">:</span><span class="token number">44.404</span> <span class="token number">28521</span><span class="token operator">-</span><span class="token number">28521</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  after start coroutines</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">26</span><span class="token operator">:</span><span class="token number">44.663</span> <span class="token number">28521</span><span class="token operator">-</span><span class="token number">28521</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  after cancelAndJoin</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">26</span><span class="token operator">:</span><span class="token number">47.404</span> <span class="token number">28521</span><span class="token operator">-</span><span class="token number">30752</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  <span class="token class-name">Thread</span><span class="token punctuation">.</span>sleep finish</pre></td></tr></table></figure><ul>
+<li>cancelAndJoin 是个挂起函数，一定延迟协程执行</li>
+<li>suspendCancellableCoroutine 被 cancel 后即使没有挂起点也一定会很快退出，内部的代码没有中断执行，但不会等待内部代码执行完毕后再通知 cancel 成功</li>
+</ul>
+<h3 id="suspendcoroutine"><a class="anchor" href="#suspendcoroutine">#</a> suspendCoroutine</h3>
+<p>将上面 suspendCancellableCoroutine 的用例改为 suspendCoroutine</p>
+<figure class="highlight java"><figcaption data-lang="java"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">45</span><span class="token operator">:</span><span class="token number">46.511</span> <span class="token number">30833</span><span class="token operator">-</span><span class="token number">30833</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  before start coroutines</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">45</span><span class="token operator">:</span><span class="token number">46.516</span> <span class="token number">30833</span><span class="token operator">-</span><span class="token number">30833</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  before cancelAndJoin</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">45</span><span class="token operator">:</span><span class="token number">46.517</span> <span class="token number">30833</span><span class="token operator">-</span><span class="token number">30833</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  after start coroutines</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">45</span><span class="token operator">:</span><span class="token number">49.517</span> <span class="token number">30833</span><span class="token operator">-</span><span class="token number">4133</span>  <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  <span class="token class-name">Thread</span><span class="token punctuation">.</span>sleep finish</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token number">2025</span><span class="token operator">-</span><span class="token number">08</span><span class="token operator">-</span><span class="token number">02</span> <span class="token number">23</span><span class="token operator">:</span><span class="token number">45</span><span class="token operator">:</span><span class="token number">49.518</span> <span class="token number">30833</span><span class="token operator">-</span><span class="token number">30833</span> <span class="token class-name">CoroutinesTest</span>          com<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>mple<span class="token punctuation">.</span>android<span class="token punctuation">.</span>kotlincoroutines  <span class="token class-name">I</span>  after cancelAndJoin</pre></td></tr></table></figure><p><strong>挂起函数无法被取消</strong></p>
+<h2 id="flow"><a class="anchor" href="#flow">#</a> Flow</h2>
+<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC82OTg5NTM2ODc2MDk2OTEzNDM5">【Kotlin Flow】 一眼看全 ——Flow 操作符大全</span></p>
+<h3 id="flow-的collect的正常用法"><a class="anchor" href="#flow-的collect的正常用法">#</a> Flow 的 collect 的正常用法</h3>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre>mainScope<span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    flow<span class="token punctuation">.</span><span class="token function">collect</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        <span class="token comment">//do something</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>mainScope<span class="token punctuation">.</span><span class="token function">launch</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    flow2<span class="token punctuation">.</span><span class="token function">collect</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token comment">//do something</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>flow 的 collect 是个 suspend 函数，内部逻辑是个 while (true) 死循环，所以不能在 collect 之后写任何代码，因为执行不到</p>
+<p>下面为 <strong>SharedFlowImpl</strong> 的代码</p>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">override</span> <span class="token keyword">suspend</span> <span class="token keyword">fun</span> <span class="token function">collect</span><span class="token punctuation">(</span>collector<span class="token operator">:</span> FlowCollector<span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">)</span><span class="token operator">:</span> Nothing <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">val</span> slot <span class="token operator">=</span> <span class="token function">allocateSlot</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>collector <span class="token keyword">is</span> SubscribedFlowCollector<span class="token punctuation">)</span> collector<span class="token punctuation">.</span><span class="token function">onSubscription</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token keyword">val</span> collectorJob <span class="token operator">=</span> <span class="token function">currentCoroutineContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span>Job<span class="token punctuation">]</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            <span class="token keyword">var</span> newValue<span class="token operator">:</span> Any<span class="token operator">?</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>                newValue <span class="token operator">=</span> <span class="token function">tryTakeValue</span><span class="token punctuation">(</span>slot<span class="token punctuation">)</span> <span class="token comment">// attempt no-suspend fast path first</span></pre></td></tr><tr><td data-num="10"></td><td><pre>                <span class="token keyword">if</span> <span class="token punctuation">(</span>newValue <span class="token operator">!==</span> NO_VALUE<span class="token punctuation">)</span> <span class="token keyword">break</span></pre></td></tr><tr><td data-num="11"></td><td><pre>                <span class="token function">awaitValue</span><span class="token punctuation">(</span>slot<span class="token punctuation">)</span> <span class="token comment">// await signal that the new value is available</span></pre></td></tr><tr><td data-num="12"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>            collectorJob<span class="token operator">?</span><span class="token punctuation">.</span><span class="token function">ensureActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            collector<span class="token punctuation">.</span><span class="token function">emit</span><span class="token punctuation">(</span>newValue <span class="token keyword">as</span> T<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token punctuation">&#125;</span> <span class="token keyword">finally</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token function">freeSlot</span><span class="token punctuation">(</span>slot<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>&lt;font color='red'&gt; 如果需要 collect 一个 flow，需要单独起一个协程，该协程内只能 collect 一个 flow，不能在 collect 函数后面加任何代码 &lt;/font&gt;</p>
+<h3 id="zip操作符和combine操作符区别"><a class="anchor" href="#zip操作符和combine操作符区别">#</a> <em>zip</em> 操作符和<em> combine</em> 操作符区别</h3>
+<ol>
+<li>
+<p>zip 要求 ：两个流发送数据的次数必须一致，1+1 合并成新的数据</p>
+<p>​     如果 A 流发两个数据，B 流发一个数据，则 A 流的第二个数据因为找不到 B 流的对应数据，不会触发 zip 流的合并发送</p>
+</li>
+<li>
+<p>combine 要求：没啥要求，两个流任意一个流的数据刷新，combine 流都会取两个流的最新值进行合并</p>
+</li>
+</ol>
+<h3 id="tryemit方法"><a class="anchor" href="#tryemit方法">#</a> tryEmit 方法</h3>
+<figure class="highlight kotlin"><figcaption data-lang="kotlin"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">/**</pre></td></tr><tr><td data-num="2"></td><td><pre>     * Tries to emit a [value] to this shared flow without suspending. It returns `true` if the value was</pre></td></tr><tr><td data-num="3"></td><td><pre>     * emitted successfully (see below). When this function returns `false`, it means that a call to a plain [emit]</pre></td></tr><tr><td data-num="4"></td><td><pre>     * function would suspend until there is buffer space available.</pre></td></tr><tr><td data-num="5"></td><td><pre>     *</pre></td></tr><tr><td data-num="6"></td><td><pre>     * This call can return `false` only when the [BufferOverflow] strategy is</pre></td></tr><tr><td data-num="7"></td><td><pre>     * [SUSPEND][BufferOverflow.SUSPEND] **and** there are subscribers collecting this shared flow.</pre></td></tr><tr><td data-num="8"></td><td><pre>     *</pre></td></tr><tr><td data-num="9"></td><td><pre>     * If there are no subscribers, the buffer is not used.</pre></td></tr><tr><td data-num="10"></td><td><pre>     * Instead, the most recently emitted value is simply stored into</pre></td></tr><tr><td data-num="11"></td><td><pre>     * the replay cache if one was configured, displacing the older elements there,</pre></td></tr><tr><td data-num="12"></td><td><pre>     * or dropped if no replay cache was configured. In any case, `tryEmit` returns `true`.</pre></td></tr><tr><td data-num="13"></td><td><pre>     *</pre></td></tr><tr><td data-num="14"></td><td><pre>     * This method is **thread-safe** and can be safely invoked from concurrent coroutines without</pre></td></tr><tr><td data-num="15"></td><td><pre>     * external synchronization.</pre></td></tr><tr><td data-num="16"></td><td><pre>     */</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token keyword">public</span> <span class="token keyword">fun</span> <span class="token function">tryEmit</span><span class="token punctuation">(</span>value<span class="token operator">:</span> T<span class="token punctuation">)</span><span class="token operator">:</span> Boolean</pre></td></tr></table></figure><p><strong>慎用 tryEmit，看备注可知，当 strategy 是 BufferOverflow.SUSPEND 时（默认策略），且有 subscribers 时 就会发送失败，返回 false</strong></p>
+<h3 id="stateflow-data-class-的问题"><a class="anchor" href="#stateflow-data-class-的问题">#</a> StateFlow + data class 的问题</h3>
+<p>data class 重写了 equal，判断每个属性是否相等，而不是判断内存地址</p>
+<p>而 StateFlow 发现 新旧数据 equal 时则不会发送新数据</p>
+<h3 id="livedata和stateflow-优缺点"><a class="anchor" href="#livedata和stateflow-优缺点">#</a> LiveData 和 StateFlow 优缺点</h3>
+<ul>
+<li>
+<p><code>StateFlow</code>  需要将初始状态传递给构造函数，而  <code>LiveData</code>  不需要</p>
+</li>
+<li>
+<p>LiveData 观察者的回调永远发生在主线程；value 是 nullable 的； <code>LiveData</code>  是不防抖的； <code>LiveData</code>  的  <code>transformation</code>  工作在主线程</p>
+</li>
+<li>
+<p>Flow 属于 Kotlin 协程的一部分，仅 Kotlin 使用；value 空安全；防抖；提供很多操作符支持切换线程</p>
+</li>
+<li>
+<p>当 View 进入  <code>STOPPED</code>  状态时， <code>LiveData.observe()</code>  会自动取消注册使用方，而从  <code>StateFlow</code>  或任何其他数据流收集数据的操作并不会自动停止。如需实现相同的行为，您需要从  <code>Lifecycle.repeatOnLifecycle</code>  块收集数据流。</p>
+</li>
+</ul>
+<p>Keep Moving Forward</p>
+]]></content>
+      <categories>
+        <category>Android</category>
+      </categories>
+      <tags>
+        <tag>协程</tag>
       </tags>
   </entry>
 </search>
