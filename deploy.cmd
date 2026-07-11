@@ -5,7 +5,7 @@ echo.
 where git >nul 2>&1
 if %errorlevel% equ 0 (
     echo ===== git diff =====
-    git diff
+    git --no-pager diff
     echo ====================
     echo.
 )
